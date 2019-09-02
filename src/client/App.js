@@ -1,23 +1,20 @@
+
 import React, { Component } from 'react';
-import './app.css';
-import ReactImage from './react.png';
+import { Provider } from 'react-redux';
+import { ConnectedRouter } from 'connected-react-router';
+import store, { history } from './store/index';
+import Routes from './routing/AppRoutes';
+
+require('moment').locale('pl');
 
 export default class App extends Component {
-  state = { username: null };
-
-  componentDidMount() {
-    fetch('/api/getUsername')
-      .then(res => res.json())
-      .then(user => this.setState({ username: user.username }));
-  }
-
-  render() {
-    const { username } = this.state;
-    return (
-      <div>
-        {username ? <h1>{`Hello ${username}`}</h1> : <h1>Loading.. please wait!</h1>}
-        <img src={ReactImage} alt="react" />
-      </div>
-    );
-  }
+    render() {
+        return (
+            <Provider store={store}>
+                <ConnectedRouter history={history}>
+                    <Routes />
+                </ConnectedRouter>
+            </Provider>
+        );
+    }
 }

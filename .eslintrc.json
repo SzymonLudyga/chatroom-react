@@ -6,8 +6,10 @@
     "node": true
   },
   "rules": {
+    "indent": ["error", 4],
     "no-console": "off",
     "comma-dangle": "off",
-    "react/jsx-filename-extension": "off"
+    "react/jsx-filename-extension": "off",
+    "react/jsx-indent": "off"
   }
 }

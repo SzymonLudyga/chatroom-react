@@ -1,22 +1,38 @@
 {
-  "name": "simple-react-full-stack",
+  "name": "chatroom-react",
   "version": "1.0.0",
-  "description": "Boilerplate to build a full stack web application using React, Node.js, Express and Webpack.",
+  "description": "Chatroom Application using React",
   "main": "src/server/index.js",
   "scripts": {
     "build": "webpack --mode production",
     "start": "npm run build && node src/server/index.js",
     "client": "webpack-dev-server --mode development --devtool inline-source-map --hot",
     "server": "nodemon src/server/index.js",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "lint": "eslint src",
+    "format": "eslint --fix src"
   },
-  "author": "Sandeep Raveesh",
+  "author": "Szymon Ludyga",
   "license": "ISC",
   "dependencies": {
+    "@material-ui/core": "^4.3.1",
+    "@material-ui/icons": "^4.2.1",
+    "axios": "^0.19.0",
     "babel-polyfill": "^6.26.0",
+    "connected-react-router": "^6.5.2",
     "express": "^4.16.3",
+    "history": "^4.9.0",
+    "moment": "^2.24.0",
     "react": "^16.5.2",
-    "react-dom": "^16.5.2"
+    "react-dom": "^16.5.2",
+    "react-redux": "^7.1.0",
+    "react-router": "^5.0.1",
+    "redux": "^4.0.4",
+    "redux-devtools-extension": "^2.13.8",
+    "redux-thunk": "^2.3.0",
+    "socket.io": "^2.2.0",
+    "socket.io-client": "^2.2.0",
+    "ws": "^7.1.2"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",

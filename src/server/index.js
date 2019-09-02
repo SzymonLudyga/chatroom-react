@@ -1,9 +1,141 @@
-const express = require('express');
+// const path = require('path');
 const os = require('os');
+// const http = require('http');
+// const express = require('express');
+// const socketIO = require('socket.io');
+// // const { generateMessage } = require('./utils/message');
+// // const { isRealString } = require('./utils/validation');
+// // const { Users } = require('./utils/users');
+// const app = express();
+// const server = http.createServer(app);
+// const io = socketIO(server);
+
+// // const WebSocket = require('ws');
+
+// // const wss = new WebSocket.Server({ port: 8080 });
+// // console.log(wss);
+
+// // const users = new Users();
+
+// app.use(express.static('dist'));
+
+// // case insesitive, unique names, chatrooms displayed
+
+// io.on('connection', (socket) => {
+//     console.log('New user connected');
+
+//     socket.on('connect', () => {
+//         console.log("connect");
+//         // const user = users.getUser(socket.id);
+
+//         // if (user && isRealString(message.text)) {
+//         //     // io.emit - emits event to every connection
+//         //     // io.to(roomName).emit() - emit to every connection in room
+//         //     io.to(user.room).emit('newMessage', generateMessage(user.name, message.text));
+//         // }
+//         // callback();
+//     });
+
+//     // socket.on('join', (params, callback) => {
+//     //     if (!isRealString(params.name) || !isRealString(params.room)) {
+//     //         return callback('Name and room name are required');
+//     //     }
+
+//     //     socket.join(params.room);
+//     //     users.removeUser(socket.id);
+//     //     users.addUser(socket.id, params.name, params.room);
+
+//     //     io.to(params.room).emit(
+//     //         'update-user-list',
+//     //         users.getUsersList(params.room)
+//     //     );
+
+//     // socket.emit - emits event to single connection
+//     // socket.emit('newMessage', generateMessage('Admin', 'Welcome to chat app'));
+
+//     // socket.broadcast.emit - emits event to every connection but the socket itself
+//     // socket.broadcast
+//     //     .to(params.room)
+//     //     .emit(
+//     //         'newMessage',
+//     //         generateMessage('Admin', `${params.name} has joined.`)
+//     //     );
+
+//     // callback();
+//     // });
+
+//     socket.on('message', (message) => {
+//         console.log(message);
+//         // const user = users.getUser(socket.id);
+
+//         // if (user && isRealString(message.text)) {
+//         //     // io.emit - emits event to every connection
+//         //     // io.to(roomName).emit() - emit to every connection in room
+//         //     io.to(user.room).emit('newMessage', generateMessage(user.name, message.text));
+//         // }
+//         // callback();
+//     });
+
+//     socket.on('disconnect', () => {
+//         // const user = users.removeUser(socket.id);
+//         // if (user) {
+//         //     io.to(user.room).emit('update-user-list', users.getUsersList(user.room));
+//         //     io.to(user.room).emit(
+//         //         'newMessage',
+//         //         generateMessage('Admin', `${user.name} has left the room.`)
+//         //     );
+//         // }
+//         console.log('Client disconnected...');
+//     });
+// });
+
+
+// const port = process.env.PORT || 8080;
+
+// app.listen(port, () => console.log(`Listening on port ${port}!`));
+
+const express = require('express');
 
 const app = express();
+const port = 3030;
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
 
-app.use(express.static('dist'));
-app.get('/api/getUsername', (req, res) => res.send({ username: os.userInfo().username }));
 
-app.listen(process.env.PORT || 8080, () => console.log(`Listening on port ${process.env.PORT || 8080}!`));
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    next();
+});
+
+app.get('/api/getUsername',
+    (req, res) => res.send({ username: os.userInfo().username }));
+
+io.on('connection', (socket) => {
+    console.log('a user connected');
+
+    socket.on('disconnect', (reason) => {
+        console.log('user disconnected');
+    });
+
+    socket.on('room', (data) => {
+        console.log('room join');
+        console.log(data);
+        socket.join(data.room);
+    });
+
+    socket.on('leave room', (data) => {
+        console.log('leaving room');
+        console.log(data);
+        socket.leave(data.room);
+    });
+
+    socket.on('new message', (data) => {
+        console.log(data.room);
+        socket.broadcast
+            .to(data.room)
+            .emit('receive message', data);
+    });
+});
+
+server.listen(port);
