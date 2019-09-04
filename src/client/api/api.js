@@ -10,3 +10,11 @@ export function auth(token) {
             : {}
     });
 }
+
+export async function apiGetRooms() {
+    return await axios.get(`${baseUrl}/api/rooms-list`);
+}
+
+export async function apiPostRoom(room) {
+    return await axios.post(`${baseUrl}/api/room`, { room });
+}

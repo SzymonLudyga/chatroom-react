@@ -1,0 +1,2 @@
+export const ROOMS_RECEIVED = "ROOMS_RECEIVED";
+export const ROOM_CHOSEN = "ROOM_CHOSEN";

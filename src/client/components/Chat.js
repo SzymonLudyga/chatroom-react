@@ -7,7 +7,7 @@ import axios from 'axios';
 
 const io = require('socket.io-client');
 
-const socket = io('http://localhost:3030');
+const socket = io('http://localhost:8080');
 
 function Chat() {
     const [username, setUsername] = useState('USER');
@@ -32,7 +32,7 @@ function Chat() {
     useEffect(() => {
         const fetchData = async () => {
             const result = await axios(
-                'http://localhost:3030/api/getUsername',
+                'http://localhost:8080/api/getUsername',
             );
 
             setUsername(result);

@@ -12,24 +12,30 @@ export default class Join extends Component {
         };
     }
 
-    _handleChange = (e) => {
-        console.log(e.target.value);
+    componentDidMount() {
+        this.props.fetchRooms();
+    }
+
+    _handleChange = e => {
         this.setState({
             roomName: e.target.value
         });
+        // console.log(this.state.roomName);
     }
 
     _handleSubmit = () => {
-        this.props.history.push(routes.chat);
+        console.log(this.state.roomName);
+        this.props.confirmRoom(this.state.roomName);
+        // this.props.history.push(routes.chat);
     }
 
     render() {
-        const { classes } = this.props;
+        const { classes, rooms, room } = this.props;
         return (
             <div className={classes.container}>
                 <FormControl>
                     <InputLabel shrink htmlFor="room-label-placeholder">
-                        Room
+                        {`Room ${room}`} 
                     </InputLabel>
                     <Select
                         className={classes.textField}
@@ -37,9 +43,7 @@ export default class Join extends Component {
                         onChange={this._handleChange}
                         input={<Input name="room" id="room-helper" />}
                     >
-                        <MenuItem value="oslo">Oslo</MenuItem>
-                        <MenuItem value="berlin">Berlin</MenuItem>
-                        <MenuItem value="copenhagen">Copenhagen</MenuItem>
+                    {rooms.map(room => <MenuItem key={room.id} value={room.name}>{room.name[0].toUpperCase() + room.name.substring(1)}</MenuItem>)}
                     </Select>
                     <FormHelperText>Select room for chat</FormHelperText>
                     <Button onClick={this._handleSubmit} className={classes.big} variant="contained" color="primary">

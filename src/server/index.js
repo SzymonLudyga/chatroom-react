@@ -97,19 +97,28 @@ const os = require('os');
 const express = require('express');
 
 const app = express();
-const port = 3030;
+const port = 8080;
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
+const cors = require('cors')
+const bodyParser = require('body-parser');
 
+app.use(bodyParser.json());
 
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    next();
-});
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(cors());
+
+app.get('/api/rooms-list', (req, res) =>
+    res.send({ rooms: [{ id: 1, name: 'oslo' }, { id: 2, name: 'berlin' }, { id: 3, name: 'copenhagen' }] }));
+
+app.post('/api/room', (req, res) => res.send(req.body));
 
 app.get('/api/getUsername',
-    (req, res) => res.send({ username: os.userInfo().username }));
+    (req, res, next) =>
+        res.send({ username: os.userInfo().username })
+);
+
 
 io.on('connection', (socket) => {
     console.log('a user connected');
@@ -138,4 +147,6 @@ io.on('connection', (socket) => {
     });
 });
 
-server.listen(port);
+server.listen(port, () => {
+    console.log("SERVER ON PORT " + port);
+});

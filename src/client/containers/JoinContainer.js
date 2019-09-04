@@ -1,6 +1,8 @@
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 
+import { fetchRooms, confirmRoom } from '../actions/join';
+
 import Join from '../components/Join';
 
 const styles = theme => ({
@@ -22,11 +24,17 @@ const styles = theme => ({
 });
 
 function mapStateToProps(state) {
-    return {};
+    return {
+        rooms: state.join.rooms,
+        room: state.join.room,
+    };
 }
 
 function mapDispatchToProps(dispatch) {
-    return {};
+    return {
+        fetchRooms: () => dispatch(fetchRooms()),
+        confirmRoom: room => dispatch(confirmRoom(room)),
+    };
 }
 
 export default connect(
