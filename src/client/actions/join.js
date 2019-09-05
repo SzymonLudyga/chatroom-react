@@ -9,7 +9,6 @@ function roomsReceived(rooms) {
 }
 
 function roomChosen(room) {
-    console.log(room);
     return {
         type: ROOM_CHOSEN,
         room,
@@ -35,9 +34,7 @@ export function fetchRooms() {
 export function confirmRoom(room) {
     return async dispatch => {
         try {
-            console.log(room);
             const res = await apiPostRoom(room);
-            console.log(res);
             if(res.status !== 200) {
                 throw Error("Error adding room");
             }

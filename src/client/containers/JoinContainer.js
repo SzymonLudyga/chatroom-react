@@ -26,7 +26,6 @@ const styles = theme => ({
 function mapStateToProps(state) {
     return {
         rooms: state.join.rooms,
-        room: state.join.room,
     };
 }
 

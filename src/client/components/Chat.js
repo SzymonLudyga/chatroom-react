@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { Component } from 'react';
 
 import {
     FormControl, Button, Typography, InputLabel, Input, Divider, OutlinedInput
@@ -9,88 +9,74 @@ const io = require('socket.io-client');
 
 const socket = io('http://localhost:8080');
 
-function Chat() {
-    const [username, setUsername] = useState('USER');
-    const [messageCount, setMessageCount] = useState(0);
-    const [inRoom, setInRoom] = useState(false);
+export default class Chat extends Component {
+    constructor(props) {
+        super(props)
 
-    useEffect(() => {
-        if (inRoom) {
-            socket.emit('room', { room: 'test-room' });
+        this.state = {
+            username: 'USER',
+            messageCount: 0,
+            inRoom: false
         }
+    }
 
-        return () => {
-            if (inRoom) {
-                console.log('leaving room');
-                socket.emit('leave room', {
-                    room: 'test-room'
-                });
-            }
-        };
-    });
+    async componentDidMount() {
+        const res = await axios(
+            'http://localhost:8080/api/getUsername',
+        );
+        this.setState({ username: res.data.username });
+    }
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const result = await axios(
-                'http://localhost:8080/api/getUsername',
-            );
-
-            setUsername(result);
-        };
-        fetchData();
-    }, []);
-
-    useEffect(() => {
-        socket.on('receive message', (payload) => {
-            setMessageCount(messageCount + 1);
-        });
-
-        document.title = `${messageCount} new messages have been emitted`;
-    }, [messageCount]); // only re-run the effect if new message comes in
-
-    const handleInRoom = () => {
-        inRoom
-            ? setInRoom(false)
-            : setInRoom(true);
+    _handleInRoom = () => {
+        if(this.state.inRoom){
+            socket.emit('leave room', {
+                room: 'test-room'
+            });
+            this.setState({inRoom: false});
+        } else {
+            socket.emit('room', { room: 'test-room' });
+            this.setState({inRoom: true});
+        }
     };
 
-    const handleNewMessage = () => {
-        console.log(`${username.data.username} emits new message`);
+    _handleNewMessage = () => {
+        console.log(`${this.state.username} emits new message`);
         socket.emit('new message', {
             room: 'test-room'
         });
-        setMessageCount(messageCount + 1);
+        if(this.state.inRoom) {
+            this.setState({ messageCount: this.state.messageCount + 1 })
+        }
     };
 
-    return (
-        <>
-            <FormControl>
-                <h1>
-                    {inRoom && 'You Have Entered The Room'}
-                    {!inRoom && 'Outside Room'}
-                </h1>
-                <p>
-                    {messageCount}
-                    {' '}
-messages have been emitted
-                </p>
-                {/* <InputLabel htmlFor="component-outlined">
-                    Name
-                </InputLabel> */}
-                {/* <OutlinedInput
-                    id="component-outlined"
-                    value={name}
-                    onChange={this.handleChange}
-                /> */}
-                <Button onClick={() => handleNewMessage()} variant="contained" color="primary">
-                    Emit
-                </Button>
-                <Button onClick={() => handleInRoom()}>
-                    {inRoom ? 'Leave Room' : 'Enter room'}
-                </Button>
-            </FormControl>
-        </>
-    );
+    render() {
+        const { classes } = this.props;
+        return (
+            <>
+                <FormControl>
+                    <Typography className={classes.big}>
+                        {this.state.inRoom && 'You Have Entered The Room'}
+                        {!this.state.inRoom && 'Outside Room'}
+                    </Typography>
+                    <Typography>
+                        {`${this.state.messageCount} messages have been emitted`}
+                    </Typography>
+                    <Typography htmlFor="component-outlined">
+                        {`${this.state.username} in room ${this.props.room}`}
+                    </Typography>
+                    {/* <OutlinedInput
+                        id="component-outlined"
+                        value={name}
+                        onChange={this._handleChange}
+                    /> */}
+                    <Button onClick={this._handleNewMessage} variant="contained" color="primary">
+                        Emit
+                    </Button>
+                    <Button onClick={this._handleInRoom}>
+                        {this.state.inRoom ? 'Leave Room' : 'Enter room'}
+                    </Button>
+                </FormControl>
+            </>
+        );
+    }
 }
-
-export default Chat;

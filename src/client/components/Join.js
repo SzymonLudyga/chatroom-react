@@ -24,9 +24,8 @@ export default class Join extends Component {
     }
 
     _handleSubmit = () => {
-        console.log(this.state.roomName);
         this.props.confirmRoom(this.state.roomName);
-        // this.props.history.push(routes.chat);
+        this.props.history.push(routes.chat);
     }
 
     render() {
