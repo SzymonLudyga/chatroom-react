@@ -100,7 +100,7 @@ const app = express();
 const port = 8080;
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
-const cors = require('cors')
+const cors = require('cors');
 const bodyParser = require('body-parser');
 
 app.use(bodyParser.json());
@@ -109,15 +109,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(cors());
 
-app.get('/api/rooms-list', (req, res) =>
-    res.send({ rooms: [{ id: 1, name: 'oslo' }, { id: 2, name: 'berlin' }, { id: 3, name: 'copenhagen' }] }));
+app.get('/api/rooms-list', (req, res) => res.send({ rooms: [{ id: 1, name: 'oslo' }, { id: 2, name: 'berlin' }, { id: 3, name: 'copenhagen' }] }));
 
 app.post('/api/room', (req, res) => res.send(req.body));
 
-app.get('/api/getUsername',
-    (req, res, next) =>
-        res.send({ username: os.userInfo().username })
-);
+app.get('/api/username',
+    (req, res) => res.send({ username: os.userInfo().username }));
 
 
 io.on('connection', (socket) => {
@@ -148,5 +145,5 @@ io.on('connection', (socket) => {
 });
 
 server.listen(port, () => {
-    console.log("SERVER ON PORT " + port);
+    console.log(`SERVER ON PORT ${port}`);
 });

@@ -11,31 +11,31 @@ const socket = io('http://localhost:8080');
 
 export default class Chat extends Component {
     constructor(props) {
-        super(props)
+        super(props);
 
         this.state = {
             username: 'USER',
             messageCount: 0,
             inRoom: false
-        }
+        };
     }
 
     async componentDidMount() {
         const res = await axios(
-            'http://localhost:8080/api/getUsername',
+            'http://localhost:8080/api/username',
         );
         this.setState({ username: res.data.username });
     }
 
     _handleInRoom = () => {
-        if(this.state.inRoom){
+        if (this.state.inRoom) {
             socket.emit('leave room', {
                 room: 'test-room'
             });
-            this.setState({inRoom: false});
+            this.setState({ inRoom: false });
         } else {
             socket.emit('room', { room: 'test-room' });
-            this.setState({inRoom: true});
+            this.setState({ inRoom: true });
         }
     };
 
@@ -44,8 +44,8 @@ export default class Chat extends Component {
         socket.emit('new message', {
             room: 'test-room'
         });
-        if(this.state.inRoom) {
-            this.setState({ messageCount: this.state.messageCount + 1 })
+        if (this.state.inRoom) {
+            this.setState({ messageCount: this.state.messageCount + 1 });
         }
     };
 

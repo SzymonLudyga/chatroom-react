@@ -16,7 +16,7 @@ export default class Join extends Component {
         this.props.fetchRooms();
     }
 
-    _handleChange = e => {
+    _handleChange = (e) => {
         this.setState({
             roomName: e.target.value
         });
@@ -34,7 +34,7 @@ export default class Join extends Component {
             <div className={classes.container}>
                 <FormControl>
                     <InputLabel shrink htmlFor="room-label-placeholder">
-                        {`Room ${room}`} 
+                        {`Room ${room}`}
                     </InputLabel>
                     <Select
                         className={classes.textField}
@@ -42,7 +42,7 @@ export default class Join extends Component {
                         onChange={this._handleChange}
                         input={<Input name="room" id="room-helper" />}
                     >
-                    {rooms.map(room => <MenuItem key={room.id} value={room.name}>{room.name[0].toUpperCase() + room.name.substring(1)}</MenuItem>)}
+                        {rooms.map(room => <MenuItem key={room.id} value={room.name}>{room.name[0].toUpperCase() + room.name.substring(1)}</MenuItem>)}
                     </Select>
                     <FormHelperText>Select room for chat</FormHelperText>
                     <Button onClick={this._handleSubmit} className={classes.big} variant="contained" color="primary">
