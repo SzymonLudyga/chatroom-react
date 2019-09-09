@@ -42,7 +42,7 @@ export default class Chat extends Component {
     _handleNewMessage = () => {
         console.log(`${this.state.username} emits new message`);
         socket.emit('new message', {
-            room: 'test-room'
+            room: this.props.room
         });
         if (this.state.inRoom) {
             this.setState({ messageCount: this.state.messageCount + 1 });

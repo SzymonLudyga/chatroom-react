@@ -2,12 +2,12 @@
     "name": "chatroom-react",
     "version": "1.0.0",
     "description": "Chatroom Application using React",
-    "main": "src/server/index.js",
+    "main": "src/backend/index.js",
     "scripts": {
         "build": "webpack --mode production",
-        "start": "npm run build && node src/server/index.js",
+        "start": "npm run build && node src/backend/index.js",
         "client": "webpack-dev-server --mode development --devtool inline-source-map --hot",
-        "server": "nodemon src/server/index.js",
+        "server": "nodemon src/backend/index.js",
         "dev": "concurrently \"npm run server\" \"npm run client\"",
         "lint": "eslint src",
         "format": "eslint --fix src"

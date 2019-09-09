@@ -1,5 +1,4 @@
 // const path = require('path');
-const os = require('os');
 // const http = require('http');
 // const express = require('express');
 // const socketIO = require('socket.io');
@@ -98,6 +97,7 @@ const express = require('express');
 
 const app = express();
 const port = 8080;
+const os = require('os');
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 const cors = require('cors');
@@ -137,7 +137,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('new message', (data) => {
-        console.log(data.room);
+        console.log("DATA ROOM", data.room);
         socket.broadcast
             .to(data.room)
             .emit('receive message', data);
