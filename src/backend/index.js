@@ -103,6 +103,8 @@ const io = require('socket.io')(server);
 const cors = require('cors');
 const bodyParser = require('body-parser');
 
+const { fetchMessages, addMessage, deleteMessages, saveMessages } = require('./utils/utils');
+
 app.use(bodyParser.json());
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -115,6 +117,17 @@ app.post('/api/room', (req, res) => res.send(req.body));
 
 app.get('/api/username',
     (req, res) => res.send({ username: os.userInfo().username }));
+
+app.delete('/api/messages', (req, res) => {
+    deleteMessages();
+    res.send({ operation: 'success' });
+});
+
+app.get('/api/messages', (req, res) => {
+    const messages = fetchMessages();
+    console.log(messages);
+    res.send({ messages })
+});
 
 
 io.on('connection', (socket) => {
@@ -136,11 +149,13 @@ io.on('connection', (socket) => {
         socket.leave(data.room);
     });
 
-    socket.on('new message', (data) => {
-        console.log("DATA ROOM", data.room);
-        socket.broadcast
-            .to(data.room)
-            .emit('receive message', data);
+    socket.on('create-message', (data) => {
+        console.log("DATA", data);
+        addMessage(data);
+        io.emit('new-message');
+        // socket.broadcast
+        //     .to(data.room)
+        //     .emit('receive message', data);
     });
 });
 

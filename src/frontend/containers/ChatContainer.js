@@ -1,6 +1,8 @@
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 
+import { fetchMessages, deleteMessages } from '../actions/chat';
+
 import Chat from '../components/Chat';
 
 const styles = () => ({
@@ -12,11 +14,15 @@ const styles = () => ({
 function mapStateToProps(state) {
     return {
         room: state.join.room,
+        messages: state.chat.messages,
     };
 }
 
 function mapDispatchToProps(dispatch) {
-    return {};
+    return {
+        fetchMessages: () => dispatch(fetchMessages()),
+        deleteMessages: () => dispatch(deleteMessages()),
+    };
 }
 
 export default connect(

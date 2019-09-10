@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import {
     FormControl, Button, Typography, InputLabel, Input, Divider, OutlinedInput
 } from '@material-ui/core';
-import axios from 'axios';
 
 const io = require('socket.io-client');
 
@@ -16,15 +15,18 @@ export default class Chat extends Component {
         this.state = {
             username: 'USER',
             messageCount: 0,
-            inRoom: false
+            inRoom: false,
+            message: "",
         };
     }
 
-    async componentDidMount() {
-        const res = await axios(
-            'http://localhost:8080/api/username',
-        );
-        this.setState({ username: res.data.username });
+    componentDidMount() {
+        // this.props.fetchRoom();
+        socket.on('new-message', () => {
+            console.log("JESTEM TU")
+            this.props.fetchMessages();
+        });
+        this.setState({ username: "Szymon" });
     }
 
     _handleInRoom = () => {
@@ -39,10 +41,16 @@ export default class Chat extends Component {
         }
     };
 
-    _handleNewMessage = () => {
+    _handleTypeChange = e => {
+        this.setState({ message: e.target.value });
+    }
+
+    _handleEmitMessage = () => {
         console.log(`${this.state.username} emits new message`);
-        socket.emit('new message', {
-            room: this.props.room
+        socket.emit('create-message', {
+            name: this.state.username,
+            room: this.props.room,
+            message: this.state.message
         });
         if (this.state.inRoom) {
             this.setState({ messageCount: this.state.messageCount + 1 });
@@ -64,17 +72,17 @@ export default class Chat extends Component {
                     <Typography htmlFor="component-outlined">
                         {`${this.state.username} in room ${this.props.room}`}
                     </Typography>
-                    {/* <OutlinedInput
-                        id="component-outlined"
-                        value={name}
-                        onChange={this._handleChange}
-                    /> */}
-                    <Button onClick={this._handleNewMessage} variant="contained" color="primary">
+                    <Input onChange={this._handleTypeChange} placeholder="new message..."></Input>
+                    <Button onClick={this._handleEmitMessage} variant="contained" color="primary">
                         Emit
                     </Button>
                     <Button onClick={this._handleInRoom}>
                         {this.state.inRoom ? 'Leave Room' : 'Enter room'}
                     </Button>
+                    <Button onClick={this.props.deleteMessages}>
+                        Delete Messages
+                    </Button>
+                    {this.props.messages.map(message => <Typography>{`${message.from}(${message.createdAt}): ${message.text}`}</Typography>)}
                 </FormControl>
             </>
         );
