@@ -103,7 +103,9 @@ const io = require('socket.io')(server);
 const cors = require('cors');
 const bodyParser = require('body-parser');
 
-const { fetchMessages, addMessage, deleteMessages, saveMessages } = require('./utils/utils');
+const {
+    fetchMessages, addMessage, deleteMessages, saveMessages
+} = require('./utils/utils');
 
 app.use(bodyParser.json());
 
@@ -126,7 +128,7 @@ app.delete('/api/messages', (req, res) => {
 app.get('/api/messages', (req, res) => {
     const messages = fetchMessages();
     console.log(messages);
-    res.send({ messages })
+    res.send({ messages });
 });
 
 
@@ -150,7 +152,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('create-message', (data) => {
-        console.log("DATA", data);
+        console.log('DATA', data);
         addMessage(data);
         io.emit('new-message');
         // socket.broadcast

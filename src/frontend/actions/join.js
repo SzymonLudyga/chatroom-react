@@ -29,6 +29,20 @@ export function fetchRooms() {
     };
 }
 
+export function fetchCurrentRoom() {
+    return async (dispatch) => {
+        // try {
+        //     const res = await apiGetRooms();
+        //     if (res.status !== 200) {
+        //         throw Error('Error fetching rooms');
+        //     }
+        //     dispatch(roomsReceived(res.data.rooms));
+        // } catch (e) {
+        //     console.log(e);
+        // }
+    };
+}
+
 export function confirmRoom(room) {
     return async (dispatch) => {
         try {

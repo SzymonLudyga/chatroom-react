@@ -16,17 +16,17 @@ export default class Chat extends Component {
             username: 'USER',
             messageCount: 0,
             inRoom: false,
-            message: "",
+            message: '',
         };
     }
 
     componentDidMount() {
-        // this.props.fetchRoom();
+        console.log(this.props.room);
+        this.props.fetchCurrentRoom();
         socket.on('new-message', () => {
-            console.log("JESTEM TU")
             this.props.fetchMessages();
         });
-        this.setState({ username: "Szymon" });
+        this.setState({ username: 'Szymon' });
     }
 
     _handleInRoom = () => {
@@ -41,7 +41,7 @@ export default class Chat extends Component {
         }
     };
 
-    _handleTypeChange = e => {
+    _handleTypeChange = (e) => {
         this.setState({ message: e.target.value });
     }
 
@@ -72,7 +72,7 @@ export default class Chat extends Component {
                     <Typography htmlFor="component-outlined">
                         {`${this.state.username} in room ${this.props.room}`}
                     </Typography>
-                    <Input onChange={this._handleTypeChange} placeholder="new message..."></Input>
+                    <Input onChange={this._handleTypeChange} placeholder="new message..." />
                     <Button onClick={this._handleEmitMessage} variant="contained" color="primary">
                         Emit
                     </Button>
@@ -82,7 +82,12 @@ export default class Chat extends Component {
                     <Button onClick={this.props.deleteMessages}>
                         Delete Messages
                     </Button>
-                    {this.props.messages.map(message => <Typography>{`${message.from}(${message.createdAt}): ${message.text}`}</Typography>)}
+                    {this.props.messages.map(message => (
+                        <>
+                            <Divider />
+                            <Typography>{`${message.from} (${message.createdAt}): ${message.text}`}</Typography>
+                        </>
+                    ))}
                 </FormControl>
             </>
         );

@@ -2,18 +2,16 @@ const moment = require('moment');
 const fs = require('fs');
 const path = require('path');
 
-const generateMessage = (from, text) => {
-    return {
-        from,
-        text,
-        createdAt: moment().format('D MMM YYYY H:mm')
-    };
-};
+const generateMessage = (from, text) => ({
+    from,
+    text,
+    createdAt: moment().format('H:mm')
+});
 
 const fetchMessages = () => {
     try {
         const messages = fs.readFileSync(
-            path.join(__dirname, "../data", `messages.json`)
+            path.join(__dirname, '../data', 'messages.json')
         );
         return JSON.parse(messages);
     } catch (e) {
@@ -24,7 +22,7 @@ const fetchMessages = () => {
 
 const saveMessages = (data) => {
     fs.writeFileSync(
-        path.join(__dirname, "../data", `messages.json`),
+        path.join(__dirname, '../data', 'messages.json'),
         JSON.stringify(data)
     );
 };
@@ -34,7 +32,7 @@ const deleteMessages = () => {
 };
 
 const addMessage = (data) => {
-    let messages = fetchMessages();
+    const messages = fetchMessages();
     const message = generateMessage(data.name, data.message);
     messages.push(message);
     saveMessages(messages);
