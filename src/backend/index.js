@@ -107,6 +107,8 @@ const {
     fetchMessages, addMessage, deleteMessages, saveMessages
 } = require('./utils/utils');
 
+const { User } = require('./db/users');
+
 app.use(bodyParser.json());
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -129,6 +131,19 @@ app.get('/api/messages', (req, res) => {
     const messages = fetchMessages();
     console.log(messages);
     res.send({ messages });
+});
+
+app.post('/api/users', (req, res) => {
+    const user = new User({ name: req.body.name, password: req.body.password });
+
+    user
+        .save()
+        .then(() => {
+            res.send(user);
+        })
+        .catch((err) => {
+            res.status(400).send(err);
+        });
 });
 
 

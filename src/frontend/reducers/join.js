@@ -11,7 +11,7 @@ export default function join(state = initialState, action) {
             ...state,
             rooms: action.rooms
         };
-    } else if (action.type === ROOM_CHOSEN) {
+    } if (action.type === ROOM_CHOSEN) {
         return {
             ...state,
             room: action.room

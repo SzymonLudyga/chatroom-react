@@ -5,12 +5,26 @@ import {
 import { routes } from '../routing/routes';
 
 export default class Login extends Component {
-    _handleChange = (e) => {
-        console.log(e.target.value);
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            login: '',
+            password: '',
+        };
+    }
+
+    _handleLoginChange = (e) => {
+        this.setState({ login: e.target.value });
+    }
+
+    _handlePasswordChange = (e) => {
+        this.setState({ password: e.target.value });
     }
 
     _handleSubmit = () => {
-        this.props.history.push(routes.join);
+        this.props.login({ name: this.state.login, password: this.state.password });
+        // this.props.history.push(routes.join);
     }
 
     render() {
@@ -22,7 +36,7 @@ export default class Login extends Component {
                     label="Name"
                     className={classes.textField}
                     // value={values.name}
-                    onChange={this._handleChange}
+                    onChange={this._handleLoginChange}
                     margin="normal"
                     variant="outlined"
                 />
@@ -31,6 +45,7 @@ export default class Login extends Component {
                     label="Password"
                     className={classes.textField}
                     type="password"
+                    onChange={this._handlePasswordChange}
                     autoComplete="current-password"
                     margin="normal"
                     variant="outlined"

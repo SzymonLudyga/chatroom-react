@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
+import { login } from '../actions/login';
 
 import Login from '../components/Login';
 
@@ -26,7 +27,9 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return {};
+    return {
+        login: userInfo => dispatch(login(userInfo)),
+    };
 }
 
 export default connect(

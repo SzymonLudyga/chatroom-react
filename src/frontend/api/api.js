@@ -26,3 +26,7 @@ export async function apiGetMessages() {
 export async function apiDeleteMessages() {
     return await axios.delete(`${baseUrl}/api/messages`);
 }
+
+export async function apiCreateUser(userCredentials) {
+    return await axios.post(`${baseUrl}/api/users`, userCredentials);
+}

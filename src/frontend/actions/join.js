@@ -30,9 +30,9 @@ export function fetchRooms() {
 }
 
 export function leaveRoom() {
-    return dispatch => {
+    return (dispatch) => {
         dispatch(roomChosen(null));
-    }
+    };
 }
 
 export function confirmRoom(room) {

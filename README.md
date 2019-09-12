@@ -8,8 +8,8 @@
 
 Small tasks:
 - write socket class
-- name and password (not encrypted yet) saved to mongoDB
 - messages in mongoDB
 - write class for mongoDB features
 - add express router
+- add proptypes
 ```
