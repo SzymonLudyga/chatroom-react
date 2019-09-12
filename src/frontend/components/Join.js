@@ -4,6 +4,10 @@ import {
 } from '@material-ui/core';
 import { routes } from '../routing/routes';
 
+const io = require('socket.io-client');
+
+const socket = io('http://localhost:8080');
+
 export default class Join extends Component {
     constructor(props) {
         super(props);
@@ -24,6 +28,9 @@ export default class Join extends Component {
     }
 
     _handleSubmit = () => {
+        socket.emit('join-room', {
+            room: this.state.roomName
+        });
         this.props.confirmRoom(this.state.roomName);
         this.props.history.push(routes.chat);
     }

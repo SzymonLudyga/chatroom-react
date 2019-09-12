@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import { fetchMessages, deleteMessages } from '../actions/chat';
-import { fetchCurrentRoom } from '../actions/join';
+import { fetchCurrentRoom, leaveRoom } from '../actions/join';
 
 import Chat from '../components/Chat';
 
@@ -23,6 +23,7 @@ function mapDispatchToProps(dispatch) {
         fetchCurrentRoom: () => dispatch(fetchCurrentRoom()),
         fetchMessages: () => dispatch(fetchMessages()),
         deleteMessages: () => dispatch(deleteMessages()),
+        leaveRoom: () => dispatch(leaveRoom()),
     };
 }
 

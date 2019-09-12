@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import {
     FormControl, Button, Typography, InputLabel, Input, Divider, OutlinedInput
 } from '@material-ui/core';
+import { routes } from '../routing/routes';
 
 const io = require('socket.io-client');
 
@@ -21,8 +22,7 @@ export default class Chat extends Component {
     }
 
     componentDidMount() {
-        console.log(this.props.room);
-        this.props.fetchCurrentRoom();
+        this.props.fetchMessages();
         socket.on('new-message', () => {
             this.props.fetchMessages();
         });
@@ -40,6 +40,14 @@ export default class Chat extends Component {
             this.setState({ inRoom: true });
         }
     };
+
+    _leaveRoom = () => {
+        socket.emit('leave-room', {
+            room: 'test-room'
+        });
+        this.props.leaveRoom();
+        this.props.history.push(routes.join);
+    }
 
     _handleTypeChange = (e) => {
         this.setState({ message: e.target.value });
@@ -82,13 +90,16 @@ export default class Chat extends Component {
                     <Button onClick={this.props.deleteMessages}>
                         Delete Messages
                     </Button>
-                    {this.props.messages.map(message => (
-                        <>
-                            <Divider />
-                            <Typography>{`${message.from} (${message.createdAt}): ${message.text}`}</Typography>
-                        </>
-                    ))}
+                    <Button onClick={this._leaveRoom}>
+                        Leave Room
+                    </Button>
                 </FormControl>
+                {this.props.messages.map(message => (
+                    <>
+                        <Divider />
+                        <Typography key={message.id}>{`${message.from} (${message.createdAt}): ${message.text}`}</Typography>
+                    </>
+                ))}
             </>
         );
     }
