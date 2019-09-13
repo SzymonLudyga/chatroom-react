@@ -56,7 +56,7 @@ export default class Chat extends Component {
     _handleEmitMessage = () => {
         console.log(`${this.state.username} emits new message`);
         socket.emit('create-message', {
-            name: this.state.username,
+            user: this.state.username,
             room: this.props.room,
             message: this.state.message
         });

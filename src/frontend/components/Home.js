@@ -8,7 +8,7 @@ export default class Home extends Component {
 
 
     componentDidMount() {
-        fetch('/api/getUsername')
+        fetch('/api/username')
             .then(res => res.json())
             .then(user => this.setState({ username: user.username }));
     }
