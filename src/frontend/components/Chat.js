@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from "prop-types";
 
 import {
     FormControl, Button, Typography, InputLabel, Input, Divider, OutlinedInput
@@ -104,3 +105,12 @@ export default class Chat extends Component {
         );
     }
 }
+
+
+Chat.propTypes = {
+    classes: PropTypes.object.isRequired,
+    messages: PropTypes.array.isRequired,
+    deleteMessages: PropTypes.func.isRequired,
+    leaveRoom: PropTypes.func.isRequired,
+    fetchMessages: PropTypes.func.isRequired,
+};

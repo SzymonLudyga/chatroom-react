@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from "prop-types";
 import {
     FormControl, Button, TextField
 } from '@material-ui/core';
@@ -57,3 +58,8 @@ export default class Login extends Component {
         );
     }
 }
+
+Login.propTypes = {
+    classes: PropTypes.object.isRequired,
+    login: PropTypes.func.isRequired,
+};

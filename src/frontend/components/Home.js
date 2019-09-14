@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from "prop-types";
 import {
     FormControl, Button, Typography, InputLabel, Input, Divider, OutlinedInput
 } from '@material-ui/core';
@@ -40,3 +41,8 @@ export default class Home extends Component {
         );
     }
 }
+
+
+Home.propTypes = {
+    classes: PropTypes.object.isRequired,
+};

@@ -11,5 +11,4 @@ Small tasks:
 - messages in mongoDB
 - write class for mongoDB features
 - add express router
-- add proptypes
 ```

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from "prop-types";
 import {
     FormControl, Button, InputLabel, Select, MenuItem, Input, FormHelperText
 } from '@material-ui/core';
@@ -61,3 +62,12 @@ export default class Join extends Component {
         );
     }
 }
+
+
+Join.propTypes = {
+    rooms: PropTypes.array.isRequired,
+    room: PropTypes.string.isRequired,
+    classes: PropTypes.object.isRequired,
+    confirmRoom: PropTypes.func.isRequired,
+    fetchRooms: PropTypes.func.isRequired,
+};
