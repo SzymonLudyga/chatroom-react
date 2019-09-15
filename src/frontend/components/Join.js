@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 import {
     FormControl, Button, InputLabel, Select, MenuItem, Input, FormHelperText
 } from '@material-ui/core';
 import { routes } from '../routing/routes';
+import { baseUrl } from '../config/config';
 
-const io = require('socket.io-client');
+import WebSocket from '../websockets/WebSocket'
 
-const socket = io('http://localhost:8080');
+// const io = require('socket.io-client');
+
+// const socket = io('http://localhost:8080');
 
 export default class Join extends Component {
     constructor(props) {
@@ -15,6 +18,8 @@ export default class Join extends Component {
         this.state = {
             roomName: ''
         };
+
+        this._socket = new WebSocket(baseUrl);
     }
 
     componentDidMount() {
@@ -29,7 +34,7 @@ export default class Join extends Component {
     }
 
     _handleSubmit = () => {
-        socket.emit('join-room', {
+        this._socket.emit('join-room', {
             room: this.state.roomName
         });
         this.props.confirmRoom(this.state.roomName);
@@ -66,7 +71,7 @@ export default class Join extends Component {
 
 Join.propTypes = {
     rooms: PropTypes.array.isRequired,
-    room: PropTypes.string.isRequired,
+    room: PropTypes.string,
     classes: PropTypes.object.isRequired,
     confirmRoom: PropTypes.func.isRequired,
     fetchRooms: PropTypes.func.isRequired,

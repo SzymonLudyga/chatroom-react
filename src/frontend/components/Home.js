@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 import {
     FormControl, Button, Typography, InputLabel, Input, Divider, OutlinedInput
 } from '@material-ui/core';

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 import {
     FormControl, Button, TextField
 } from '@material-ui/core';
@@ -25,7 +25,7 @@ export default class Login extends Component {
 
     _handleSubmit = () => {
         this.props.login({ name: this.state.login, password: this.state.password });
-        // this.props.history.push(routes.join);
+        this.props.history.push(routes.join);
     }
 
     render() {

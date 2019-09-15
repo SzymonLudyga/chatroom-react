@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 
 import {
     FormControl, Button, Typography, InputLabel, Input, Divider, OutlinedInput
 } from '@material-ui/core';
 import { routes } from '../routing/routes';
+import { baseUrl } from '../config/config';
+import WebSocket from '../websockets/WebSocket'
 
-const io = require('socket.io-client');
+// const io = require('socket.io-client');
 
-const socket = io('http://localhost:8080');
+// const socket = io('http://localhost:8080');
 
 export default class Chat extends Component {
     constructor(props) {
@@ -20,11 +22,13 @@ export default class Chat extends Component {
             inRoom: false,
             message: '',
         };
+
+        this._socket = new WebSocket(baseUrl);
     }
 
     componentDidMount() {
         this.props.fetchMessages();
-        socket.on('new-message', () => {
+        this._socket.listen('new-message', () => {
             this.props.fetchMessages();
         });
         this.setState({ username: 'Szymon' });
@@ -32,18 +36,18 @@ export default class Chat extends Component {
 
     _handleInRoom = () => {
         if (this.state.inRoom) {
-            socket.emit('leave room', {
+            this._socket.emit('leave room', {
                 room: 'test-room'
             });
             this.setState({ inRoom: false });
         } else {
-            socket.emit('room', { room: 'test-room' });
+            this._socket.emit('room', { room: 'test-room' });
             this.setState({ inRoom: true });
         }
     };
 
     _leaveRoom = () => {
-        socket.emit('leave-room', {
+        this._socket.emit('leave-room', {
             room: 'test-room'
         });
         this.props.leaveRoom();
@@ -56,7 +60,7 @@ export default class Chat extends Component {
 
     _handleEmitMessage = () => {
         console.log(`${this.state.username} emits new message`);
-        socket.emit('create-message', {
+        this._socket.emit('create-message', {
             user: this.state.username,
             room: this.props.room,
             message: this.state.message

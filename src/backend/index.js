@@ -95,6 +95,7 @@
 
 const express = require('express');
 const moment = require('moment');
+
 const app = express();
 const port = 8080;
 const os = require('os');
@@ -172,20 +173,22 @@ io.on('connection', (socket) => {
     socket.on('create-message', (data) => {
         console.log('DATA', data);
         const timestamp = moment().valueOf();
-        User.findOne({ name: data.user }).then(res => {
-            const message = new Message({ _user: res._id, room: data.room, timestamp, message: data.message });
+        User.findOne({ name: data.user }).then((res) => {
+            const message = new Message({
+                _user: res._id, room: data.room, timestamp, message: data.message
+            });
             console.log(message);
             message.save().then(
-                    res => {
-                      io.emit('new-message');
-                    },
-                    err => {
-                      console.log(err)
-                    }
-                  );
-        }, err => {
+                (res) => {
+                    io.emit('new-message');
+                },
+                (err) => {
+                    console.log(err);
+                }
+            );
+        }, (err) => {
             console.log(err);
-        })
+        });
         // const message = new Message({ _user: usetobjectid, room: data.room, timestamp, message: data.message });
         // message.save().then(
         //     res => {
