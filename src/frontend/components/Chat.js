@@ -6,7 +6,7 @@ import {
 } from '@material-ui/core';
 import { routes } from '../routing/routes';
 import { baseUrl } from '../config/config';
-import WebSocket from '../websockets/WebSocket'
+import WebSocket from '../websockets/WebSocket';
 
 // const io = require('socket.io-client');
 
@@ -17,7 +17,7 @@ export default class Chat extends Component {
         super(props);
 
         this.state = {
-            username: 'USER',
+            user: 'USER',
             messageCount: 0,
             inRoom: false,
             message: '',
@@ -31,7 +31,7 @@ export default class Chat extends Component {
         this._socket.listen('new-message', () => {
             this.props.fetchMessages();
         });
-        this.setState({ username: 'Szymon' });
+        this.setState({ user: 'Szymon' });
     }
 
     _handleInRoom = () => {
@@ -59,9 +59,9 @@ export default class Chat extends Component {
     }
 
     _handleEmitMessage = () => {
-        console.log(`${this.state.username} emits new message`);
+        console.log(`${this.state.user} emits new message`);
         this._socket.emit('create-message', {
-            user: this.state.username,
+            user: this.state.user,
             room: this.props.room,
             message: this.state.message
         });
@@ -83,7 +83,7 @@ export default class Chat extends Component {
                         {`${this.state.messageCount} messages have been emitted`}
                     </Typography>
                     <Typography htmlFor="component-outlined">
-                        {`${this.state.username} in room ${this.props.room}`}
+                        {`${this.state.user} in room ${this.props.room}`}
                     </Typography>
                     <Input onChange={this._handleTypeChange} placeholder="new message..." />
                     <Button onClick={this._handleEmitMessage} variant="contained" color="primary">

@@ -6,7 +6,7 @@ import {
 import { routes } from '../routing/routes';
 import { baseUrl } from '../config/config';
 
-import WebSocket from '../websockets/WebSocket'
+import WebSocket from '../websockets/WebSocket';
 
 // const io = require('socket.io-client');
 

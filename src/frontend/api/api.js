@@ -12,11 +12,11 @@ export function auth(token) {
 }
 
 export async function apiGetRooms() {
-    return await axios.get(`${baseUrl}/api/rooms-list`);
+    return await axios.get(`${baseUrl}/api/rooms`);
 }
 
 export async function apiPostRoom(room) {
-    return await axios.post(`${baseUrl}/api/room`, { room });
+    return await axios.post(`${baseUrl}/api/rooms`, { room });
 }
 
 export async function apiGetMessages() {

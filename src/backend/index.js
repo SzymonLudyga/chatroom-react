@@ -98,7 +98,6 @@ const moment = require('moment');
 
 const app = express();
 const port = 8080;
-const os = require('os');
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 const cors = require('cors');
@@ -109,46 +108,21 @@ const {
 } = require('./utils/utils');
 
 const { mongoose } = require('./db/mongoose');
-const { User } = require('./db/users');
-const { Message } = require('./db/messages');
+const { User } = require('./db/User');
+const { Message } = require('./db/Message');
+
+const usersRouter = require('./router/user');
+const roomsRouter = require('./router/room');
+const messagesRouter = require('./router/message');
 
 app.use(bodyParser.json());
-
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(cors());
 
-app.get('/api/rooms-list', (req, res) => res.send({ rooms: [{ id: 1, name: 'oslo' }, { id: 2, name: 'berlin' }, { id: 3, name: 'copenhagen' }] }));
-
-app.post('/api/room', (req, res) => res.send(req.body));
-
-app.get('/api/username',
-    (req, res) => res.send({ username: os.userInfo().username }));
-
-app.delete('/api/messages', (req, res) => {
-    deleteMessages();
-    res.send({ operation: 'success' });
-});
-
-app.get('/api/messages', (req, res) => {
-    const messages = fetchMessages();
-    console.log(messages);
-    res.send({ messages });
-});
-
-app.post('/api/users', (req, res) => {
-    const user = new User({ name: req.body.name, password: req.body.password });
-
-    user
-        .save()
-        .then(() => {
-            res.send(user);
-        })
-        .catch((err) => {
-            res.status(400).send(err);
-        });
-});
-
+app.use('/api/rooms', roomsRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/messages', messagesRouter);
 
 io.on('connection', (socket) => {
     console.log('a user connected');
@@ -206,5 +180,5 @@ io.on('connection', (socket) => {
 });
 
 server.listen(port, () => {
-    console.log(`SERVER ON PORT ${port}`);
+    console.log(`## SERVER ON PORT ${port} ##`);
 });

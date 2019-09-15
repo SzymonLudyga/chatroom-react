@@ -5,13 +5,13 @@ import {
 } from '@material-ui/core';
 
 export default class Home extends Component {
-    state = { username: null };
+    state = { user: null };
 
 
     componentDidMount() {
-        fetch('/api/username')
+        fetch('/api/users')
             .then(res => res.json())
-            .then(user => this.setState({ username: user.username }));
+            .then(user => this.setState({ user: user.user }));
     }
 
     handleChange(e) {
