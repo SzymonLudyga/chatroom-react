@@ -163,19 +163,7 @@ io.on('connection', (socket) => {
         }, (err) => {
             console.log(err);
         });
-        // const message = new Message({ _user: usetobjectid, room: data.room, timestamp, message: data.message });
-        // message.save().then(
-        //     res => {
-        //       io.emit('new-message');
-        //     },
-        //     err => {
-        //       res.status(400).send(err);
-        //     }
-        //   );
         addMessage(data);
-        // socket.broadcast
-        //     .to(data.room)
-        //     .emit('receive message', data);
     });
 });
 

@@ -34,7 +34,7 @@ export default class Join extends Component {
     }
 
     _handleSubmit = () => {
-        this._socket.emit('join-room', {
+        this._socket.emitMessage('join-room', {
             room: this.state.roomName
         });
         this.props.confirmRoom(this.state.roomName);

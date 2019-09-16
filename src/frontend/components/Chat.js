@@ -28,7 +28,7 @@ export default class Chat extends Component {
 
     componentDidMount() {
         this.props.fetchMessages();
-        this._socket.listen('new-message', () => {
+        this._socket.onMessage('new-message', () => {
             this.props.fetchMessages();
         });
         this.setState({ user: 'Szymon' });
@@ -36,19 +36,19 @@ export default class Chat extends Component {
 
     _handleInRoom = () => {
         if (this.state.inRoom) {
-            this._socket.emit('leave room', {
+            this._socket.emitMessage('leave room', {
                 room: 'test-room'
             });
             this.setState({ inRoom: false });
         } else {
-            this._socket.emit('room', { room: 'test-room' });
+            this._socket.emitMessage('room', { room: 'test-room' });
             this.setState({ inRoom: true });
         }
     };
 
     _leaveRoom = () => {
-        this._socket.emit('leave-room', {
-            room: 'test-room'
+        this._socket.emitMessage('leave-room', {
+            room: this.props.room
         });
         this.props.leaveRoom();
         this.props.history.push(routes.join);
@@ -60,7 +60,7 @@ export default class Chat extends Component {
 
     _handleEmitMessage = () => {
         console.log(`${this.state.user} emits new message`);
-        this._socket.emit('create-message', {
+        this._socket.emitMessage('create-message', {
             user: this.state.user,
             room: this.props.room,
             message: this.state.message

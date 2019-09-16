@@ -5,11 +5,11 @@ export default class WebSocket {
         this.socket = io(url);
     }
 
-    listen = (query, data = null) => {
+    onMessage = (query, data = null) => {
         this.socket.on(query, data);
     }
 
-    emit = (query, data = null) => {
+    emitMessage = (query, data = null) => {
         this.socket.emit(query, data);
     }
 }
