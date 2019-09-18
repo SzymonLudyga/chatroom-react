@@ -19,6 +19,17 @@ router.post('', (req, res) => {
 });
 
 router.get('',
-    (req, res) => res.send({ user: os.userInfo().username }));
+    (req, res) => {
+        User.find().then(user => res.send({ user })).catch(err => res.status(404).send("User not found"));
+    // res.send({ user: os.userInfo().username })
+    });
+
+router.post('/register', (req,res) => {
+    //
+});
+
+router.post('/login', (req,res) => {
+    //
+});
 
 module.exports = router;

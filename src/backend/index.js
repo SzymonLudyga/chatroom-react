@@ -127,7 +127,7 @@ app.use('/api/messages', messagesRouter);
 io.on('connection', (socket) => {
     console.log('a user connected');
 
-    socket.on('disconnect', (reason) => {
+    socket.on('disconnect', () => {
         console.log('user disconnected');
     });
 
