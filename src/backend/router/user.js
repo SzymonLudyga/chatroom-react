@@ -1,30 +1,14 @@
 const express = require('express');
-
-
 const _ = require('lodash');
 
 const router = express.Router();
-const os = require('os');
+
 const { User } = require('../db/User');
+const { authenticate } = require('../middleware/auth');
 
-router.post('', (req, res) => {
-    const user = new User({ name: req.body.name, password: req.body.password });
-
-    user
-        .save()
-        .then(() => {
-            res.send(user);
-        })
-        .catch((err) => {
-            res.status(400).send(err);
-        });
+router.get('', authenticate, (req, res) => {
+    res.send(req.user);
 });
-
-router.get('',
-    (req, res) => {
-        User.find().then(user => res.send({ user })).catch(err => res.status(404).send('User not found'));
-        // res.send({ user: os.userInfo().username })
-    });
 
 router.post('/register', (req, res) => {
     const body = _.pick(req.body, ['name', 'password']);
@@ -32,11 +16,13 @@ router.post('/register', (req, res) => {
 
     user
         .save()
-        .then(() => user.generateAuthToken())
-        .then((token) => {
+        .then(() => {
+            return user.generateAuthToken();
+        })
+        .then(token => {
             res.header('x-auth', token).send(user);
         })
-        .catch((err) => {
+        .catch(err => {
             res.status(400).send(err);
         });
 });
@@ -44,13 +30,26 @@ router.post('/register', (req, res) => {
 router.post('/login', (req, res) => {
     const body = _.pick(req.body, ['name', 'password']);
 
-    User.findByCredentials(body.email, body.password)
-        .then(user => user.generateAuthToken().then((token) => {
-            res.header('x-auth', token).send(user);
-        }))
-        .catch((err) => {
+    User.findByCredentials(body.name, body.password)
+        .then(user => {
+            return user.generateAuthToken().then(token => {
+                res.header('x-auth', token).send(user);
+            });
+        })
+        .catch(err => {
             res.status(400).send();
         });
+});
+
+router.delete('/token', authenticate, (req, res) => {
+    req.user.removeToken(req.token).then(
+        () => {
+            res.status(200).send();
+        },
+        () => {
+            res.status(400).send();
+        }
+    );
 });
 
 module.exports = router;

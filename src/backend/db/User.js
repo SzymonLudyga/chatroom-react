@@ -59,6 +59,32 @@ UserSchema.statics.findByCredentials = function (name, password) {
     });
 };
 
+UserSchema.methods.removeToken = function (token) {
+    const user = this;
+    return user.update({
+        $pull: {
+            tokens: {
+                token
+            }
+        }
+    });
+};
+
+UserSchema.statics.findByToken = function (token) {
+    const User = this;
+    let decoded;
+    try {
+        decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+        return Promise.reject();
+    }
+
+    return User.findOne({
+        _id: decoded._id,
+        'tokens.token': token,
+        'tokens.access': 'auth'
+    });
+};
 
 UserSchema.pre('save', function (next) {
     const user = this;
