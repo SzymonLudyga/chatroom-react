@@ -11,7 +11,7 @@
 
 // // const WebSocket = require('ws');
 
-// // const wss = new WebSocket.Server({ port: 8080 });
+// // const wss = new WebSocket.Server({ port: 3000 });
 // // console.log(wss);
 
 // // const users = new Users();
@@ -89,7 +89,7 @@
 // });
 
 
-// const port = process.env.PORT || 8080;
+// const port = process.env.PORT || 3000;
 
 // app.listen(port, () => console.log(`Listening on port ${port}!`));
 
@@ -97,12 +97,13 @@ const express = require('express');
 const moment = require('moment');
 
 const app = express();
-const port = 8080;
+const port = 3000;
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 const cors = require('cors');
 const bodyParser = require('body-parser');
 
+const morgan = require('morgan');
 const {
     fetchMessages, addMessage, deleteMessages, saveMessages
 } = require('./utils/utils');
@@ -114,6 +115,8 @@ const { Message } = require('./db/Message');
 const usersRouter = require('./router/user');
 const roomsRouter = require('./router/room');
 const messagesRouter = require('./router/message');
+
+app.use(morgan('dev'));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

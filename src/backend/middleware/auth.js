@@ -1,21 +1,21 @@
 const { User } = require('../db/User');
 
 const authenticate = (req, res, next) => {
-  const token = req.header('x-auth');
+    const token = req.header('x-auth');
 
-  User.findByToken(token)
-    .then(user => {
-      if (!user) {
-        return Promise.reject();
-      }
+    User.findByToken(token)
+        .then((user) => {
+            if (!user) {
+                return Promise.reject();
+            }
 
-      req.user = user;
-      req.token = token;
-      next();
-    })
-    .catch(e => {
-      res.status(401).send();
-    });
+            req.user = user;
+            req.token = token;
+            next();
+        })
+        .catch((e) => {
+            res.status(401).send();
+        });
 };
 
 module.exports = { authenticate };

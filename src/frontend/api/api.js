@@ -27,6 +27,10 @@ export async function apiDeleteMessages() {
     return await axios.delete(`${baseUrl}/api/messages`);
 }
 
-export async function apiCreateUser(userCredentials) {
-    return await axios.post(`${baseUrl}/api/users`, userCredentials);
+export async function apiRegister(userCredentials) {
+    return await axios.post(`${baseUrl}/api/users/register`, userCredentials);
+}
+
+export async function apiLogin(userCredentials) {
+    return await axios.post(`${baseUrl}/api/users/login`, userCredentials);
 }

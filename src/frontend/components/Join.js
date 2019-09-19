@@ -8,10 +8,6 @@ import { baseUrl } from '../config/config';
 
 import WebSocket from '../websockets/WebSocket';
 
-// const io = require('socket.io-client');
-
-// const socket = io('http://localhost:8080');
-
 export default class Join extends Component {
     constructor(props) {
         super(props);

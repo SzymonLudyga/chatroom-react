@@ -13,7 +13,7 @@ router.delete('', (req, res) => {
 
 router.get('', (req, res) => {
     const messages = fetchMessages();
-    console.log(messages);
+    console.log('MESSAGES', messages);
     res.send({ messages });
 });
 

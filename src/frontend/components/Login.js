@@ -10,13 +10,14 @@ export default class Login extends Component {
         super(props);
 
         this.state = {
-            login: '',
+            option: 'login',
+            name: '',
             password: '',
         };
     }
 
-    _handleLoginChange = (e) => {
-        this.setState({ login: e.target.value });
+    _handleNameChange = (e) => {
+        this.setState({ name: e.target.value });
     }
 
     _handlePasswordChange = (e) => {
@@ -24,37 +25,50 @@ export default class Login extends Component {
     }
 
     _handleSubmit = () => {
-        this.props.login({ name: this.state.login, password: this.state.password });
+        const { name, password, option } = this.state;
+        option === 'login' ? this.props.login({ name, password }) : this.props.register({ name, password });
         this.props.history.push(routes.join);
+    }
+
+    _change = (option) => {
+        this.setState({ option });
     }
 
     render() {
         const { classes } = this.props;
+        const { option } = this.state;
         return (
-            <FormControl className={classes.container}>
-                <TextField
-                    id="outlined-name"
-                    label="Name"
-                    className={classes.textField}
-                    // value={values.name}
-                    onChange={this._handleLoginChange}
-                    margin="normal"
-                    variant="outlined"
-                />
-                <TextField
-                    id="outlined-password-input"
-                    label="Password"
-                    className={classes.textField}
-                    type="password"
-                    onChange={this._handlePasswordChange}
-                    autoComplete="current-password"
-                    margin="normal"
-                    variant="outlined"
-                />
-                <Button onClick={this._handleSubmit} className={classes.big} variant="contained" color="primary">
+            <>
+                <Button onClick={() => this._change('login')} className={classes.option} variant="outlined" color="primary">
                     Login
                 </Button>
-            </FormControl>
+                <Button onClick={() => this._change('register')} className={classes.option} variant="outlined" color="secondary">
+                    Register
+                </Button>
+                <FormControl className={classes.container}>
+                    <TextField
+                        id="outlined-name"
+                        label="Name"
+                        className={classes.textField}
+                        onChange={this._handleNameChange}
+                        margin="normal"
+                        variant="outlined"
+                    />
+                    <TextField
+                        id="outlined-password-input"
+                        label="Password"
+                        className={classes.textField}
+                        type="password"
+                        onChange={this._handlePasswordChange}
+                        autoComplete="current-password"
+                        margin="normal"
+                        variant="outlined"
+                    />
+                    <Button onClick={this._handleSubmit} className={classes.big} variant="contained" color={option === 'login' ? 'primary' : 'secondary'}>
+                        {option === 'login' ? 'Login' : 'Register'}
+                    </Button>
+                </FormControl>
+            </>
         );
     }
 }
@@ -63,4 +77,5 @@ Login.propTypes = {
     history: PropTypes.object.isRequired,
     classes: PropTypes.object.isRequired,
     login: PropTypes.func.isRequired,
+    register: PropTypes.func.isRequired,
 };

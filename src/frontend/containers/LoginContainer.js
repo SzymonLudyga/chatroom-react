@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
-import { login } from '../actions/login';
+import { login, register } from '../actions/login';
 
 import Login from '../components/Login';
 
@@ -14,6 +14,10 @@ const styles = theme => ({
         marginTop: '20px',
         fontSize: '30px',
         width: '40%',
+    },
+    option: {
+        margin: 0,
+        width: '50%',
     },
     textField: {
         width: '50%',
@@ -29,6 +33,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return {
         login: userInfo => dispatch(login(userInfo)),
+        register: userInfo => dispatch(register(userInfo)),
     };
 }
 

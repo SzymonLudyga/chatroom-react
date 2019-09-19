@@ -32,7 +32,7 @@ module.exports = {
     extensions: ['*', '.js', '.jsx']
   },
   devServer: {
-    port: 3000,
+    port: 3030,
     open: true
   },
   plugins: [
