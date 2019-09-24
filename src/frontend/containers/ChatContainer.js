@@ -15,6 +15,7 @@ function mapStateToProps(state) {
     return {
         room: state.join.room,
         messages: state.chat.messages,
+        username: state.user.username,
     };
 }
 

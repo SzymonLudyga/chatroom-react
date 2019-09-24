@@ -102,13 +102,11 @@ const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 const cors = require('cors');
 const bodyParser = require('body-parser');
-
 const morgan = require('morgan');
-const {
-    fetchMessages, addMessage, deleteMessages, saveMessages
-} = require('./utils/utils');
 
-const { mongoose } = require('./db/mongoose');
+const { addMessage } = require('./utils/messageUtils');
+
+const { mongoose } = require('./db/mongooseConfig');
 const { User } = require('./db/User');
 const { Message } = require('./db/Message');
 
@@ -142,31 +140,18 @@ io.on('connection', (socket) => {
 
     socket.on('leave-room', (data) => {
         console.log('leaving room');
-        deleteMessages();
         console.log(data);
         socket.leave(data.room);
     });
 
     socket.on('create-message', (data) => {
         console.log('DATA', data);
-        const timestamp = moment().valueOf();
-        User.findOne({ name: data.user }).then((res) => {
-            const message = new Message({
-                _user: res._id, room: data.room, timestamp, message: data.message
-            });
-            console.log(message);
-            message.save().then(
-                (res) => {
-                    io.emit('new-message');
-                },
-                (err) => {
-                    console.log(err);
-                }
-            );
-        }, (err) => {
+        try {
+            addMessage(data);
+            io.emit('new-message');
+        } catch (err) {
             console.log(err);
-        });
-        addMessage(data);
+        }
     });
 });
 

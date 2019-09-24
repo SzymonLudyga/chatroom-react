@@ -1,8 +1,10 @@
 const mongoose = require('mongoose');
 
 const MessageSchema = new mongoose.Schema({
-    _user: {
-        type: mongoose.Schema.Types.ObjectId,
+    user: {
+        type: String,
+        required: true,
+        minlength: 1,
         required: true,
     },
     room: {

@@ -15,7 +15,7 @@ export function fetchMessages() {
             if (res.status !== 200) {
                 throw Error('Error fetching messages');
             }
-            dispatch(_messagesReceived(res.data.messages));
+            dispatch(_messagesReceived(res.data.msg));
         } catch (e) {
             console.log(e);
         }

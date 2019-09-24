@@ -13,7 +13,6 @@ export default class Chat extends Component {
         super(props);
 
         this.state = {
-            user: 'USER',
             messageCount: 0,
             inRoom: false,
             message: '',
@@ -27,7 +26,6 @@ export default class Chat extends Component {
         this._socket.onMessage('new-message', () => {
             this.props.fetchMessages();
         });
-        this.setState({ user: 'Szymon' });
     }
 
     _handleInRoom = () => {
@@ -55,9 +53,9 @@ export default class Chat extends Component {
     }
 
     _handleEmitMessage = () => {
-        console.log(`${this.state.user} emits new message`);
+        console.log(`${this.props.username} emits new message`);
         this._socket.emitMessage('create-message', {
-            user: this.state.user,
+            user: this.props.username,
             room: this.props.room,
             message: this.state.message
         });
@@ -79,7 +77,7 @@ export default class Chat extends Component {
                         {`${this.state.messageCount} messages have been emitted`}
                     </Typography>
                     <Typography htmlFor="component-outlined">
-                        {`${this.state.user} in room ${this.props.room}`}
+                        {`${this.props.username} in room ${this.props.room}`}
                     </Typography>
                     <Input onChange={this._handleTypeChange} placeholder="new message..." />
                     <Button onClick={this._handleEmitMessage} variant="contained" color="primary">
@@ -95,10 +93,10 @@ export default class Chat extends Component {
                         Leave Room
                     </Button>
                 </FormControl>
-                {this.props.messages.map(message => (
+                {this.props.messages.map(msg => (
                     <>
                         <Divider />
-                        <Typography key={message.id}>{`${message.from} (${message.createdAt}): ${message.text}`}</Typography>
+                        <Typography key={msg._id}>{`${msg.user} (${msg.timestamp}): ${msg.message}`}</Typography>
                     </>
                 ))}
             </>

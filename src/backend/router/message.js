@@ -2,19 +2,24 @@ const express = require('express');
 
 const router = express.Router();
 
-const {
-    fetchMessages, addMessage, deleteMessages, saveMessages
-} = require('../utils/utils');
+const { Message } = require('../db/Message');
+const { authenticate } = require('../middleware/auth');
 
 router.delete('', (req, res) => {
-    deleteMessages();
-    res.send({ operation: 'success' });
+    Message.deleteMany().then(doc => {
+        res.status(200).send('OK');
+    }, err => {
+        res.send(err);
+    });
 });
 
 router.get('', (req, res) => {
-    const messages = fetchMessages();
-    console.log('MESSAGES', messages);
-    res.send({ messages });
+    Message.find().then(msg => {
+        console.log('MESSAGES', msg);
+        res.status(200).send({ msg })
+    }, err => {
+        res.send(err);
+    });
 });
 
 module.exports = router;
