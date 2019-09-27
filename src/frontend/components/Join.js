@@ -38,12 +38,12 @@ export default class Join extends Component {
     }
 
     render() {
-        const { classes, rooms, room } = this.props;
+        const { classes, rooms } = this.props;
         return (
             <div className={classes.container}>
                 <FormControl>
                     <InputLabel shrink htmlFor="room-label-placeholder">
-                        {`Room ${room}`}
+                        Choose room
                     </InputLabel>
                     <Select
                         className={classes.textField}

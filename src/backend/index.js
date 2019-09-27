@@ -105,6 +105,7 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 
 const { addMessage } = require('./utils/messageUtils');
+const { getUsers } = require('./utils/userUtils');
 
 const { mongoose } = require('./db/mongooseConfig');
 const { User } = require('./db/User');
@@ -136,6 +137,22 @@ io.on('connection', (socket) => {
         console.log('room join');
         console.log(data);
         socket.join(data.room);
+
+        io.to(data.room).emit(
+            'update-user-list',
+            users.getUsers(data.room)
+        );
+
+        // socket.emit - emits event to single connection
+        socket.emit('new-message', { user: 'Admin', message: 'Welcome to the app' });
+
+        // socket.broadcast.emit - emits event to every connection but the socket itself
+        socket.broadcast
+            .to(data.room)
+            .emit(
+                'new-message',
+                { user: 'Admin', message: `${data.user} has joined` }
+            );
     });
 
     socket.on('leave-room', (data) => {
@@ -148,7 +165,7 @@ io.on('connection', (socket) => {
         console.log('DATA', data);
         try {
             addMessage(data);
-            io.emit('new-message');
+            io.to(data.room).emit('new-message', { user: data.user, message: data.message });
         } catch (err) {
             console.log(err);
         }

@@ -1,9 +1,5 @@
 const moment = require('moment');
-const fs = require('fs');
-const path = require('path');
 
-
-const { User } = require('../db/User');
 const { Message } = require('../db/Message');
 
 const addMessage = (data) => {
