@@ -26,6 +26,9 @@ export default class Chat extends Component {
         this._socket.onMessage('new-message', () => {
             this.props.fetchMessages();
         });
+        this._socket.onMessage('update-user-list', users => {
+            this.props.updateUserList(users)
+        });
     }
 
     _handleInRoom = () => {
@@ -93,6 +96,12 @@ export default class Chat extends Component {
                         Leave Room
                     </Button>
                 </FormControl>
+                {this.props.users.map(user => (
+                    <>
+                        <Divider />
+                        <Typography variant='h3' key={user._id}>{`${user.name}`}</Typography>
+                    </>
+                ))}
                 {this.props.messages.map(msg => (
                     <>
                         <Divider />

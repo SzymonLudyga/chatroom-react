@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import { fetchMessages, deleteMessages } from '../actions/chat';
 import { fetchCurrentRoom, leaveRoom } from '../actions/join';
+import { updateUserList } from '../actions/user';
 
 import Chat from '../components/Chat';
 
@@ -16,6 +17,7 @@ function mapStateToProps(state) {
         room: state.join.room,
         messages: state.chat.messages,
         username: state.user.username,
+        users: state.user.userList
     };
 }
 
@@ -25,6 +27,7 @@ function mapDispatchToProps(dispatch) {
         fetchMessages: () => dispatch(fetchMessages()),
         deleteMessages: () => dispatch(deleteMessages()),
         leaveRoom: () => dispatch(leaveRoom()),
+        updateUserList: (users) => dispatch(updateUserList(users)),
     };
 }
 

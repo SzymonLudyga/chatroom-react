@@ -16,6 +16,10 @@ const UserSchema = new mongoose.Schema({
         require: true,
         minlength: 6
     },
+    room: {
+        type: String,
+        default: null
+    },
     tokens: [
         {
             access: {

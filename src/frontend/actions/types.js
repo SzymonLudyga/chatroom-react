@@ -4,3 +4,4 @@ export const ROOM_CHOSEN = 'ROOM_CHOSEN';
 export const MESSAGES_RECEIVED = 'MESSAGES_RECEIVED';
 
 export const USER_LOGIN = 'USER_LOGIN';
+export const USER_LIST_RECEIVED = 'USER_LIST_RECEIVED';
