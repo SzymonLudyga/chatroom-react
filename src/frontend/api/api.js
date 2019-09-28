@@ -19,8 +19,8 @@ export async function apiPostRoom(room) {
     return await axios.post(`${baseUrl}/api/rooms`, { room });
 }
 
-export async function apiGetMessages() {
-    return await axios.get(`${baseUrl}/api/messages`);
+export async function apiGetMessages(room) {
+    return await axios.get(`${baseUrl}/api/messages/${room}`);
 }
 
 export async function apiDeleteMessages() {

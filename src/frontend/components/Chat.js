@@ -14,7 +14,6 @@ export default class Chat extends Component {
 
         this.state = {
             messageCount: 0,
-            inRoom: false,
             message: '',
         };
 
@@ -22,30 +21,18 @@ export default class Chat extends Component {
     }
 
     componentDidMount() {
-        this.props.fetchMessages();
+        this.props.fetchMessages(this.props.room);
         this._socket.onMessage('new-message', () => {
-            this.props.fetchMessages();
+            this.props.fetchMessages(this.props.room);
         });
         this._socket.onMessage('update-user-list', users => {
             this.props.updateUserList(users)
         });
     }
 
-    _handleInRoom = () => {
-        if (this.state.inRoom) {
-            this._socket.emitMessage('leave room', {
-                room: 'test-room'
-            });
-            this.setState({ inRoom: false });
-        } else {
-            this._socket.emitMessage('room', { room: 'test-room' });
-            this.setState({ inRoom: true });
-        }
-    };
-
     _leaveRoom = () => {
         this._socket.emitMessage('leave-room', {
-            room: this.props.room
+            user: this.props.username, room: this.props.room
         });
         this.props.leaveRoom();
         this.props.history.push(routes.join);
@@ -55,16 +42,14 @@ export default class Chat extends Component {
         this.setState({ message: e.target.value });
     }
 
-    _handleEmitMessage = () => {
+    _sendMessage = () => {
         console.log(`${this.props.username} emits new message`);
         this._socket.emitMessage('create-message', {
             user: this.props.username,
             room: this.props.room,
             message: this.state.message
         });
-        if (this.state.inRoom) {
-            this.setState({ messageCount: this.state.messageCount + 1 });
-        }
+        this.setState({ messageCount: this.state.messageCount + 1, message: '' });
     };
 
     render() {
@@ -73,21 +58,14 @@ export default class Chat extends Component {
             <>
                 <FormControl>
                     <Typography className={classes.big}>
-                        {this.state.inRoom && 'You Have Entered The Room'}
-                        {!this.state.inRoom && 'Outside Room'}
+                        {`${this.props.username} in room ${this.props.room}`}
                     </Typography>
                     <Typography>
                         {`${this.state.messageCount} messages have been emitted`}
                     </Typography>
-                    <Typography htmlFor="component-outlined">
-                        {`${this.props.username} in room ${this.props.room}`}
-                    </Typography>
                     <Input onChange={this._handleTypeChange} placeholder="new message..." />
-                    <Button onClick={this._handleEmitMessage} variant="contained" color="primary">
-                        Emit
-                    </Button>
-                    <Button onClick={this._handleInRoom}>
-                        {this.state.inRoom ? 'Leave Room' : 'Enter room'}
+                    <Button onClick={this._sendMessage} variant="contained" color="primary">
+                        Send
                     </Button>
                     <Button onClick={this.props.deleteMessages}>
                         Delete Messages

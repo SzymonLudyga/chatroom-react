@@ -24,7 +24,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return {
         fetchCurrentRoom: () => dispatch(fetchCurrentRoom()),
-        fetchMessages: () => dispatch(fetchMessages()),
+        fetchMessages: (room) => dispatch(fetchMessages(room)),
         deleteMessages: () => dispatch(deleteMessages()),
         leaveRoom: () => dispatch(leaveRoom()),
         updateUserList: (users) => dispatch(updateUserList(users)),

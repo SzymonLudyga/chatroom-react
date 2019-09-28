@@ -26,12 +26,11 @@ export default class Join extends Component {
         this.setState({
             roomName: e.target.value
         });
-        // console.log(this.state.roomName);
     }
 
     _handleSubmit = () => {
         this._socket.emitMessage('join-room', {
-            room: this.state.roomName
+            user: this.props.username, room: this.props.roomName
         });
         this.props.confirmRoom(this.state.roomName);
         this.props.history.push(routes.chat);

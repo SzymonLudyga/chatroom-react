@@ -8,10 +8,10 @@ function _messagesReceived(messages) {
     };
 }
 
-export function fetchMessages() {
+export function fetchMessages(room) {
     return async (dispatch) => {
         try {
-            const res = await apiGetMessages();
+            const res = await apiGetMessages(room);
             if (res.status !== 200) {
                 throw Error('Error fetching messages');
             }

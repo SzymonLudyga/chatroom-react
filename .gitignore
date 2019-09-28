@@ -5,5 +5,3 @@ dist
 yarn.lock
 package-lock.json
 .env
-
-src/backend/data/*.json

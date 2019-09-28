@@ -7,8 +7,5 @@
 4. Live rendering of messages
 
 Small tasks:
-- write socket class
-- messages in mongoDB
 - write class for mongoDB features
-- add express router
 ```

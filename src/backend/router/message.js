@@ -13,9 +13,8 @@ router.delete('', (req, res) => {
     });
 });
 
-router.get('', (req, res) => {
-    Message.find().then(msg => {
-        console.log('MESSAGES', msg);
+router.get('/:room', (req, res) => {
+    Message.find({room: req.params.room}).then(msg => {
         res.status(200).send({ msg })
     }, err => {
         res.send(err);
