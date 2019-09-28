@@ -167,9 +167,10 @@ io.on('connection', (socket) => {
         console.log(data);
         socket.leave(data.room);
 
-        changeUserRoom(data.user, null)
+        // changeUserRoom(data.user, null)
 
         getUsers(data.room, userList => {
+            console.log("USERS", userList)
             io.emit(
                 'update-user-list',
                 userList

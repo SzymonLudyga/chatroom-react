@@ -34,7 +34,7 @@ export default class Chat extends Component {
         this._socket.emitMessage('leave-room', {
             user: this.props.username, room: this.props.room
         });
-        this.props.leaveRoom();
+        // this.props.leaveRoom();
         this.props.history.push(routes.join);
     }
 

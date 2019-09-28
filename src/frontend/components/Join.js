@@ -30,7 +30,7 @@ export default class Join extends Component {
 
     _handleSubmit = () => {
         this._socket.emitMessage('join-room', {
-            user: this.props.username, room: this.props.roomName
+            user: this.props.username, room: this.state.roomName
         });
         this.props.confirmRoom(this.state.roomName);
         this.props.history.push(routes.chat);

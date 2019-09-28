@@ -9,8 +9,8 @@ const getUsers = (room, callback) => {
 };
 
 const changeUserRoom = (user, room) => {
-    User.findOneAndUpdate({ user }, { room }).then(res => {
-        console.log(res);
+    User.findOneAndUpdate({ name: user }, { room }).then(res => {
+        console.log("RES", res);
     }, err => {
         console.log(err);
     })
