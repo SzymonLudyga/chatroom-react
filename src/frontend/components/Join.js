@@ -36,6 +36,11 @@ export default class Join extends Component {
         this.props.history.push(routes.chat);
     }
 
+    _handleLogout = () => {
+        this.props.logout();
+        this.props.history.push(routes.login);
+    }
+
     render() {
         const { classes, rooms } = this.props;
         return (
@@ -55,6 +60,9 @@ export default class Join extends Component {
                     <FormHelperText>Select room for chat</FormHelperText>
                     <Button onClick={this._handleSubmit} className={classes.big} variant="contained" color="primary">
                         Join
+                    </Button>
+                    <Button onClick={this._handleLogout} className={classes.big} variant="contained" color="secondary">
+                        Logout
                     </Button>
                 </FormControl>
             </div>

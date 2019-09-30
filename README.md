@@ -8,4 +8,5 @@
 
 Small tasks:
 - write class for mongoDB features
+- generic axios api methods
 ```

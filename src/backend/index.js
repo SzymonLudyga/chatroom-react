@@ -136,6 +136,7 @@ io.on('connection', (socket) => {
     socket.on('join-room', (data) => {
         console.log('room join');
         console.log(data);
+        console.log(socket.id);
         socket.join(data.room);
 
         changeUserRoom(data.user, data.room)

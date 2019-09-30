@@ -34,3 +34,7 @@ export async function apiRegister(userCredentials) {
 export async function apiLogin(userCredentials) {
     return await axios.post(`${baseUrl}/api/users/login`, userCredentials);
 }
+
+export async function apiLogout() {
+    return await axios.delete(`${baseUrl}/api/users/token`);
+}

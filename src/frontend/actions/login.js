@@ -1,4 +1,4 @@
-import { apiRegister, apiLogin } from '../api/api';
+import { apiRegister, apiLogin, apiLogout } from '../api/api';
 
 import { USER_LOGIN } from './types';
 
@@ -17,6 +17,19 @@ export function login(userCredentials) {
                 throw Error('Error Login');
             }
             dispatch(_userUpdated(userCredentials.name))
+        } catch (e) {
+            console.log(e);
+        }
+    };
+}
+
+export function logout() {
+    return async () => {
+        try {
+            const res = await apiLogout();
+            if (res.status !== 200) {
+                throw Error('Error Logout');
+            }
         } catch (e) {
             console.log(e);
         }

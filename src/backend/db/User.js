@@ -20,6 +20,10 @@ const UserSchema = new mongoose.Schema({
         type: String,
         default: null
     },
+    socket_id: {
+        type: String,
+        default: null
+    },
     tokens: [
         {
             access: {

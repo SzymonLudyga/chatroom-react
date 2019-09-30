@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 
 import { fetchRooms, confirmRoom } from '../actions/join';
+import { logout } from '../actions/login';
 
 import Join from '../components/Join';
 
@@ -31,6 +32,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
+        logout: () => dispatch(logout()),
         fetchRooms: () => dispatch(fetchRooms()),
         confirmRoom: room => dispatch(confirmRoom(room)),
     };
