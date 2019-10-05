@@ -8,4 +8,5 @@
 
 Small tasks:
 - write class for mongoDB features
+- user info in sockets to fix
 ```

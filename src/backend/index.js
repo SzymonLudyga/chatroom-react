@@ -127,7 +127,7 @@ app.use('/api/users', usersRouter);
 app.use('/api/messages', messagesRouter);
 
 io.on('connection', (socket) => {
-    console.log('a user connected');
+    console.log('\n\n\n\na user connected\n\n\n\n');
 
     socket.on('disconnect', () => {
         console.log('user disconnected');
@@ -136,10 +136,10 @@ io.on('connection', (socket) => {
     socket.on('join-room', (data) => {
         console.log('room join');
         console.log(data);
-        console.log(socket.id);
+        console.log("ID", socket.id);
         socket.join(data.room);
 
-        changeUserRoom(data.user, data.room)
+        changeUserRoom(data.user, { room: data.room, socket_id: socket.id })
 
         getUsers(data.room, userList => {
             console.log("USERS", userList)
@@ -149,7 +149,7 @@ io.on('connection', (socket) => {
             );
         });
 
-        
+
 
         // socket.emit - emits event to single connection
         socket.emit('new-message', { user: 'Admin', message: 'Welcome to the app' });
@@ -182,8 +182,9 @@ io.on('connection', (socket) => {
     socket.on('create-message', (data) => {
         console.log('DATA', data);
         try {
-            addMessage(data);
-            io.to(data.room).emit('new-message', { user: data.user, message: data.message });
+            addMessage(data, (res) => {
+                io.emit('new-message');
+            });
         } catch (err) {
             console.log(err);
         }

@@ -4,7 +4,6 @@ import {
     FormControl, Button, InputLabel, Select, MenuItem, Input, FormHelperText
 } from '@material-ui/core';
 import { routes } from '../routing/routes';
-import { baseUrl } from '../config/config';
 
 import WebSocket from '../websockets/WebSocket';
 
@@ -15,7 +14,7 @@ export default class Join extends Component {
             roomName: ''
         };
 
-        this._socket = new WebSocket(baseUrl);
+        this._socket = new WebSocket();
     }
 
     componentDidMount() {

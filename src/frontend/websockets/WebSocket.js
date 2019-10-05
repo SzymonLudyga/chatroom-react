@@ -1,8 +1,8 @@
 const io = require('socket.io-client');
 
 export default class WebSocket {
-    constructor(url) {
-        this.socket = io(url);
+    constructor() {
+        this.socket = io('http://localhost:3000');
     }
 
     onMessage = (query, data = null) => {

@@ -8,8 +8,8 @@ const getUsers = (room, callback) => {
     })
 };
 
-const changeUserRoom = (user, room) => {
-    User.findOneAndUpdate({ name: user }, { room }).then(res => {
+const changeUserRoom = (user, data) => {
+    User.findOneAndUpdate({ name: user }, data).then(res => {
         console.log("RES", res);
     }, err => {
         console.log(err);

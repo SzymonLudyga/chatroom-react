@@ -5,7 +5,6 @@ import {
     FormControl, Button, Typography, InputLabel, Input, Divider, OutlinedInput
 } from '@material-ui/core';
 import { routes } from '../routing/routes';
-import { baseUrl } from '../config/config';
 import WebSocket from '../websockets/WebSocket';
 
 export default class Chat extends Component {
@@ -17,7 +16,7 @@ export default class Chat extends Component {
             message: '',
         };
 
-        this._socket = new WebSocket(baseUrl);
+        this._socket = new WebSocket();
     }
 
     componentDidMount() {
@@ -43,7 +42,8 @@ export default class Chat extends Component {
     }
 
     _sendMessage = () => {
-        console.log(`${this.props.username} emits new message`);
+        console.log(`${this.props.username} emits new message ${this.state.message} to ${this.props.room}`);
+
         this._socket.emitMessage('create-message', {
             user: this.props.username,
             room: this.props.room,
@@ -63,7 +63,7 @@ export default class Chat extends Component {
                     <Typography>
                         {`${this.state.messageCount} messages have been emitted`}
                     </Typography>
-                    <Input onChange={this._handleTypeChange} placeholder="new message..." />
+                    <Input onChange={this._handleTypeChange} value={this.state.message} placeholder="new message..." />
                     <Button onClick={this._sendMessage} variant="contained" color="primary">
                         Send
                     </Button>

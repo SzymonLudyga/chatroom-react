@@ -2,17 +2,17 @@ const moment = require('moment');
 
 const { Message } = require('../db/Message');
 
-const addMessage = (data) => {
+const addMessage = (data, callback) => {
     const timestamp = moment().valueOf();
     const message = new Message({
         user: data.user, room: data.room, timestamp, message: data.message
     });
     message.save().then(
         (res) => {
-            return 'msg-saved';
+            callback(res);
         },
         (err) => {
-            throw new Error("error saving msg");
+            throw new Error("Error saving msg");
         }
     );
 };
