@@ -1,4 +1,4 @@
-import { apiGetMessages, apiDeleteMessages } from '../api/api';
+import { apiCall } from '../api/api';
 import { MESSAGES_RECEIVED } from './types';
 
 function _messagesReceived(messages) {
@@ -11,7 +11,7 @@ function _messagesReceived(messages) {
 export function fetchMessages(room) {
     return async (dispatch) => {
         try {
-            const res = await apiGetMessages(room);
+            const res = await apiCall('get', `messages/${room}`);
             if (res.status !== 200) {
                 throw Error('Error fetching messages');
             }
@@ -25,7 +25,7 @@ export function fetchMessages(room) {
 export function deleteMessages() {
     return async (dispatch) => {
         try {
-            const res = await apiDeleteMessages();
+            const res = await apiCall('delete', 'messages');
             if (res.status !== 200) {
                 throw Error('Error fetching messages');
             }

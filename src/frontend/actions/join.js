@@ -1,4 +1,4 @@
-import { apiGetRooms, apiPostRoom } from '../api/api';
+import { apiCall, apiCallWithData } from '../api/api';
 import { ROOMS_RECEIVED, ROOM_CHOSEN } from './types';
 
 function roomsReceived(rooms) {
@@ -18,7 +18,7 @@ function roomChosen(room) {
 export function fetchRooms() {
     return async (dispatch) => {
         try {
-            const res = await apiGetRooms();
+            const res = await apiCall('get', 'rooms');
             if (res.status !== 200) {
                 throw Error('Error fetching rooms');
             }
@@ -38,7 +38,7 @@ export function fetchRooms() {
 export function confirmRoom(room) {
     return async (dispatch) => {
         try {
-            const res = await apiPostRoom(room);
+            const res = await apiCallWithData('post', 'rooms', { room });
             if (res.status !== 200) {
                 throw Error('Error adding room');
             }

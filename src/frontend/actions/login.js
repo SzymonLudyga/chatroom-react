@@ -1,4 +1,4 @@
-import { apiRegister, apiLogin, apiLogout } from '../api/api';
+import { apiCallWithData, apiCall } from '../api/api';
 
 import { USER_LOGIN } from './types';
 
@@ -12,7 +12,7 @@ function _userUpdated(username) {
 export function login(userCredentials) {
     return async (dispatch) => {
         try {
-            const res = await apiLogin(userCredentials);
+            const res = await apiCallWithData('post', 'users/login', userCredentials);
             if (res.status !== 200) {
                 throw Error('Error Login');
             }
@@ -26,7 +26,7 @@ export function login(userCredentials) {
 export function logout() {
     return async () => {
         try {
-            const res = await apiLogout();
+            const res = await apiCall('delete', 'users/token');
             if (res.status !== 200) {
                 throw Error('Error Logout');
             }
@@ -39,7 +39,7 @@ export function logout() {
 export function register(userCredentials) {
     return async (dispatch) => {
         try {
-            const res = await apiRegister(userCredentials);
+            const res = await apiCallWithData('post', 'users/register', userCredentials);
             if (res.status !== 200) {
                 throw Error('Error Register');
             }
