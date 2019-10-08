@@ -14,24 +14,29 @@ export default class Chat extends Component {
         this.state = {
             messageCount: 0,
             message: '',
+            roomName: this.props.match.params.room,
         };
 
         this._socket = new WebSocket();
     }
 
     componentDidMount() {
-        this.props.fetchMessages(this.props.room);
+        this.props.fetchMessages(this.state.roomName);
         this._socket.onMessage('new-message', () => {
-            this.props.fetchMessages(this.props.room);
+            this.props.fetchMessages(this.state.roomName);
         });
         this._socket.onMessage('update-user-list', users => {
             this.props.updateUserList(users)
         });
     }
 
+    componentWillUnmount() {
+        this.props.clearMessages();
+    }
+
     _leaveRoom = () => {
         this._socket.emitMessage('leave-room', {
-            user: this.props.username, room: this.props.room
+            user: this.props.username, room: this.state.roomName
         });
         // this.props.leaveRoom();
         this.props.history.push(routes.join);
@@ -42,11 +47,11 @@ export default class Chat extends Component {
     }
 
     _sendMessage = () => {
-        console.log(`${this.props.username} emits new message ${this.state.message} to ${this.props.room}`);
+        console.log(`${this.props.username} emits new message ${this.state.message} to ${this.state.roomName}`);
 
         this._socket.emitMessage('create-message', {
             user: this.props.username,
-            room: this.props.room,
+            room: this.state.roomName,
             message: this.state.message
         });
         this.setState({ messageCount: this.state.messageCount + 1, message: '' });
@@ -58,7 +63,7 @@ export default class Chat extends Component {
             <>
                 <FormControl>
                     <Typography className={classes.big}>
-                        {`${this.props.username} in room ${this.props.room}`}
+                        {`${this.props.username} in room ${this.state.roomName}`}
                     </Typography>
                     <Typography>
                         {`${this.state.messageCount} messages have been emitted`}

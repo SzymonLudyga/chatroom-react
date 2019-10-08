@@ -11,7 +11,7 @@ export default () => (
     <RoutesProvider>
         <Switch>
             <Route exact path={routes.homepage} component={HomeContainer} />
-            <Route exact path={routes.chat} component={ChatContainer} />
+            <Route exact path={routes.chatroom} component={ChatContainer} />
             <Route exact path={routes.join} component={JoinContainer} />
             <Route component={LoginContainer} />
         </Switch>

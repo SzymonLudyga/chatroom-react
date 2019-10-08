@@ -127,14 +127,31 @@ app.use('/api/users', usersRouter);
 app.use('/api/messages', messagesRouter);
 
 io.on('connection', (socket) => {
-    console.log('\n\n\n\na user connected\n\n\n\n');
+    // user connected 
+    //  - update room database (add user)
+    //  - info to everyone to fetch user list
+    console.log('\n\na user connected\n\n');
 
     socket.on('disconnect', () => {
-        console.log('user disconnected');
+        // user disconnected
+        //  - wait for user (refresh scenario - 5ms)
+        //  FAIL:
+        //  - update room database (remove user)
+        //  - info to everyone but socket to fetch user list
+        //  - info to everyone but socket that user was disconnected
+        //  PASS:
+        //  - new timestamp (older messages not seen, only after approval of other users)
+        //  - option to fetch older messages 
+        console.log('\n\nuser disconnected\n\n');
     });
 
     socket.on('join-room', (data) => {
-        console.log('room join');
+        // user joined room
+        //  - info to everyone but socket that user was connected
+        //  - info to socket with welcome message
+
+        
+        console.log('\n\njoin room\n\n')
         console.log(data);
         console.log("ID", socket.id);
         socket.join(data.room);
@@ -164,7 +181,12 @@ io.on('connection', (socket) => {
     });
 
     socket.on('leave-room', (data) => {
-        console.log('leaving room');
+        // user left room
+        //  - info to everyone but the socket to update user list
+        //  - info to everyone but the socket that user left the room
+
+        
+        console.log('\n\nleave room\n\n')
         console.log(data);
         socket.leave(data.room);
 
@@ -180,6 +202,10 @@ io.on('connection', (socket) => {
     });
 
     socket.on('create-message', (data) => {
+        // created message
+        // - add message to database
+        // - info to everyone to fetch messages
+        console.log('\n\ncreate message\n\n')
         console.log('DATA', data);
         try {
             addMessage(data, (res) => {

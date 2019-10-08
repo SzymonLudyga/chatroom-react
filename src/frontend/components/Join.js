@@ -32,11 +32,11 @@ export default class Join extends Component {
             user: this.props.username, room: this.state.roomName
         });
         this.props.confirmRoom(this.state.roomName);
-        this.props.history.push(routes.chat);
+        this.props.history.push(`${routes.chat}/${this.state.roomName}`);
     }
 
     _handleLogout = () => {
-        this.props.logout();
+        this.props.logout({ username: this.props.username, token: this.props.token });
         this.props.history.push(routes.login);
     }
 

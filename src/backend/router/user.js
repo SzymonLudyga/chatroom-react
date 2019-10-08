@@ -41,13 +41,26 @@ router.post('/login', (req, res) => {
         });
 });
 
-router.delete('/token', (req, res) => {
+router.delete('/token', authenticate, (req, res) => {
+    console.log(req);
+
     req.user.removeToken(req.token).then(
         () => {
             res.status(200).send();
         },
         () => {
             res.status(400).send();
+        }
+    );
+});
+
+router.delete('/token/all', (req, res) => {
+    User.findOneAndUpdate({ name: req.body.user }, { tokens: [] }).then(
+        (doc) => {
+            res.status(200).send(doc);
+        },
+        (err) => {
+            res.status(400).send(err);
         }
     );
 });

@@ -27,12 +27,14 @@ const styles = theme => ({
 function mapStateToProps(state) {
     return {
         rooms: state.join.rooms,
+        username: state.user.userInfo.username,
+        token: state.user.userInfo.token
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        logout: () => dispatch(logout()),
+        logout: (userInfo) => dispatch(logout(userInfo)),
         fetchRooms: () => dispatch(fetchRooms()),
         confirmRoom: room => dispatch(confirmRoom(room)),
     };

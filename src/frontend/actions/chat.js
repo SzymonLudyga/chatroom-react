@@ -1,10 +1,16 @@
 import { apiCall } from '../api/api';
-import { MESSAGES_RECEIVED } from './types';
+import { MESSAGES_RECEIVED, MESSAGES_CLEARED } from './types';
 
 function _messagesReceived(messages) {
     return {
         type: MESSAGES_RECEIVED,
         messages,
+    };
+}
+
+export function clearMessages() {
+    return {
+        type: MESSAGES_CLEARED,
     };
 }
 
@@ -29,7 +35,7 @@ export function deleteMessages() {
             if (res.status !== 200) {
                 throw Error('Error fetching messages');
             }
-            dispatch(fetchMessages());
+            // dispatch(fetchMessages());
         } catch (e) {
             console.log(e);
         }
