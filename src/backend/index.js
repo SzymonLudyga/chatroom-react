@@ -105,7 +105,7 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 
 const { addMessage } = require('./utils/messageUtils');
-const { getUsers, changeUserRoom } = require('./utils/userUtils');
+const { getUsers, changeUserRoom, checkUserRoom } = require('./utils/userUtils');
 
 const { mongoose } = require('./db/mongooseConfig');
 const { User } = require('./db/User');
@@ -127,10 +127,7 @@ app.use('/api/users', usersRouter);
 app.use('/api/messages', messagesRouter);
 
 io.on('connection', (socket) => {
-    // user connected 
-    //  - update room database (add user)
-    //  - info to everyone to fetch user list
-    console.log('\n\na user connected\n\n');
+    console.log('\n\n', socket.id,'a user connected\n\n');
 
     socket.on('disconnect', () => {
         // user disconnected
@@ -142,74 +139,78 @@ io.on('connection', (socket) => {
         //  PASS:
         //  - new timestamp (older messages not seen, only after approval of other users)
         //  - option to fetch older messages 
-        console.log('\n\nuser disconnected\n\n');
+        console.log('\n\n', socket.id, 'user disconnected\n\n');
     });
 
-    socket.on('join-room', (data) => {
-        // user joined room
-        //  - info to everyone but socket that user was connected
-        //  - info to socket with welcome message
-
-        
+    socket.on('join-room', async (data) => {
         console.log('\n\njoin room\n\n')
         console.log(data);
         console.log("ID", socket.id);
         socket.join(data.room);
-
-        changeUserRoom(data.user, { room: data.room, socket_id: socket.id })
-
-        getUsers(data.room, userList => {
-            console.log("USERS", userList)
-            io.emit(
-                'update-user-list',
-                userList
-            );
-        });
-
-
-
-        // socket.emit - emits event to single connection
-        socket.emit('new-message', { user: 'Admin', message: 'Welcome to the app' });
-
-        // socket.broadcast.emit - emits event to every connection but the socket itself
-        socket.broadcast
-            .to(data.room)
-            .emit(
-                'new-message',
-                { user: 'Admin', message: `${data.user} has joined` }
-            );
+        const room = await checkUserRoom(data.user);
+        
+        if(data.room !== room) {
+            // - if new room of the user 
+            console.log("SPRAWDZAM");
+            socket.join(data.room);
+            // 1. then update user list
+            changeUserRoom(data.user, data.room, userList => {
+                console.log("USERS", userList)
+                // 2. then info to everyone to fetch user list
+                io.to(data.room).emit(
+                    'update-user-list',
+                    userList
+                );
+            });
+            
+            addMessage({ user: 'Admin', room: data.room, message: 'Welcome to the app' }, (res) => {
+                console.log(res)
+                // 3. then info to socket with welcome message
+                // socket.emit - emits event to single connection(socket)
+                socket.emit('new-message', res);
+            });
+            addMessage({ user: 'Admin', room: data.room, message: `${data.user} has joined` }, (res) => {
+                console.log(res)
+                // 4. then info to everyone but socket that user was connected
+                // socket.broadcast.emit - emits event to every connection but the socket
+                socket.broadcast.to(data.room).emit('new-message', res);
+            });
+        }
     });
 
     socket.on('leave-room', (data) => {
-        // user left room
-        //  - info to everyone but the socket to update user list
-        //  - info to everyone but the socket that user left the room
-
-        
         console.log('\n\nleave room\n\n')
         console.log(data);
+
         socket.leave(data.room);
 
-        // changeUserRoom(data.user, null)
+        addMessage({ user: 'Admin', room: data.room, message: `${data.user} left the room` }, (res) => {
+            console.log(res)
+            // 1. Info to everyone but the socket to update user list
+            // socket.broadcast.emit - emits event to every connection but the socket
+            socket.broadcast.to(data.room).emit('new-message', res);
+        });
 
-        getUsers(data.room, userList => {
+        changeUserRoom(data.user, null, userList => {
             console.log("USERS", userList)
-            io.emit(
+            // 2. Info to everyone but the socket that user left the room
+            socket.broadcast.to(data.room).emit(
                 'update-user-list',
                 userList
             );
-        });
+        })
     });
 
     socket.on('create-message', (data) => {
-        // created message
-        // - add message to database
-        // - info to everyone to fetch messages
         console.log('\n\ncreate message\n\n')
         console.log('DATA', data);
+        
         try {
+            // 1. add message to database
             addMessage(data, (res) => {
-                io.emit('new-message');
+                console.log(res)
+                // 2. info to everyone to fetch messages
+                io.to(data.room).emit('new-message', res);
             });
         } catch (err) {
             console.log(err);

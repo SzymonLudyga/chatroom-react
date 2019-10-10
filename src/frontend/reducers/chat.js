@@ -1,4 +1,4 @@
-import { MESSAGES_RECEIVED, MESSAGES_CLEARED } from '../actions/types';
+import { MESSAGES_RECEIVED, MESSAGES_CLEARED, MESSAGE_ADDED } from '../actions/types';
 
 const initialState = {
     messages: [],
@@ -9,6 +9,12 @@ export default function chat(state = initialState, action) {
         return {
             ...state,
             messages: action.messages
+        };
+    }
+    if (action.type === MESSAGE_ADDED) {
+        return {
+            ...state,
+            messages: state.messages.concat([action.data])
         };
     }
     if (action.type === MESSAGES_CLEARED) {

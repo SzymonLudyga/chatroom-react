@@ -9,7 +9,11 @@ const addMessage = (data, callback) => {
     });
     message.save().then(
         (res) => {
-            callback(res);
+            callback({
+                user: res.user,
+                timestamp: res.timestamp,
+                message: res.message
+            });
         },
         (err) => {
             throw new Error("Error saving msg");

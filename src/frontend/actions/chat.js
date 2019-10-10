@@ -1,5 +1,5 @@
 import { apiCall } from '../api/api';
-import { MESSAGES_RECEIVED, MESSAGES_CLEARED } from './types';
+import { MESSAGES_RECEIVED, MESSAGES_CLEARED, MESSAGE_ADDED } from './types';
 
 function _messagesReceived(messages) {
     return {
@@ -11,6 +11,13 @@ function _messagesReceived(messages) {
 export function clearMessages() {
     return {
         type: MESSAGES_CLEARED,
+    };
+}
+
+export function addMessage(data) {
+    return {
+        type: MESSAGE_ADDED,
+        data
     };
 }
 

@@ -8,14 +8,20 @@ const getUsers = (room, callback) => {
     })
 };
 
-const changeUserRoom = (user, data) => {
-    User.findOneAndUpdate({ name: user }, data).then(res => {
-        console.log("RES", res);
+const checkUserRoom = (user) =>{
+    return User.findOne({ name: user }).then(res => {
+        return res.room;
     }, err => {
-        console.log(err);
-    })
+        throw new Error("Error getting user");
+    });
+}
+
+const changeUserRoom = (user, room, callback) => {
+    User.findOneAndUpdate({ name: user }, { room })
+        .then(res => getUsers(room || res.room, callback))
+        .catch(err => console.log(err));
 };
 
 module.exports = {
-    getUsers, changeUserRoom
+    getUsers, changeUserRoom, checkUserRoom
 };

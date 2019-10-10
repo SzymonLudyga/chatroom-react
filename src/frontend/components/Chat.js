@@ -21,17 +21,29 @@ export default class Chat extends Component {
     }
 
     componentDidMount() {
-        this.props.fetchMessages(this.state.roomName);
-        this._socket.onMessage('new-message', () => {
-            this.props.fetchMessages(this.state.roomName);
+        this._socket.onMessage('new-message', (res) => {
+            this.props.addMessage(res)
         });
         this._socket.onMessage('update-user-list', users => {
+            console.log(users);
             this.props.updateUserList(users)
+        });
+        this._socket.emitMessage('join-room', {
+            user: this.props.username, room: this.state.roomName
         });
     }
 
     componentWillUnmount() {
         this.props.clearMessages();
+    }
+
+    _delete = () => {
+        this.props.deleteMessages();
+        this.props.clearMessages();
+    }
+
+    _getPastMessages = () => {
+        this.props.fetchMessages(this.state.roomName);
     }
 
     _leaveRoom = () => {
@@ -72,11 +84,15 @@ export default class Chat extends Component {
                     <Button onClick={this._sendMessage} variant="contained" color="primary">
                         Send
                     </Button>
-                    <Button onClick={this.props.deleteMessages}>
+                    <Button onClick={this._delete}>
                         Delete Messages
                     </Button>
                     <Button onClick={this._leaveRoom}>
                         Leave Room
+                    </Button>
+
+                    <Button onClick={this._getPastMessages}>
+                        Get messages from the past
                     </Button>
                 </FormControl>
                 {this.props.users.map(user => (
@@ -88,7 +104,7 @@ export default class Chat extends Component {
                 {this.props.messages.map(msg => (
                     <>
                         <Divider />
-                        <Typography key={msg._id}>{`${msg.user} (${msg.timestamp}): ${msg.message}`}</Typography>
+                        <Typography key={msg.timestamp}>{`${msg.user} (${msg.timestamp}): ${msg.message}`}</Typography>
                     </>
                 ))}
             </>
