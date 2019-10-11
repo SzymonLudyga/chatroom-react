@@ -38,7 +38,7 @@ export default class Chat extends Component {
     }
 
     _delete = () => {
-        this.props.deleteMessages();
+        this.props.deleteMessages(this.state.roomName);
         this.props.clearMessages();
     }
 
@@ -50,7 +50,6 @@ export default class Chat extends Component {
         this._socket.emitMessage('leave-room', {
             user: this.props.username, room: this.state.roomName
         });
-        // this.props.leaveRoom();
         this.props.history.push(routes.join);
     }
 

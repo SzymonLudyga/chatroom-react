@@ -1,4 +1,4 @@
-import { apiCall } from '../api/api';
+import { authApiCall } from '../api/api';
 import { MESSAGES_RECEIVED, MESSAGES_CLEARED, MESSAGE_ADDED } from './types';
 
 function _messagesReceived(messages) {
@@ -22,9 +22,10 @@ export function addMessage(data) {
 }
 
 export function fetchMessages(room) {
-    return async (dispatch) => {
+    return async (dispatch, getState) => {
         try {
-            const res = await apiCall('get', `messages/${room}`);
+            const token = getState().user.userInfo.token;
+            const res = await authApiCall('get', `messages/${room}`, token);
             if (res.status !== 200) {
                 throw Error('Error fetching messages');
             }
@@ -35,14 +36,15 @@ export function fetchMessages(room) {
     };
 }
 
-export function deleteMessages() {
-    return async (dispatch) => {
+export function deleteMessages(room) {
+    return async (dispatch, getState) => {
         try {
-            const res = await apiCall('delete', 'messages');
+            const token = getState().user.userInfo.token;
+            const res = await authApiCall('delete', `messages/${room}`, token);
             if (res.status !== 200) {
                 throw Error('Error fetching messages');
             }
-            // dispatch(fetchMessages());
+            dispatch(fetchMessages(room));
         } catch (e) {
             console.log(e);
         }

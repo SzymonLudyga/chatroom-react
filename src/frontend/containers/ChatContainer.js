@@ -17,7 +17,7 @@ function mapStateToProps(state) {
         room: state.join.room,
         messages: state.chat.messages,
         username: state.user.userInfo.username,
-        users: state.user.userList
+        users: state.user.userList,
     };
 }
 
@@ -27,7 +27,7 @@ function mapDispatchToProps(dispatch) {
         fetchMessages: (room) => dispatch(fetchMessages(room)),
         addMessage: (msg) => dispatch(addMessage(msg)),
         clearMessages: () => dispatch(clearMessages()),
-        deleteMessages: () => dispatch(deleteMessages()),
+        deleteMessages: (room) => dispatch(deleteMessages(room)),
         leaveRoom: () => dispatch(leaveRoom()),
         updateUserList: (users) => dispatch(updateUserList(users)),
     };

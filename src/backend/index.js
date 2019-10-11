@@ -48,19 +48,18 @@ io.on('connection', (socket) => {
     });
 
     socket.on('join-room', async (data) => {
-        console.log('\n\njoin room\n\n')
-        console.log(data);
-        console.log("ID", socket.id);
+        // console.log('\n\njoin room\n\n')
+        // console.log(data);
+        // console.log("ID", socket.id);
         socket.join(data.room);
         const room = await checkUserRoom(data.user);
         
         if(data.room !== room) {
             // - if new room of the user 
-            console.log("SPRAWDZAM");
             socket.join(data.room);
             // 1. then update user list
             changeUserRoom(data.user, data.room, userList => {
-                console.log("USERS", userList)
+                // console.log("USERS", userList)
                 // 2. then info to everyone to fetch user list
                 io.to(data.room).emit(
                     'update-user-list',
@@ -69,13 +68,13 @@ io.on('connection', (socket) => {
             });
             
             addMessage({ user: 'Admin', room: data.room, message: 'Welcome to the app' }, (res) => {
-                console.log(res)
+                // console.log(res)
                 // 3. then info to socket with welcome message
                 // socket.emit - emits event to single connection(socket)
                 socket.emit('new-message', res);
             });
             addMessage({ user: 'Admin', room: data.room, message: `${data.user} has joined` }, (res) => {
-                console.log(res)
+                // console.log(res)
                 // 4. then info to everyone but socket that user was connected
                 // socket.broadcast.emit - emits event to every connection but the socket
                 socket.broadcast.to(data.room).emit('new-message', res);
@@ -90,14 +89,14 @@ io.on('connection', (socket) => {
         socket.leave(data.room);
 
         addMessage({ user: 'Admin', room: data.room, message: `${data.user} left the room` }, (res) => {
-            console.log(res)
+            // console.log(res)
             // 1. Info to everyone but the socket to update user list
             // socket.broadcast.emit - emits event to every connection but the socket
             socket.broadcast.to(data.room).emit('new-message', res);
         });
 
         changeUserRoom(data.user, null, userList => {
-            console.log("USERS", userList)
+            // console.log("USERS", userList)
             // 2. Info to everyone but the socket that user left the room
             socket.broadcast.to(data.room).emit(
                 'update-user-list',

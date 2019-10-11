@@ -1,4 +1,4 @@
-import { apiCallWithData, authApiCall } from '../api/api';
+import { apiCallWithData, authApiCallWithData } from '../api/api';
 
 import { USER_UPDATE } from './types';
 
@@ -16,9 +16,9 @@ export function login(userCredentials) {
             if (res.status !== 200) {
                 throw Error('Error Login');
             }
-            dispatch(_userUpdated({ 
-                username: userCredentials.name, 
-                token: res.data.tokens[res.data.tokens.length-1].token 
+            dispatch(_userUpdated({
+                username: userCredentials.name,
+                token: res.data.tokens[res.data.tokens.length - 1].token
             }));
         } catch (e) {
             console.log(e);
@@ -26,15 +26,16 @@ export function login(userCredentials) {
     };
 }
 
-export function logout(userInfo) {
-    return async (dispatch) => {
+export function logout(username) {
+    return async (dispatch, getState) => {
         try {
-            const res = await authApiCall('delete', 'users/token', userInfo);
+            const token = getState().user.userInfo.token;
+            const res = await authApiCallWithData('delete', 'users/token', token, { username });
             if (res.status !== 200) {
                 throw Error('Error Logout');
             }
-            dispatch(_userUpdated({ 
-                username: null, 
+            dispatch(_userUpdated({
+                username: null,
                 token: null
             }))
         } catch (e) {

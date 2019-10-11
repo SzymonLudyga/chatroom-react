@@ -29,12 +29,6 @@ export function fetchRooms() {
     };
 }
 
-// export function leaveRoom() {
-//     return (dispatch) => {
-//         dispatch(roomChosen(null));
-//     };
-// }
-
 export function confirmRoom(room) {
     return async (dispatch) => {
         try {

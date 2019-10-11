@@ -28,13 +28,12 @@ function mapStateToProps(state) {
     return {
         rooms: state.join.rooms,
         username: state.user.userInfo.username,
-        token: state.user.userInfo.token
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        logout: (userInfo) => dispatch(logout(userInfo)),
+        logout: (username) => dispatch(logout(username)),
         fetchRooms: () => dispatch(fetchRooms()),
         confirmRoom: room => dispatch(confirmRoom(room)),
     };

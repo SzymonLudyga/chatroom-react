@@ -28,15 +28,12 @@ export default class Join extends Component {
     }
 
     _handleSubmit = () => {
-        // this._socket.emitMessage('join-room', {
-        //     user: this.props.username, room: this.state.roomName
-        // });
         this.props.confirmRoom(this.state.roomName);
         this.props.history.push(`${routes.chat}/${this.state.roomName}`);
     }
 
     _handleLogout = () => {
-        this.props.logout({ username: this.props.username, token: this.props.token });
+        this.props.logout({ username: this.props.username });
         this.props.history.push(routes.login);
     }
 

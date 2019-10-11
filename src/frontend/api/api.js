@@ -2,7 +2,6 @@ import axios from 'axios';
 import { baseUrl } from '../config/config';
 
 export async function apiCallWithData(method, resource, data) {
-    console.log(data)
     return await axios({
         method,
         url: `${baseUrl}/${resource}`,
@@ -10,24 +9,27 @@ export async function apiCallWithData(method, resource, data) {
     });
 }
 
-export async function authApiCall(method, resource, data) {
-    console.log(data)
+export async function authApiCallWithData(method, resource, token, req) {
     return await axios({
         method,
         url: `${baseUrl}/${resource}`,
-        data: {
-            username: data.username
-        },
-        headers: {'x-auth': data.token}
-    }
-    );
+        data: req,
+        headers: { 'x-auth': token }
+    });
 }
 
 export async function apiCall(method, resource) {
-    console.log(resource);
     return await axios({
         method,
         url: `${baseUrl}/${resource}`,
         responseType: 'json'
+    });
+}
+
+export async function authApiCall(method, resource, token) {
+    return await axios({
+        method,
+        url: `${baseUrl}/${resource}`,
+        headers: { 'x-auth': token }
     });
 }
