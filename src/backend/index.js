@@ -1,98 +1,3 @@
-// const path = require('path');
-// const http = require('http');
-// const express = require('express');
-// const socketIO = require('socket.io');
-// // const { generateMessage } = require('./utils/message');
-// // const { isRealString } = require('./utils/validation');
-// // const { Users } = require('./utils/users');
-// const app = express();
-// const server = http.createServer(app);
-// const io = socketIO(server);
-
-// // const WebSocket = require('ws');
-
-// // const wss = new WebSocket.Server({ port: 3000 });
-// // console.log(wss);
-
-// // const users = new Users();
-
-// app.use(express.static('dist'));
-
-// // case insesitive, unique names, chatrooms displayed
-
-// io.on('connection', (socket) => {
-//     console.log('New user connected');
-
-//     socket.on('connect', () => {
-//         console.log("connect");
-//         // const user = users.getUser(socket.id);
-
-//         // if (user && isRealString(message.text)) {
-//         //     // io.emit - emits event to every connection
-//         //     // io.to(roomName).emit() - emit to every connection in room
-//         //     io.to(user.room).emit('newMessage', generateMessage(user.name, message.text));
-//         // }
-//         // callback();
-//     });
-
-//     // socket.on('join', (params, callback) => {
-//     //     if (!isRealString(params.name) || !isRealString(params.room)) {
-//     //         return callback('Name and room name are required');
-//     //     }
-
-//     //     socket.join(params.room);
-//     //     users.removeUser(socket.id);
-//     //     users.addUser(socket.id, params.name, params.room);
-
-//     //     io.to(params.room).emit(
-//     //         'update-user-list',
-//     //         users.getUsersList(params.room)
-//     //     );
-
-//     // socket.emit - emits event to single connection
-//     // socket.emit('newMessage', generateMessage('Admin', 'Welcome to chat app'));
-
-//     // socket.broadcast.emit - emits event to every connection but the socket itself
-//     // socket.broadcast
-//     //     .to(params.room)
-//     //     .emit(
-//     //         'newMessage',
-//     //         generateMessage('Admin', `${params.name} has joined.`)
-//     //     );
-
-//     // callback();
-//     // });
-
-//     socket.on('message', (message) => {
-//         console.log(message);
-//         // const user = users.getUser(socket.id);
-
-//         // if (user && isRealString(message.text)) {
-//         //     // io.emit - emits event to every connection
-//         //     // io.to(roomName).emit() - emit to every connection in room
-//         //     io.to(user.room).emit('newMessage', generateMessage(user.name, message.text));
-//         // }
-//         // callback();
-//     });
-
-//     socket.on('disconnect', () => {
-//         // const user = users.removeUser(socket.id);
-//         // if (user) {
-//         //     io.to(user.room).emit('update-user-list', users.getUsersList(user.room));
-//         //     io.to(user.room).emit(
-//         //         'newMessage',
-//         //         generateMessage('Admin', `${user.name} has left the room.`)
-//         //     );
-//         // }
-//         console.log('Client disconnected...');
-//     });
-// });
-
-
-// const port = process.env.PORT || 3000;
-
-// app.listen(port, () => console.log(`Listening on port ${port}!`));
-
 const express = require('express');
 const moment = require('moment');
 
@@ -204,7 +109,7 @@ io.on('connection', (socket) => {
     socket.on('create-message', (data) => {
         console.log('\n\ncreate message\n\n')
         console.log('DATA', data);
-        
+
         try {
             // 1. add message to database
             addMessage(data, (res) => {

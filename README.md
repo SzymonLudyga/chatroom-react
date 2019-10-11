@@ -1,12 +1,11 @@
 # TODO
 
 ```
-1. Login with user authentication
-2. Choosing room
-3. Messages are private within the room
-4. Live rendering of messages
-
-Small tasks:
-- write class for mongoDB features
-- user info in sockets to fix
+1. Only authenticated user can:
+    - join room
+    - add message
+    - delete message
+2. Enhance UI/UX
+3. Error handling
+4. Checking if message, room and user are correct
 ```
