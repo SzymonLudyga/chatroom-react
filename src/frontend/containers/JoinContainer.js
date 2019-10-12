@@ -33,7 +33,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        logout: (username) => dispatch(logout(username)),
+        logout: username => dispatch(logout(username)),
         fetchRooms: () => dispatch(fetchRooms()),
         confirmRoom: room => dispatch(confirmRoom(room)),
     };

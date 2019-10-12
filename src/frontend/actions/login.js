@@ -6,7 +6,7 @@ function _userUpdated(userData) {
     return {
         type: USER_UPDATE,
         userData,
-    }
+    };
 }
 
 export function login(userCredentials) {
@@ -29,7 +29,7 @@ export function login(userCredentials) {
 export function logout(username) {
     return async (dispatch, getState) => {
         try {
-            const token = getState().user.userInfo.token;
+            const { token } = getState().user.userInfo;
             const res = await authApiCallWithData('delete', 'users/token', token, { username });
             if (res.status !== 200) {
                 throw Error('Error Logout');
@@ -37,7 +37,7 @@ export function logout(username) {
             dispatch(_userUpdated({
                 username: null,
                 token: null
-            }))
+            }));
         } catch (e) {
             console.log(e);
         }
@@ -51,7 +51,7 @@ export function register(userCredentials) {
             if (res.status !== 200) {
                 throw Error('Error Register');
             }
-            dispatch(_userUpdated(userCredentials.name))
+            dispatch(_userUpdated(userCredentials.name));
         } catch (e) {
             console.log(e);
         }

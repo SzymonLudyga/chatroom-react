@@ -9,7 +9,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 
-const { addMessage } = require('./utils/messageUtils');
+const { addMessage, checkMessage } = require('./utils/messageUtils');
 const { getUsers, changeUserRoom, checkUserRoom } = require('./utils/userUtils');
 
 const { mongoose } = require('./db/mongooseConfig');
@@ -32,7 +32,7 @@ app.use('/api/users', usersRouter);
 app.use('/api/messages', messagesRouter);
 
 io.on('connection', (socket) => {
-    console.log('\n\n', socket.id,'a user connected\n\n');
+    console.log('\n\n', socket.id, 'a user connected\n\n');
 
     socket.on('disconnect', () => {
         // user disconnected
@@ -43,7 +43,7 @@ io.on('connection', (socket) => {
         //  - info to everyone but socket that user was disconnected
         //  PASS:
         //  - new timestamp (older messages not seen, only after approval of other users)
-        //  - option to fetch older messages 
+        //  - option to fetch older messages
         console.log('\n\n', socket.id, 'user disconnected\n\n');
     });
 
@@ -53,12 +53,12 @@ io.on('connection', (socket) => {
         // console.log("ID", socket.id);
         socket.join(data.room);
         const room = await checkUserRoom(data.user);
-        
-        if(data.room !== room) {
-            // - if new room of the user 
+
+        if (data.room !== room) {
+            // - if new room of the user
             socket.join(data.room);
             // 1. then update user list
-            changeUserRoom(data.user, data.room, userList => {
+            changeUserRoom(data.user, data.room, (userList) => {
                 // console.log("USERS", userList)
                 // 2. then info to everyone to fetch user list
                 io.to(data.room).emit(
@@ -66,7 +66,7 @@ io.on('connection', (socket) => {
                     userList
                 );
             });
-            
+
             addMessage({ user: 'Admin', room: data.room, message: 'Welcome to the app' }, (res) => {
                 // console.log(res)
                 // 3. then info to socket with welcome message
@@ -83,7 +83,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('leave-room', (data) => {
-        console.log('\n\nleave room\n\n')
+        console.log('\n\nleave room\n\n');
         console.log(data);
 
         socket.leave(data.room);
@@ -95,29 +95,32 @@ io.on('connection', (socket) => {
             socket.broadcast.to(data.room).emit('new-message', res);
         });
 
-        changeUserRoom(data.user, null, userList => {
+        changeUserRoom(data.user, null, (userList) => {
             // console.log("USERS", userList)
             // 2. Info to everyone but the socket that user left the room
             socket.broadcast.to(data.room).emit(
                 'update-user-list',
                 userList
             );
-        })
+        });
     });
 
     socket.on('create-message', (data) => {
-        console.log('\n\ncreate message\n\n')
+        console.log('\n\ncreate message\n\n');
         console.log('DATA', data);
 
         try {
-            // 1. add message to database
+            // 1. check message and user
+            checkMessage(data);
+            // 2. add message to database
             addMessage(data, (res) => {
-                console.log(res)
-                // 2. info to everyone to fetch messages
+                // console.log(res)
+                // 3. info to everyone to fetch messages
                 io.to(data.room).emit('new-message', res);
             });
         } catch (err) {
-            console.log(err);
+            console.log(err.message);
+            socket.emit('error-message', { message: err.message, type: 'message' });
         }
     });
 });

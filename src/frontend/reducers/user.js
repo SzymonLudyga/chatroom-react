@@ -16,7 +16,7 @@ export default function user(state = initialState, action) {
                 ...state.userInfo,
                 username: action.userData.username,
                 token: action.userData.token
-            } 
+            }
         };
     }
     if (action.type === USER_LIST_RECEIVED) {

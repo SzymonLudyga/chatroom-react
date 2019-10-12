@@ -16,13 +16,11 @@ router.post('/register', (req, res) => {
 
     user
         .save()
-        .then(() => {
-            return user.generateAuthToken();
-        })
-        .then(token => {
+        .then(() => user.generateAuthToken())
+        .then((token) => {
             res.header('x-auth', token).send(user);
         })
-        .catch(err => {
+        .catch((err) => {
             res.status(400).send(err);
         });
 });
@@ -31,12 +29,10 @@ router.post('/login', (req, res) => {
     const body = _.pick(req.body, ['name', 'password']);
 
     User.findByCredentials(body.name, body.password)
-        .then(user => {
-            return user.generateAuthToken().then(token => {
-                res.header('x-auth', token).send(user);
-            });
-        })
-        .catch(err => {
+        .then(user => user.generateAuthToken().then((token) => {
+            res.header('x-auth', token).send(user);
+        }))
+        .catch((err) => {
             res.status(400).send();
         });
 });

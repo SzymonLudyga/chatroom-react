@@ -4,5 +4,5 @@ export function updateUserList(userList) {
     return {
         type: USER_LIST_RECEIVED,
         userList,
-    }
-};
+    };
+}

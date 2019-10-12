@@ -24,7 +24,7 @@ export function addMessage(data) {
 export function fetchMessages(room) {
     return async (dispatch, getState) => {
         try {
-            const token = getState().user.userInfo.token;
+            const { token } = getState().user.userInfo;
             const res = await authApiCall('get', `messages/${room}`, token);
             if (res.status !== 200) {
                 throw Error('Error fetching messages');
@@ -39,7 +39,7 @@ export function fetchMessages(room) {
 export function deleteMessages(room) {
     return async (dispatch, getState) => {
         try {
-            const token = getState().user.userInfo.token;
+            const { token } = getState().user.userInfo;
             const res = await authApiCall('delete', `messages/${room}`, token);
             if (res.status !== 200) {
                 throw Error('Error fetching messages');

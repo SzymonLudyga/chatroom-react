@@ -7,3 +7,6 @@ export const MESSAGE_ADDED = 'MESSAGE_ADDED';
 
 export const USER_UPDATE = 'USER_UPDATE';
 export const USER_LIST_RECEIVED = 'USER_LIST_RECEIVED';
+
+export const ERROR_DISPLAY = 'ERROR_DISPLAY';
+export const ERROR_HIDE = 'ERROR_HIDE';

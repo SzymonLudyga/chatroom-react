@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import {
-    FormControl, Button, Typography, InputLabel, Input, Divider, OutlinedInput
+    FormControl, Button, Typography, TextField, FormHelperText, Divider
 } from '@material-ui/core';
 import { routes } from '../routing/routes';
 import WebSocket from '../websockets/WebSocket';
@@ -22,11 +22,14 @@ export default class Chat extends Component {
 
     componentDidMount() {
         this._socket.onMessage('new-message', (res) => {
-            this.props.addMessage(res)
+            this.props.addMessage(res);
         });
-        this._socket.onMessage('update-user-list', users => {
+        this._socket.onMessage('error-message', (res) => {
+            this.props.handleError({ errorType: res.type, errorMessage: res.message });
+        });
+        this._socket.onMessage('update-user-list', (users) => {
             console.log(users);
-            this.props.updateUserList(users)
+            this.props.updateUserList(users);
         });
         this._socket.emitMessage('join-room', {
             user: this.props.username, room: this.state.roomName
@@ -60,6 +63,7 @@ export default class Chat extends Component {
     _sendMessage = () => {
         console.log(`${this.props.username} emits new message ${this.state.message} to ${this.state.roomName}`);
 
+        this.props.errorHide();
         this._socket.emitMessage('create-message', {
             user: this.props.username,
             room: this.state.roomName,
@@ -79,7 +83,12 @@ export default class Chat extends Component {
                     <Typography>
                         {`${this.state.messageCount} messages have been emitted`}
                     </Typography>
-                    <Input onChange={this._handleTypeChange} value={this.state.message} placeholder="new message..." />
+                    <div className={classes.marginBig}>
+                        <TextField error={this.props.errorType === 'message'} onChange={this._handleTypeChange} value={this.state.message} placeholder="new message..." />
+                        {this.props.errorType === 'message'
+                            && <FormHelperText className={classes.red}>{this.props.errorMessage}</FormHelperText>
+                        }
+                    </div>
                     <Button onClick={this._sendMessage} variant="contained" color="primary">
                         Send
                     </Button>
@@ -97,7 +106,7 @@ export default class Chat extends Component {
                 {this.props.users.map(user => (
                     <>
                         <Divider />
-                        <Typography variant='h3' key={user._id}>{`${user.name}`}</Typography>
+                        <Typography variant="h3" key={user._id}>{`${user.name}`}</Typography>
                     </>
                 ))}
                 {this.props.messages.map(msg => (

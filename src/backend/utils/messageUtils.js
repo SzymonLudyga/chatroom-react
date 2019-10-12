@@ -16,11 +16,17 @@ const addMessage = (data, callback) => {
             });
         },
         (err) => {
-            throw new Error("Error saving msg");
+            throw new Error('Error saving msg');
         }
     );
 };
 
+const checkMessage = (data) => {
+    if (!data.message) {
+        throw new Error('Message should be non-empty');
+    }
+};
+
 module.exports = {
-    addMessage
+    addMessage, checkMessage
 };
