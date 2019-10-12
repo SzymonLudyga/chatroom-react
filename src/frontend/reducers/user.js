@@ -3,7 +3,10 @@ import { USER_UPDATE, USER_LIST_RECEIVED } from '../actions/types';
 const initialState = {
     userInfo: {
         username: null,
-        token: null
+        token: {
+            tokenInfo: null,
+            timestamp: null
+        }
     },
     userList: []
 };
@@ -15,7 +18,11 @@ export default function user(state = initialState, action) {
             userInfo: {
                 ...state.userInfo,
                 username: action.userData.username,
-                token: action.userData.token
+                token: {
+                    ...state.userInfo.token,
+                    tokenInfo: action.userData.token.tokenInfo,
+                    timestamp: action.userData.token.timestamp
+                }
             }
         };
     }

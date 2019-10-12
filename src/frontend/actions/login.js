@@ -18,7 +18,10 @@ export function login(userCredentials) {
             }
             dispatch(_userUpdated({
                 username: userCredentials.name,
-                token: res.data.tokens[res.data.tokens.length - 1].token
+                token: {
+                    tokenInfo: res.data.tokens[res.data.tokens.length - 1].token,
+                    timestamp: res.data.tokens[res.data.tokens.length - 1].timestamp
+                }
             }));
         } catch (e) {
             console.log(e);
@@ -29,14 +32,17 @@ export function login(userCredentials) {
 export function logout(username) {
     return async (dispatch, getState) => {
         try {
-            const { token } = getState().user.userInfo;
-            const res = await authApiCallWithData('delete', 'users/token', token, { username });
+            const { tokenInfo } = getState().user.userInfo.token;
+            const res = await authApiCallWithData('delete', 'users/token', tokenInfo, { username });
             if (res.status !== 200) {
                 throw Error('Error Logout');
             }
             dispatch(_userUpdated({
                 username: null,
-                token: null
+                token: {
+                    tokenInfo: null,
+                    timestamp: null
+                }
             }));
         } catch (e) {
             console.log(e);
@@ -51,7 +57,13 @@ export function register(userCredentials) {
             if (res.status !== 200) {
                 throw Error('Error Register');
             }
-            dispatch(_userUpdated(userCredentials.name));
+            dispatch(_userUpdated({
+                username: userCredentials.name,
+                token: {
+                    tokenInfo: res.data.tokens[res.data.tokens.length - 1].token,
+                    timestamp: res.data.tokens[res.data.tokens.length - 1].timestamp
+                }
+            }));
         } catch (e) {
             console.log(e);
         }
