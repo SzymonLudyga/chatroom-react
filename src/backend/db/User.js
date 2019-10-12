@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const _ = require('lodash');
 const bcrypt = require('bcryptjs');
+const moment = require('moment');
 
 const UserSchema = new mongoose.Schema({
     name: {
@@ -33,18 +34,24 @@ const UserSchema = new mongoose.Schema({
             token: {
                 type: String,
                 require: true
+            },
+            timestamp: {
+                type: Number,
+                required: true,
+                default: null,
             }
         }
     ]
 });
 
 UserSchema.methods.generateAuthToken = function () {
+    const timestamp = moment().valueOf();
     const user = this;
     const access = 'auth';
     const token = jwt
         .sign({ _id: user._id.toHexString(), access }, process.env.JWT_SECRET)
         .toString();
-    user.tokens = user.tokens.concat([{ access, token }]);
+    user.tokens = user.tokens.concat([{ access, token, timestamp }]);
     return user.save().then(() => token);
 };
 
