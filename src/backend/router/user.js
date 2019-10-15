@@ -38,7 +38,6 @@ router.post('/login', (req, res) => {
 });
 
 router.get('/refresh-token', authenticate, (req, res) => {
-    console.log("Hejo");
     req.user.removeToken(req.token).then(
         () => {
             req.user
@@ -50,7 +49,6 @@ router.get('/refresh-token', authenticate, (req, res) => {
                 .catch((err) => {
                     res.status(400).send(err);
                 });
-            
         },
         () => {
             res.status(400).send();
@@ -59,7 +57,6 @@ router.get('/refresh-token', authenticate, (req, res) => {
 });
 
 router.delete('/token', authenticate, (req, res) => {
-
     req.user.removeToken(req.token).then(
         () => {
             res.status(200).send();
