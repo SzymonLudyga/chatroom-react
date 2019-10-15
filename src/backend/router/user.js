@@ -37,8 +37,28 @@ router.post('/login', (req, res) => {
         });
 });
 
+router.get('/refresh-token', authenticate, (req, res) => {
+    console.log("Hejo");
+    req.user.removeToken(req.token).then(
+        () => {
+            req.user
+                .save()
+                .then(() => req.user.generateAuthToken())
+                .then((token) => {
+                    res.header('x-auth', token).send(req.user);
+                })
+                .catch((err) => {
+                    res.status(400).send(err);
+                });
+            
+        },
+        () => {
+            res.status(400).send();
+        }
+    );
+});
+
 router.delete('/token', authenticate, (req, res) => {
-    console.log(req);
 
     req.user.removeToken(req.token).then(
         () => {

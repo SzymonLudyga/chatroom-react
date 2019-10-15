@@ -1,4 +1,4 @@
-import { USER_UPDATE, USER_LIST_RECEIVED } from '../actions/types';
+import { USER_UPDATE, USER_LIST_RECEIVED, TOKEN_UPDATE } from '../actions/types';
 
 const initialState = {
     userInfo: {
@@ -22,6 +22,19 @@ export default function user(state = initialState, action) {
                     ...state.userInfo.token,
                     tokenInfo: action.userData.token.tokenInfo,
                     timestamp: action.userData.token.timestamp
+                }
+            }
+        };
+    }
+    if (action.type === TOKEN_UPDATE) {
+        return {
+            ...state,
+            userInfo: {
+                ...state.userInfo,
+                token: {
+                    ...state.userInfo.token,
+                    tokenInfo: action.token.tokenInfo,
+                    timestamp: action.token.timestamp
                 }
             }
         };

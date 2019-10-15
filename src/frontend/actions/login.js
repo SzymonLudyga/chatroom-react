@@ -1,11 +1,18 @@
-import { apiCallWithData, authApiCallWithData } from '../api/api';
+import { apiCallWithData, authApiCallWithData, authApiCall } from '../api/api';
 
-import { USER_UPDATE } from './types';
+import { USER_UPDATE, TOKEN_UPDATE } from './types';
 
 function _userUpdated(userData) {
     return {
         type: USER_UPDATE,
         userData,
+    };
+}
+
+function _tokenUpdated(token) {
+    return {
+        type: TOKEN_UPDATE,
+        token,
     };
 }
 
@@ -22,6 +29,24 @@ export function login(userCredentials) {
                     tokenInfo: res.data.tokens[res.data.tokens.length - 1].token,
                     timestamp: res.data.tokens[res.data.tokens.length - 1].timestamp
                 }
+            }));
+        } catch (e) {
+            console.log(e);
+        }
+    };
+}
+
+export function refreshToken(store) {
+    return async () => {
+        try {
+            const { tokenInfo } = store.getState().user.userInfo.token;
+            const res = await authApiCall('get', 'users/refresh-token', tokenInfo);
+            if (res.status !== 200) {
+                throw Error('Error Token');
+            }
+            store.dispatch(_tokenUpdated({
+                tokenInfo: res.data.tokens[res.data.tokens.length - 1].token,
+                timestamp: res.data.tokens[res.data.tokens.length - 1].timestamp
             }));
         } catch (e) {
             console.log(e);

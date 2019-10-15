@@ -7,6 +7,6 @@
 2. Enhance UI/UX
 3. Error handling (Error Modals)
 4. Checking if room and user are correct
-5. Adding timestamps to tokens
-6. PropTypes
+5. PropTypes
+6. npm lint!
 ```

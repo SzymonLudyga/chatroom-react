@@ -45,13 +45,13 @@ const UserSchema = new mongoose.Schema({
 });
 
 UserSchema.methods.generateAuthToken = function () {
-    const timestamp = moment().valueOf();
+    const expiration = moment().add(1, 'hours').valueOf()
     const user = this;
     const access = 'auth';
     const token = jwt
         .sign({ _id: user._id.toHexString(), access }, process.env.JWT_SECRET)
         .toString();
-    user.tokens = user.tokens.concat([{ access, token, timestamp }]);
+    user.tokens = user.tokens.concat([{ access, token, timestamp: expiration }]);
     return user.save().then(() => token);
 };
 
