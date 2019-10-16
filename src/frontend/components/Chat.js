@@ -125,6 +125,5 @@ Chat.propTypes = {
     classes: PropTypes.object.isRequired,
     messages: PropTypes.array.isRequired,
     deleteMessages: PropTypes.func.isRequired,
-    leaveRoom: PropTypes.func.isRequired,
     fetchMessages: PropTypes.func.isRequired,
 };

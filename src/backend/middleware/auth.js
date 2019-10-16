@@ -1,8 +1,8 @@
+const moment = require('moment');
 const { User } = require('../db/User');
-const moment = require('moment')
 
 const authenticate = (req, res, next) => {
-    const timestamp = moment().valueOf()
+    const timestamp = moment().valueOf();
     const token = req.header('x-auth');
 
     User.findByToken(token)

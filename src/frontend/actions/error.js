@@ -7,7 +7,6 @@ export function errorHide() {
 }
 
 export function errorDisplay(error) {
-    console.log(error);
     return {
         type: ERROR_DISPLAY,
         error

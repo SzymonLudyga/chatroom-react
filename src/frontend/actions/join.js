@@ -1,5 +1,6 @@
 import { apiCall, apiCallWithData } from '../api/api';
 import { ROOMS_RECEIVED, ROOM_CHOSEN } from './types';
+import { errorDisplay } from './error'
 
 function roomsReceived(rooms) {
     return {
@@ -22,7 +23,7 @@ export function fetchRooms() {
             if (res.status !== 200) {
                 throw Error('Error fetching rooms');
             }
-            dispatch(roomsReceived(res.data.rooms));
+            dispatch(roomsReceived(res.data));
         } catch (e) {
             console.log(e);
         }
@@ -32,13 +33,33 @@ export function fetchRooms() {
 export function confirmRoom(room) {
     return async (dispatch) => {
         try {
-            const res = await apiCallWithData('post', 'rooms', { room });
+            const res = await apiCallWithData('post', 'rooms/choose', { room });
             if (res.status !== 200) {
-                throw Error('Error adding room');
+                throw Error('Error confirmin room');
             }
             dispatch(roomChosen(res.data.room));
         } catch (e) {
             console.log(e);
+        }
+    };
+}
+
+export function createRoom(data) {
+    return async (dispatch) => {
+        try {
+            const res = await apiCallWithData('post', 'rooms', data);
+            if (res.status !== 200) {
+                throw Error('Error confirming room');
+            }
+            // dispatch(roomCreated(res.data.room));
+        } catch (e) {
+            console.log(e.response);
+            if (e.response.status === 400) {
+                dispatch(errorDisplay({ 
+                    errorType: e.response.data.errorType, 
+                    errorMessage: e.response.data.errorMessage 
+                }));
+            }
         }
     };
 }

@@ -7,7 +7,6 @@ const initialState = {
 
 export default function error(state = initialState, action) {
     if (action.type === ERROR_DISPLAY) {
-        console.log(action);
         return {
             ...state,
             errorType: action.error.errorType,

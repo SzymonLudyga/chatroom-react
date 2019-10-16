@@ -45,7 +45,7 @@ const UserSchema = new mongoose.Schema({
 });
 
 UserSchema.methods.generateAuthToken = function () {
-    const expiration = moment().add(1, 'hours').valueOf()
+    const expiration = moment().add(1, 'hours').valueOf();
     const user = this;
     const access = 'auth';
     const token = jwt

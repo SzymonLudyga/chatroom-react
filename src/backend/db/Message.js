@@ -5,7 +5,6 @@ const MessageSchema = new mongoose.Schema({
         type: String,
         required: true,
         minlength: 1,
-        required: true,
     },
     room: {
         type: String,

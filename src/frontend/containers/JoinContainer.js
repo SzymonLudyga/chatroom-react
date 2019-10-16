@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 
-import { fetchRooms, confirmRoom } from '../actions/join';
+import { fetchRooms, confirmRoom, createRoom } from '../actions/join';
 import { logout } from '../actions/login';
 
 import Join from '../components/Join';
@@ -28,6 +28,8 @@ function mapStateToProps(state) {
     return {
         rooms: state.join.rooms,
         username: state.user.userInfo.username,
+        errorType: state.error.errorType,
+        errorMessage: state.error.errorMessage
     };
 }
 
@@ -36,6 +38,7 @@ function mapDispatchToProps(dispatch) {
         logout: username => dispatch(logout(username)),
         fetchRooms: () => dispatch(fetchRooms()),
         confirmRoom: room => dispatch(confirmRoom(room)),
+        createRoom: data => dispatch(createRoom(data)),
     };
 }
 

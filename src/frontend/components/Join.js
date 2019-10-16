@@ -3,15 +3,17 @@ import PropTypes from 'prop-types';
 import {
     FormControl, Button, InputLabel, Select, MenuItem, Input, FormHelperText
 } from '@material-ui/core';
-import { routes } from '../routing/routes';
 
+import { routes } from '../routing/routes';
 import WebSocket from '../websockets/WebSocket';
+import InputModal from '../common/InputModal';
 
 export default class Join extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            roomName: ''
+            roomName: '',
+            roomModalOpen: false
         };
 
         this._socket = new WebSocket();
@@ -27,6 +29,24 @@ export default class Join extends Component {
         });
     }
 
+    _openModal = () => {
+        this.setState({
+            roomModalOpen: true
+        });
+    }
+
+    _closeModal = () => {
+        this.setState({
+            roomModalOpen: false
+        });
+    }
+
+    _onRoomSubmit = (room) => {
+        this.props.createRoom({
+            user: this.props.username, room
+        })
+    }
+
     _handleSubmit = () => {
         this.props.confirmRoom(this.state.roomName);
         this.props.history.push(`${routes.chat}/${this.state.roomName}`);
@@ -40,29 +60,41 @@ export default class Join extends Component {
     render() {
         const { classes, rooms } = this.props;
         return (
-            <div className={classes.container}>
-                <FormControl>
-                    <InputLabel shrink htmlFor="room-label-placeholder">
-                        Choose room
-                    </InputLabel>
-                    <Select
-                        className={classes.textField}
-                        value={this.state.roomName}
-                        onChange={this._handleChange}
-                        input={<Input name="room" id="room-helper" />}
-                    >
-                        {rooms.map(room => <MenuItem key={room.id} value={room.name}>{room.name[0].toUpperCase() + room.name.substring(1)}</MenuItem>)}
-                    </Select>
-                    <FormHelperText>Select room for chat</FormHelperText>
-                    <Button onClick={this._handleSubmit} className={classes.big} variant="contained" color="primary">
-                        Join
-                    </Button>
-                    <Button onClick={this._handleLogout} className={classes.big} variant="contained" color="secondary">
-                        Logout
-                    </Button>
-                </FormControl>
-            </div>
-
+            <>
+                <div className={classes.container}>
+                    <FormControl>
+                        <InputLabel shrink htmlFor="room-label-placeholder">
+                            Choose room
+                        </InputLabel>
+                        <Select
+                            className={classes.textField}
+                            value={this.state.roomName}
+                            onChange={this._handleChange}
+                            input={<Input name="room" id="room-helper" />}
+                        >
+                            {rooms.map(room => <MenuItem key={room._id} value={room.name}>{room.name[0].toUpperCase() + room.name.substring(1)}</MenuItem>)}
+                        </Select>
+                        <FormHelperText>Select room for chat</FormHelperText>
+                        <Button onClick={this._handleSubmit} className={classes.big} variant="contained" color="primary">
+                            Join
+                        </Button>
+                        <Button onClick={this._handleLogout} className={classes.big} variant="contained" color="secondary">
+                            Logout
+                        </Button>
+                        <Button onClick={this._openModal} className={classes.big} variant="contained" color="secondary">
+                            Open Modal
+                        </Button>
+                    </FormControl>
+                </div>
+                <InputModal 
+                    openModal={this.state.roomModalOpen} 
+                    closeModal={this._closeModal} 
+                    message="Type the name of the room"
+                    onSubmit={(room) => this._onRoomSubmit(room)}
+                    errorType={this.props.errorType}
+                    errorMessage={this.props.errorMessage}
+                />
+            </>
         );
     }
 }
