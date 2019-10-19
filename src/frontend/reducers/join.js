@@ -1,4 +1,4 @@
-import { ROOMS_RECEIVED, ROOM_CHOSEN } from '../actions/types';
+import { ROOMS_RECEIVED, ROOM_CHOSEN, ROOM_CREATED } from '../actions/types';
 
 const initialState = {
     rooms: [],
@@ -15,6 +15,11 @@ export default function join(state = initialState, action) {
         return {
             ...state,
             room: action.room
+        };
+    } if (action.type === ROOM_CREATED) {
+        return {
+            ...state,
+            rooms: state.rooms.push(action.room)
         };
     }
     return state;

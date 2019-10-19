@@ -20,12 +20,13 @@ router.post('', (req, res) => {
         .save()
         .then(doc => 
             res.status(200).send(doc)
-        ).catch(err => 
+        ).catch(err => {
+            console.log(err)
             res.status(400).send({
                 errorType: 'room',
                 errorMessage: 'Try other room name'
             })
-        );
+        });
 });
 
 router.post('/choose', (req, res) => res.send(req.body));
