@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import {
-    FormControl, Button, Typography, TextField, FormHelperText, Divider
+    Button, Typography, TextField, FormHelperText, Divider, Grid
 } from '@material-ui/core';
 import { routes } from '../routing/routes';
 import WebSocket from '../websockets/WebSocket';
@@ -75,47 +75,56 @@ export default class Chat extends Component {
     render() {
         const { classes } = this.props;
         return (
-            <>
-                <FormControl>
-                    <Typography className={classes.big}>
-                        {`${this.props.username} in room ${this.state.roomName}`}
-                    </Typography>
-                    <Typography>
-                        {`${this.state.messageCount} messages have been emitted`}
-                    </Typography>
-                    <div className={classes.marginBig}>
-                        <TextField error={this.props.errorType === 'message'} onChange={this._handleTypeChange} value={this.state.message} placeholder="new message..." />
-                        {this.props.errorType === 'message'
-                            && <FormHelperText className={classes.red}>{this.props.errorMessage}</FormHelperText>
-                        }
+            <Grid className={classes.container}>
+                <div className={classes.users}>
+                    <div>
+                        <Typography className={classes.userTitle} variant="h3" key={1}>Users</Typography>
+                        {this.props.users.map(user => (
+                            <Typography className={classes.userElement} variant="h5" key={user._id}>- {user.name}</Typography>
+                        ))}
                     </div>
-                    <Button onClick={this._sendMessage} variant="contained" color="primary">
-                        Send
-                    </Button>
-                    <Button onClick={this._delete}>
-                        Delete Messages
-                    </Button>
-                    <Button onClick={this._leaveRoom}>
-                        Leave Room
-                    </Button>
+                    <div className={classes.buttonDiv}>
+                        <Button onClick={this._delete}>
+                            Delete Messages
+                        </Button>
+                        <Button onClick={this._leaveRoom}>
+                            Leave Room
+                        </Button>
 
-                    <Button onClick={this._getPastMessages}>
-                        Get messages from the past
-                    </Button>
-                </FormControl>
-                {this.props.users.map(user => (
-                    <>
-                        <Divider />
-                        <Typography variant="h3" key={user._id}>{`${user.name}`}</Typography>
-                    </>
-                ))}
-                {this.props.messages.map(msg => (
-                    <>
-                        <Divider />
-                        <Typography key={msg.timestamp}>{`${msg.user} (${msg.timestamp}): ${msg.message}`}</Typography>
-                    </>
-                ))}
-            </>
+                        <Button onClick={this._getPastMessages}>
+                            Get messages from the past
+                        </Button>
+                    </div>
+                </div>
+
+                <div className={classes.messages}>
+                    <div className={classes.msg}>
+                        <Typography className={classes.big}>
+                            {`${this.props.username} in room ${this.state.roomName}`}
+                        </Typography>
+                        <Typography>
+                            {`${this.state.messageCount} messages have been emitted`}
+                        </Typography>
+                        {this.props.messages.map(msg => (
+                                <>
+                                    <Divider />
+                                    <Typography key={msg.timestamp}>{`${msg.user} (${msg.timestamp}): ${msg.message}`}</Typography>
+                                </>
+                        ))}
+                    </div>
+                    <div className={classes.inputWithButton}>
+                        <div className={classes.inputWithHelper}>
+                            <TextField autoFocus error={this.props.errorType === 'message'} onChange={this._handleTypeChange} value={this.state.message} placeholder="new message..." />
+                            {this.props.errorType === 'message'
+                                && <FormHelperText className={classes.red}>{this.props.errorMessage}</FormHelperText>
+                            }
+                        </div>
+                        <Button className={classes.send} onClick={this._sendMessage} variant="contained" color="primary">
+                            Send
+                        </Button>
+                    </div>
+                </div>
+            </Grid>
         );
     }
 }

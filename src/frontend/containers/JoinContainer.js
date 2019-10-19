@@ -10,17 +10,27 @@ const styles = theme => ({
     container: {
         marginTop: '50px',
         display: 'flex',
-        justifyContent: 'center',
+        justifyContent: 'space-around',
         alignItems: 'center',
+        flexDirection: 'row',
         minWidth: 120,
     },
     big: {
-        marginTop: '20px',
+        margin: '10px',
         fontSize: '20px',
         width: '100%',
     },
+    area: {
+        margin: '40px',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'column',
+        minWidth: 260,
+        border: '3px solid black',
+    },
     textField: {
-        minWidth: 160,
+        minWidth: 260,
     }
 });
 

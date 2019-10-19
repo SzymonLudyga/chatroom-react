@@ -9,12 +9,68 @@ import { errorDisplay, errorHide } from '../actions/error';
 import Chat from '../components/Chat';
 
 const styles = () => ({
+    container: {
+        display: 'flex',
+        justifyContent: 'right',
+        alignItems: 'center',
+        flexDirection: 'row',
+    },
+    users: {
+        height: '100vh',
+        width: '25%',
+        display: 'flex',
+        alignItems: 'right',
+        justifyContent: 'space-between',
+        flexDirection: 'column',
+        backgroundColor: 'lightblue'
+    },
+    userElement: {
+        padding: '2%',
+        margin: 10
+    },
+    userTitle: {
+        borderBottom: '3px solid black',
+        padding: '2%',
+    },
+    buttonDiv: {
+        display: 'flex',
+        alignSelf: 'center',
+        flexDirection: 'column'
+    },
+    inputWithButton: {
+        flexShrink: 0,
+        display: 'flex',
+        justifyContent: 'space-between',
+        flexDirection: 'row',
+        margin: 20
+    },
+    inputWithHelper: {
+        display: 'flex',
+        flexDirection: 'column',
+        width: '75%'
+    },
     big: {
         fontSize: '40px'
+    },
+    msg: {
+        flexGrow: 1,
+        overflowY: 'scroll',
+    },
+    messages: {
+        height: '100vh',
+        width: '75%',
+        display: 'flex',
+        alignItems: 'right',
+        justifyContent: 'space-between',
+        flexDirection: 'column'
     },
     marginBig: {
         marginTop: 30,
         marginBottom: 30
+    },
+    send: {
+        alignSelf: 'flex-end',
+        width: '23%'
     },
     red: {
         color: 'red'

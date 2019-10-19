@@ -8,6 +8,7 @@ import _ from 'lodash';
 import store, { history } from './store/index';
 import Routes from './routing/AppRoutes';
 import { refreshToken } from './actions/login';
+import './App.css';
 
 require('moment').locale('pl');
 

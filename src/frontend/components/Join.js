@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
-    FormControl, Button, InputLabel, Select, MenuItem, Input, FormHelperText
+    Button, InputLabel, Select, MenuItem, Input, FormHelperText
 } from '@material-ui/core';
 
 import { routes } from '../routing/routes';
@@ -62,29 +62,31 @@ export default class Join extends Component {
         return (
             <>
                 <div className={classes.container}>
-                    <FormControl>
-                        <InputLabel shrink htmlFor="room-label-placeholder">
-                            Choose room
-                        </InputLabel>
-                        <Select
-                            className={classes.textField}
-                            value={this.state.roomName}
-                            onChange={this._handleChange}
-                            input={<Input name="room" id="room-helper" />}
-                        >
-                            {rooms.map(room => <MenuItem key={room._id} value={room.name}>{room.name[0].toUpperCase() + room.name.substring(1)}</MenuItem>)}
-                        </Select>
-                        <FormHelperText>Select room for chat</FormHelperText>
-                        <Button onClick={this._handleSubmit} className={classes.big} variant="contained" color="primary">
-                            Join
-                        </Button>
-                        <Button onClick={this._handleLogout} className={classes.big} variant="contained" color="secondary">
-                            Logout
-                        </Button>
-                        <Button onClick={this._openModal} className={classes.big} variant="contained" color="secondary">
-                            Open Modal
-                        </Button>
-                    </FormControl>
+                        <div className={classes.area}>
+                            <InputLabel shrink htmlFor="room-label-placeholder">
+                                Choose room
+                            </InputLabel>
+                            <Select
+                                className={classes.textField}
+                                value={this.state.roomName}
+                                onChange={this._handleChange}
+                                input={<Input name="room" id="room-helper" />}
+                            >
+                                {rooms.map(room => <MenuItem key={room._id} value={room.name}>{room.name[0].toUpperCase() + room.name.substring(1)}</MenuItem>)}
+                            </Select>
+                            <FormHelperText>Select room for chat</FormHelperText>
+                        </div>
+                        <div className={classes.area}>
+                            <Button onClick={this._handleSubmit} className={classes.big} variant="contained" color="primary">
+                                Join
+                            </Button>
+                            <Button onClick={this._handleLogout} className={classes.big} variant="contained" color="secondary">
+                                Logout
+                            </Button>
+                            <Button onClick={this._openModal} className={classes.big} variant="contained" color="secondary">
+                                Add room
+                            </Button>
+                        </div>
                 </div>
                 <InputModal 
                     openModal={this.state.roomModalOpen} 
