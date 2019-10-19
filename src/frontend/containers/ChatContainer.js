@@ -20,16 +20,17 @@ const styles = () => ({
         width: '25%',
         display: 'flex',
         alignItems: 'right',
+        color: 'white',
         justifyContent: 'space-between',
         flexDirection: 'column',
-        backgroundColor: 'lightblue'
+        backgroundColor: '#232e7a'
     },
     userElement: {
         padding: '2%',
         margin: 10
     },
     userTitle: {
-        borderBottom: '3px solid black',
+        borderBottom: '3px solid white',
         padding: '2%',
     },
     buttonDiv: {
@@ -50,11 +51,19 @@ const styles = () => ({
         width: '75%'
     },
     big: {
+        margin: 5,
         fontSize: '40px'
     },
     msg: {
         flexGrow: 1,
         overflowY: 'scroll',
+    },
+    singleMessage: {
+        margin: 7
+    },
+    dummyDiv: { 
+        float:"left", 
+        clear: "both" 
     },
     messages: {
         height: '100vh',
@@ -74,6 +83,11 @@ const styles = () => ({
     },
     red: {
         color: 'red'
+    },
+    white: {
+        color: 'white',
+        border: '1px solid white',
+        margin: 2
     }
 });
 

@@ -23,21 +23,26 @@ export default class Chat extends Component {
     componentDidMount() {
         this._socket.onMessage('new-message', (res) => {
             this.props.addMessage(res);
+            this._scrollToBottom();
         });
         this._socket.onMessage('error-message', (res) => {
             this.props.handleError({ errorType: res.type, errorMessage: res.message });
         });
         this._socket.onMessage('update-user-list', (users) => {
-            console.log(users);
             this.props.updateUserList(users);
         });
         this._socket.emitMessage('join-room', {
             user: this.props.username, room: this.state.roomName
         });
+        this._scrollToBottom();
     }
 
     componentWillUnmount() {
         this.props.clearMessages();
+    }
+
+    _scrollToBottom = () => {
+        this.messagesEnd.scrollIntoView({ behavior: "smooth" });
     }
 
     _delete = () => {
@@ -54,6 +59,13 @@ export default class Chat extends Component {
             user: this.props.username, room: this.state.roomName
         });
         this.props.history.push(routes.join);
+    }
+
+    _onEnter = e => {
+        console.log(e);
+        if(e.keyCode == 13){
+            this._sendMessage();
+        }
     }
 
     _handleTypeChange = (e) => {
@@ -84,15 +96,15 @@ export default class Chat extends Component {
                         ))}
                     </div>
                     <div className={classes.buttonDiv}>
-                        <Button onClick={this._delete}>
+                        <Button className={classes.white} onClick={this._delete}>
                             Delete Messages
                         </Button>
-                        <Button onClick={this._leaveRoom}>
+                        <Button className={classes.white} onClick={this._leaveRoom}>
                             Leave Room
                         </Button>
 
-                        <Button onClick={this._getPastMessages}>
-                            Get messages from the past
+                        <Button className={classes.white} onClick={this._getPastMessages}>
+                            Get messages history
                         </Button>
                     </div>
                 </div>
@@ -105,16 +117,16 @@ export default class Chat extends Component {
                         <Typography>
                             {`${this.state.messageCount} messages have been emitted`}
                         </Typography>
-                        {this.props.messages.map(msg => (
-                                <>
-                                    <Divider />
-                                    <Typography key={msg.timestamp}>{`${msg.user} (${msg.timestamp}): ${msg.message}`}</Typography>
-                                </>
-                        ))}
+                        {this.props.messages.map(msg => 
+                            <Typography className={classes.singleMessage} key={msg.timestamp}>{`${msg.user} (${msg.timestamp}): ${msg.message}`}</Typography>
+                        )}
+                        <div className={classes.dummyDiv}
+                            ref={(el) => { this.messagesEnd = el; }}>
+                        </div>
                     </div>
                     <div className={classes.inputWithButton}>
                         <div className={classes.inputWithHelper}>
-                            <TextField autoFocus error={this.props.errorType === 'message'} onChange={this._handleTypeChange} value={this.state.message} placeholder="new message..." />
+                            <TextField autoFocus error={this.props.errorType === 'message'} onKeyDown={this._onEnter} onChange={this._handleTypeChange} value={this.state.message} placeholder="new message..." />
                             {this.props.errorType === 'message'
                                 && <FormHelperText className={classes.red}>{this.props.errorMessage}</FormHelperText>
                             }
