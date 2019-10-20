@@ -4,13 +4,17 @@ import {
     ROOM_CREATED,
     ROOM_DELETED,
     CLOSE_ROOM_MODAL,
-    OPEN_ROOM_MODAL
+    OPEN_ROOM_MODAL,
+    CLOSE_CONFIRM_MODAL,
+    OPEN_CONFIRM_MODAL
 } from '../actions/types';
 
 const initialState = {
     rooms: [],
     room: null,
     roomModal: false,
+    confirmModal: false,
+    confirmDeletedRoom: null
 };
 
 export default function join(state = initialState, action) {
@@ -33,6 +37,19 @@ export default function join(state = initialState, action) {
         return {
             ...state,
             roomModal: false
+        };
+    } if (action.type === OPEN_CONFIRM_MODAL) {
+        console.log(action.room)
+        return {
+            ...state,
+            confirmModal: true,
+            confirmDeletedRoom: action.room
+        };
+    } if (action.type === CLOSE_CONFIRM_MODAL) {
+        return {
+            ...state,
+            confirmModal: false,
+            confirmDeletedRoom: null
         };
     } if (action.type === ROOM_CREATED) {
         return {

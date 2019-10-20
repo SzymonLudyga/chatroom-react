@@ -13,7 +13,6 @@ router.get('', (req, res) => {
 });
 
 router.delete('', (req, res) => {
-    console.log(req.body)
     Room.findOneAndRemove({ name: req.body.room }).then((room) => {
         res.status(200).send(room);
     }, (err) => {

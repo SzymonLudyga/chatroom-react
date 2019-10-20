@@ -7,9 +7,6 @@ import {
 
 const useStyles = makeStyles(theme => ({
     root: {
-        // position: 'absolute',
-        // margin: theme.spacing(10, 8),
-        // margin: 'auto',
         maxWidth: 400,
         padding: theme.spacing(3,2),
         display: 'flex',
@@ -46,30 +43,28 @@ export default function InputModal({
     }
 
     return (
-        <div>
-            <Modal
-                className={classes.center}
-                open={openModal}
-                onClose={closeModal}
-            >
-                <Paper className={classes.root}>
-                    <Typography variant="h5" component="h3">
-                        {message}
-                    </Typography>
-                    <div className={classes.marginBig}>
-                    <TextField className={classes.margin} autoFocus
-                        error={errorType === 'room'} 
-                        onChange={handleChangeRoom} value={room} 
-                        placeholder="new room..." />
-                        {errorType === 'room' && 
-                            <FormHelperText className={classes.red}>{errorMessage}</FormHelperText>
-                        }
-                    </div>
-                    <Button variant="contained" color="secondary" onClick={()=>onSubmit(room)}>
-                        Submit
-                    </Button>
-                </Paper>
-            </Modal>
-        </div>
+        <Modal
+            className={classes.center}
+            open={openModal}
+            onClose={closeModal}
+        >
+            <Paper className={classes.root}>
+                <Typography variant="h5" component="h3">
+                    {message}
+                </Typography>
+                <div className={classes.marginBig}>
+                <TextField className={classes.margin} autoFocus
+                    error={errorType === 'room'} 
+                    onChange={handleChangeRoom} value={room} 
+                    placeholder="new room..." />
+                    {errorType === 'room' && 
+                        <FormHelperText className={classes.red}>{errorMessage}</FormHelperText>
+                    }
+                </div>
+                <Button variant="contained" color="secondary" onClick={()=>onSubmit(room)}>
+                    Submit
+                </Button>
+            </Paper>
+        </Modal>
     );
 }

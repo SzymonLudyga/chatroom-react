@@ -7,7 +7,9 @@ import {
     createRoom,
     deleteRoom,
     openRoomModal,
-    closeRoomModal
+    closeRoomModal,
+    openConfirmModal,
+    closeConfirmModal
 } from '../actions/join';
 import { logout } from '../actions/login';
 
@@ -21,6 +23,10 @@ const styles = theme => ({
         alignItems: 'center',
         flexDirection: 'row',
         minWidth: 120,
+    },
+    margin: {
+        margin: 10,
+        width: '100%'
     },
     big: {
         margin: '10px',
@@ -42,6 +48,7 @@ const styles = theme => ({
         minWidth: 260,
     },
     right: {
+        margin: 10,
         marginLeft: 'auto'
     }
 });
@@ -49,6 +56,8 @@ const styles = theme => ({
 function mapStateToProps(state) {
     return {
         roomModal: state.join.roomModal,
+        confirmDeletedRoom: state.join.confirmDeletedRoom,
+        confirmModal: state.join.confirmModal,
         rooms: state.join.rooms,
         username: state.user.userInfo.username,
         errorType: state.error.errorType,
@@ -64,7 +73,9 @@ function mapDispatchToProps(dispatch) {
         confirmRoom: room => dispatch(confirmRoom(room)),
         createRoom: data => dispatch(createRoom(data)),
         openRoomModal: () => dispatch(openRoomModal()),
-        closeRoomModal: () => dispatch(closeRoomModal())
+        closeRoomModal: () => dispatch(closeRoomModal()),
+        openConfirmModal: room => dispatch(openConfirmModal(room)),
+        closeConfirmModal: () => dispatch(closeConfirmModal())
     };
 }
 

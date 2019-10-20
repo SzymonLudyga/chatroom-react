@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
-    Button, InputLabel, Select, MenuItem, Input, FormHelperText, IconButton, Typography
+    Button, IconButton, Fab, Typography
 } from '@material-ui/core';
 
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -9,33 +9,16 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import { routes } from '../routing/routes';
 import WebSocket from '../websockets/WebSocket';
 import InputModal from '../common/InputModal';
+import ConfirmModal from '../common/ConfirmModal';
 
 export default class Join extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            roomName: '',
-        };
-
         this._socket = new WebSocket();
     }
 
     componentDidMount() {
         this.props.fetchRooms();
-    }
-
-    _handleChange = (e) => {
-        this.setState({
-            roomName: e.target.value
-        });
-    }
-
-    _openModal = () => {
-        this.props.openRoomModal();
-    }
-
-    _closeModal = () => {
-        this.props.closeRoomModal();
     }
 
     _onRoomSubmit = (room) => {
@@ -44,9 +27,9 @@ export default class Join extends Component {
         })
     }
 
-    _handleSubmit = () => {
-        this.props.confirmRoom(this.state.roomName);
-        this.props.history.push(`${routes.chat}/${this.state.roomName}`);
+    _handleSubmit = (room) => {
+        this.props.confirmRoom(room);
+        this.props.history.push(`${routes.chat}/${room}`);
     }
 
     _handleLogout = () => {
@@ -60,25 +43,17 @@ export default class Join extends Component {
             <>
                 <div className={classes.container}>
                         <div className={classes.area}>
-                            <InputLabel shrink htmlFor="room-label-placeholder">
-                                Choose room
-                            </InputLabel>
-                            {/* <Select
-                                className={classes.textField}
-                                value={this.state.roomName}
-                                onChange={this._handleChange}
-                                input={<Input name="room" id="room-helper" />}
-                            > */}
-                                {rooms.map(room => 
-                                    <div className={classes.textField}>
-                                        <Button>{room.name[0].toUpperCase() + room.name.substring(1)}</Button>
-                                        <IconButton className={classes.right} onClick={() => this.props.deleteRoom(room.name)}>
-                                            <DeleteIcon />
-                                        </IconButton>
-                                    </div>
-                                )}
-                            {/* </Select> */}
-                            <FormHelperText>Select room for chat</FormHelperText>
+                            <Typography variant='h3'>Rooms</Typography>
+                            {rooms.map(room => 
+                                <div className={classes.textField}>
+                                    <Fab className={classes.margin} variant="extended" onClick={() => this._handleSubmit(room.name)}>
+                                        {room.name[0].toUpperCase() + room.name.substring(1)}
+                                    </Fab>
+                                    <IconButton className={classes.right} onClick={() => this.props.openConfirmModal(room.name)}>
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </div>
+                            )}
                         </div>
                         <div className={classes.area}>
                             <Button onClick={this._handleSubmit} className={classes.big} variant="contained" color="primary">
@@ -87,18 +62,25 @@ export default class Join extends Component {
                             <Button onClick={this._handleLogout} className={classes.big} variant="contained" color="secondary">
                                 Log Out
                             </Button>
-                            <Button onClick={this._openModal} className={classes.big} variant="contained" color="secondary">
+                            <Button onClick={this.props.openRoomModal} className={classes.big} variant="contained" color="secondary">
                                 Add room
                             </Button>
                         </div>
                 </div>
                 <InputModal 
                     openModal={this.props.roomModal} 
-                    closeModal={this._closeModal} 
+                    closeModal={this.props.closeRoomModal} 
                     message="Type the name of the room"
                     onSubmit={(room) => this._onRoomSubmit(room)}
                     errorType={this.props.errorType}
                     errorMessage={this.props.errorMessage}
+                />
+                <ConfirmModal 
+                    openModal={this.props.confirmModal} 
+                    closeModal={this.props.closeConfirmModal}
+                    message={`Do you want to delete room: ${this.props.confirmDeletedRoom}?`}
+                    onSubmit={() => this.props.deleteRoom(this.props.confirmDeletedRoom)}
+                    onCancel={this.props.closeConfirmModal}
                 />
             </>
         );

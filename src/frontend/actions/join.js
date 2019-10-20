@@ -5,10 +5,12 @@ import {
     ROOM_CREATED,
     ROOM_DELETED,
     OPEN_ROOM_MODAL,
-    CLOSE_ROOM_MODAL
+    CLOSE_ROOM_MODAL,
+    OPEN_CONFIRM_MODAL,
+    CLOSE_CONFIRM_MODAL
 } from './types';
 
-import { errorDisplay } from './error'
+import { errorDisplay, errorHide } from './error'
 
 function _roomsReceived(rooms) {
     return {
@@ -61,8 +63,8 @@ export function deleteRoom(room) {
             if (res.status !== 200) {
                 throw Error('Error deleting room');
             }
-            console.log(res)
             dispatch(_roomDeleted(res.data.name));
+            dispatch(closeConfirmModal());
         } catch (e) {
             console.log(e);
         }
@@ -93,6 +95,7 @@ export function createRoom(data) {
             console.log(res.data);
             dispatch(_roomCreated(res.data));
             dispatch(closeRoomModal());
+            dispatch(errorHide());
         } catch (e) {
             console.log(e.response);
             dispatch(errorDisplay({ 
@@ -112,5 +115,18 @@ export function openRoomModal() {
 export function closeRoomModal() {
     return {
         type: CLOSE_ROOM_MODAL,
+    }
+}
+
+export function openConfirmModal(room) {
+    return {
+        type: OPEN_CONFIRM_MODAL,
+        room
+    }
+}
+
+export function closeConfirmModal() {
+    return {
+        type: CLOSE_CONFIRM_MODAL,
     }
 }
