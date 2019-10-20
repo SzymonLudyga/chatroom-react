@@ -12,9 +12,10 @@ router.get('', (req, res) => {
     ).catch(err => res.status(404).send(err));
 });
 
-router.delete('', authenticate, (req, res) => {
-    Room.findOneAndRemove({ name: req.body.room }).then((msg) => {
-        res.status(200).send({ msg });
+router.delete('', (req, res) => {
+    console.log(req.body)
+    Room.findOneAndRemove({ name: req.body.room }).then((room) => {
+        res.status(200).send(room);
     }, (err) => {
         res.send(err);
     });

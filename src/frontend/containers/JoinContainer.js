@@ -1,7 +1,14 @@
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 
-import { fetchRooms, confirmRoom, createRoom, openRoomModal, closeRoomModal } from '../actions/join';
+import { 
+    fetchRooms,
+    confirmRoom,
+    createRoom,
+    deleteRoom,
+    openRoomModal,
+    closeRoomModal
+} from '../actions/join';
 import { logout } from '../actions/login';
 
 import Join from '../components/Join';
@@ -30,6 +37,8 @@ const styles = theme => ({
         border: '3px solid black',
     },
     textField: {
+        display: 'flex',
+        justifyContent: 'space-between',
         minWidth: 260,
     },
     right: {
@@ -51,6 +60,7 @@ function mapDispatchToProps(dispatch) {
     return {
         logout: username => dispatch(logout(username)),
         fetchRooms: () => dispatch(fetchRooms()),
+        deleteRoom: room => dispatch(deleteRoom(room)),
         confirmRoom: room => dispatch(confirmRoom(room)),
         createRoom: data => dispatch(createRoom(data)),
         openRoomModal: () => dispatch(openRoomModal()),

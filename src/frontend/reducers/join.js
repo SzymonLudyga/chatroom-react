@@ -2,6 +2,7 @@ import {
     ROOMS_RECEIVED,
     ROOM_CHOSEN,
     ROOM_CREATED,
+    ROOM_DELETED,
     CLOSE_ROOM_MODAL,
     OPEN_ROOM_MODAL
 } from '../actions/types';
@@ -37,6 +38,11 @@ export default function join(state = initialState, action) {
         return {
             ...state,
             rooms: state.rooms.concat([action.room])
+        };
+    } if (action.type === ROOM_DELETED) {
+        return {
+            ...state,
+            rooms: state.rooms.filter(room => room.name !== action.room)
         };
     }
     return state;

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
-    Button, InputLabel, Select, MenuItem, Input, FormHelperText, IconButton
+    Button, InputLabel, Select, MenuItem, Input, FormHelperText, IconButton, Typography
 } from '@material-ui/core';
 
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -63,14 +63,21 @@ export default class Join extends Component {
                             <InputLabel shrink htmlFor="room-label-placeholder">
                                 Choose room
                             </InputLabel>
-                            <Select
+                            {/* <Select
                                 className={classes.textField}
                                 value={this.state.roomName}
                                 onChange={this._handleChange}
                                 input={<Input name="room" id="room-helper" />}
-                            >
-                                {rooms.map(room => <MenuItem key={room._id} value={room.name}>{room.name[0].toUpperCase() + room.name.substring(1)}<IconButton className={classes.right}><DeleteIcon /></IconButton></MenuItem>)}
-                            </Select>
+                            > */}
+                                {rooms.map(room => 
+                                    <div className={classes.textField}>
+                                        <Button>{room.name[0].toUpperCase() + room.name.substring(1)}</Button>
+                                        <IconButton className={classes.right} onClick={() => this.props.deleteRoom(room.name)}>
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </div>
+                                )}
+                            {/* </Select> */}
                             <FormHelperText>Select room for chat</FormHelperText>
                         </div>
                         <div className={classes.area}>
