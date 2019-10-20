@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
-    Button, InputLabel, Select, MenuItem, Input, FormHelperText
+    Button, InputLabel, Select, MenuItem, Input, FormHelperText, IconButton
 } from '@material-ui/core';
+
+import DeleteIcon from "@material-ui/icons/Delete";
 
 import { routes } from '../routing/routes';
 import WebSocket from '../websockets/WebSocket';
@@ -13,7 +15,6 @@ export default class Join extends Component {
         super(props);
         this.state = {
             roomName: '',
-            roomModalOpen: false
         };
 
         this._socket = new WebSocket();
@@ -30,15 +31,11 @@ export default class Join extends Component {
     }
 
     _openModal = () => {
-        this.setState({
-            roomModalOpen: true
-        });
+        this.props.openRoomModal();
     }
 
     _closeModal = () => {
-        this.setState({
-            roomModalOpen: false
-        });
+        this.props.closeRoomModal();
     }
 
     _onRoomSubmit = (room) => {
@@ -72,7 +69,7 @@ export default class Join extends Component {
                                 onChange={this._handleChange}
                                 input={<Input name="room" id="room-helper" />}
                             >
-                                {rooms.map(room => <MenuItem key={room._id} value={room.name}>{room.name[0].toUpperCase() + room.name.substring(1)}</MenuItem>)}
+                                {rooms.map(room => <MenuItem key={room._id} value={room.name}>{room.name[0].toUpperCase() + room.name.substring(1)}<IconButton className={classes.right}><DeleteIcon /></IconButton></MenuItem>)}
                             </Select>
                             <FormHelperText>Select room for chat</FormHelperText>
                         </div>
@@ -81,7 +78,7 @@ export default class Join extends Component {
                                 Join
                             </Button>
                             <Button onClick={this._handleLogout} className={classes.big} variant="contained" color="secondary">
-                                Logout
+                                Log Out
                             </Button>
                             <Button onClick={this._openModal} className={classes.big} variant="contained" color="secondary">
                                 Add room
@@ -89,7 +86,7 @@ export default class Join extends Component {
                         </div>
                 </div>
                 <InputModal 
-                    openModal={this.state.roomModalOpen} 
+                    openModal={this.props.roomModal} 
                     closeModal={this._closeModal} 
                     message="Type the name of the room"
                     onSubmit={(room) => this._onRoomSubmit(room)}

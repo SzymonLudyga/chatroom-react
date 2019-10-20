@@ -1,8 +1,15 @@
-import { ROOMS_RECEIVED, ROOM_CHOSEN, ROOM_CREATED } from '../actions/types';
+import { 
+    ROOMS_RECEIVED,
+    ROOM_CHOSEN,
+    ROOM_CREATED,
+    CLOSE_ROOM_MODAL,
+    OPEN_ROOM_MODAL
+} from '../actions/types';
 
 const initialState = {
     rooms: [],
     room: null,
+    roomModal: false,
 };
 
 export default function join(state = initialState, action) {
@@ -16,10 +23,20 @@ export default function join(state = initialState, action) {
             ...state,
             room: action.room
         };
+    } if (action.type === OPEN_ROOM_MODAL) {
+        return {
+            ...state,
+            roomModal: true
+        };
+    } if (action.type === CLOSE_ROOM_MODAL) {
+        return {
+            ...state,
+            roomModal: false
+        };
     } if (action.type === ROOM_CREATED) {
         return {
             ...state,
-            rooms: state.rooms.push(action.room)
+            rooms: state.rooms.concat([action.room])
         };
     }
     return state;

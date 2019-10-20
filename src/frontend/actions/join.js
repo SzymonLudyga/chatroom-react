@@ -1,5 +1,5 @@
-import { apiCall, apiCallWithData } from '../api/api';
-import { ROOMS_RECEIVED, ROOM_CHOSEN, ROOM_CREATED } from './types';
+import { apiCall, apiCallWithData, authApiCallWithData } from '../api/api';
+import { ROOMS_RECEIVED, ROOM_CHOSEN, ROOM_CREATED, OPEN_ROOM_MODAL, CLOSE_ROOM_MODAL } from './types';
 import { errorDisplay } from './error'
 
 function _roomsReceived(rooms) {
@@ -37,6 +37,21 @@ export function fetchRooms() {
     };
 }
 
+export function deleteRoom(room) {
+    return async (dispatch) => {
+        try {
+            const { tokenInfo } = getState().user.userInfo.token;
+            const res = await authApiCallWithData('delete', 'rooms', tokenInfo, { room });
+            if (res.status !== 200) {
+                throw Error('Error deleting room');
+            }
+            dispatch(_roomsReceived(res.data));
+        } catch (e) {
+            console.log(e);
+        }
+    };
+}
+
 export function confirmRoom(room) {
     return async (dispatch) => {
         try {
@@ -58,15 +73,27 @@ export function createRoom(data) {
             if (res.status !== 200) {
                 throw Error('Error confirming room');
             }
-            dispatch(_roomCreated(res.data.name));
+            console.log(res.data);
+            dispatch(_roomCreated(res.data));
+            dispatch(closeRoomModal());
         } catch (e) {
             console.log(e.response);
-            if (e.response.status === 400) {
-                dispatch(errorDisplay({ 
-                    errorType: e.response.data.errorType, 
-                    errorMessage: e.response.data.errorMessage 
-                }));
-            }
+            dispatch(errorDisplay({ 
+                errorType: e.response.data.errorType, 
+                errorMessage: e.response.data.errorMessage 
+            }));
         }
     };
+}
+
+export function openRoomModal() {
+    return {
+        type: OPEN_ROOM_MODAL,
+    }
+}
+
+export function closeRoomModal() {
+    return {
+        type: CLOSE_ROOM_MODAL,
+    }
 }

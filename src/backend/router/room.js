@@ -12,20 +12,53 @@ router.get('', (req, res) => {
     ).catch(err => res.status(404).send(err));
 });
 
+router.delete('', authenticate, (req, res) => {
+    Room.findOneAndRemove({ name: req.body.room }).then((msg) => {
+        res.status(200).send({ msg });
+    }, (err) => {
+        res.send(err);
+    });
+});
+
 router.post('', (req, res) => {
     const created_at = moment().valueOf();
-    const room = new Room({ name: req.body.room, created_at, creator: req.body.user });
+    const room = new Room({ name: req.body.room.toLowerCase(), created_at, creator: req.body.user });
+
+    Room.find().then(
+        rooms => {
+            if (rooms.length > 10) {
+                throw new Error('There are too many rooms created');
+            }
+        }
+    ).catch(err => {
+        res.status(422).send({
+            errorType: 'room',
+            errorMessage: err.message
+        });
+    });
 
     room
         .save()
         .then(doc => 
             res.status(200).send(doc)
         ).catch(err => {
-            console.log(err)
-            res.status(400).send({
-                errorType: 'room',
-                errorMessage: 'Try other room name'
-            })
+            console.log(err);
+            if (err.name === 'ValidationError') {
+                res.status(400).send({
+                    errorType: 'room',
+                    errorMessage: `Room must contain 4-20 letters.`
+                });
+            } else if (err.name === 'MongoError' && err.code === 11000) {
+                res.status(422).send({
+                    errorType: 'room',
+                    errorMessage: 'Room already exists.'
+                });
+            } else {
+                res.status(500).send({
+                    errorType: 'room',
+                    errorMessage: 'Unknown error, check your internet connection.'
+                });
+            }
         });
 });
 
