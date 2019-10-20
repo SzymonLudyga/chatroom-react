@@ -25,13 +25,16 @@ const styles = () => ({
         flexDirection: 'column',
         backgroundColor: '#232e7a'
     },
+    usersNone: {
+        display: 'none',
+    },
     userElement: {
         padding: '2%',
         margin: 10
     },
     userTitle: {
+        textAlign: 'center',
         borderBottom: '3px solid white',
-        padding: '2%',
     },
     buttonDiv: {
         display: 'flex',
@@ -67,7 +70,7 @@ const styles = () => ({
     },
     messages: {
         height: '100vh',
-        width: '75%',
+        width: '100%',
         display: 'flex',
         alignItems: 'right',
         justifyContent: 'space-between',

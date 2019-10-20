@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import {
-    Button, Typography, TextField, FormHelperText, Divider, Grid
+    Button, Typography, TextField, FormHelperText, Grid
 } from '@material-ui/core';
 import { routes } from '../routing/routes';
 import WebSocket from '../websockets/WebSocket';
@@ -15,6 +15,7 @@ export default class Chat extends Component {
             messageCount: 0,
             message: '',
             roomName: this.props.match.params.room,
+            screenWidth: window.innerWidth,
         };
 
         this._socket = new WebSocket();
@@ -35,10 +36,18 @@ export default class Chat extends Component {
             user: this.props.username, room: this.state.roomName
         });
         this._scrollToBottom();
+        window.addEventListener('resize', () => this._handleResize());
     }
 
     componentWillUnmount() {
         this.props.clearMessages();
+        window.removeEventListener('resize', this._handleResize);
+    }
+
+    _handleResize = () => {
+        this.setState({
+            screenWidth: window.innerWidth
+        })
     }
 
     _scrollToBottom = () => {
@@ -86,13 +95,14 @@ export default class Chat extends Component {
 
     render() {
         const { classes } = this.props;
+        const isSmallerScreen = this.state.screenWidth < 600;
         return (
             <Grid className={classes.container}>
-                <div className={classes.users}>
+                <div className={isSmallerScreen ? classes.usersNone : classes.users}>
                     <div>
                         <Typography className={classes.userTitle} variant="h3" key={1}>Users</Typography>
                         {this.props.users.map(user => (
-                            <Typography className={classes.userElement} variant="h5" key={user._id}>- {user.name}</Typography>
+                            <Typography className={classes.userElement} variant="h5" key={user._id}>{user.name}</Typography>
                         ))}
                     </div>
                     <div className={classes.buttonDiv}>
