@@ -12,4 +12,8 @@ export default class WebSocket {
     emitMessage = (query, data = null) => {
         this.socket.emit(query, data);
     }
+
+    close = () => {
+        this.socket.close();
+    }
 }

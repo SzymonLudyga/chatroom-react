@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {
     FormControl, Button, TextField
 } from '@material-ui/core';
+import classnames from 'classnames';
 import { routes } from '../routing/routes';
 
 export default class Login extends Component {
@@ -13,7 +14,22 @@ export default class Login extends Component {
             option: 'login',
             name: '',
             password: '',
+            screenWidth: window.innerWidth,
         };
+    }
+
+    componentDidMount() {
+        window.addEventListener('resize', () => this._handleResize());
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this._handleResize);
+    }
+
+    _handleResize = () => {
+        this.setState({
+            screenWidth: window.innerWidth
+        })
     }
 
     _handleNameChange = (e) => {
@@ -37,15 +53,18 @@ export default class Login extends Component {
     render() {
         const { classes } = this.props;
         const { option } = this.state;
+        const isSmallerScreen = this.state.screenWidth < 600;
         return (
             <>
-                <Button onClick={() => this._change('login')} className={classes.option} variant="outlined" color="primary">
-                    Login
-                </Button>
-                <Button onClick={() => this._change('register')} className={classes.option} variant="outlined" color="secondary">
-                    Register
-                </Button>
-                <FormControl className={classes.container}>
+                <div className={classes.buttonDiv}>
+                    <Button onClick={() => this._change('login')} className={classes.option} variant="outlined" color="primary">
+                        Login
+                    </Button>
+                    <Button onClick={() => this._change('register')} className={classes.option} variant="outlined" color="secondary">
+                        Register
+                    </Button>
+                </div>
+                <div className={classnames([classes.container, isSmallerScreen ? classes.width100 : classes.width60])}>
                     <TextField
                         id="outlined-name"
                         label="Name"
@@ -64,10 +83,10 @@ export default class Login extends Component {
                         margin="normal"
                         variant="outlined"
                     />
-                    <Button onClick={this._handleSubmit} className={classes.big} variant="contained" color={option === 'login' ? 'primary' : 'secondary'}>
+                    <Button onClick={this._handleSubmit} className={classes.button} variant="contained" color={option === 'login' ? 'primary' : 'secondary'}>
                         {option === 'login' ? 'Login' : 'Register'}
                     </Button>
-                </FormControl>
+                </div>
             </>
         );
     }

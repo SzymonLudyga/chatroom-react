@@ -17,32 +17,50 @@ import Join from '../components/Join';
 
 const styles = theme => ({
     container: {
-        marginTop: '50px',
-        display: 'flex',
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        flexDirection: 'row',
-        minWidth: 120,
+        marginTop: 10
     },
-    margin: {
+    room: {
         margin: 10,
         width: '100%'
     },
-    big: {
-        margin: '10px',
+    buttonAdd: {
+        margin: 10,
         fontSize: '20px',
         width: '100%',
     },
-    area: {
-        margin: '40px',
+    topMargin: {
+        top: 50
+    },
+    roomArea: {
+        position: 'absolute',
+        width: '30%',
         display: 'flex',
+        left: 0, 
+        right: 0,
+        margin: '0 auto',
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'column',
         minWidth: 260,
-        border: '3px solid black',
     },
-    textField: {
+    logout: {
+        position: 'absolute',
+        top: 15,
+        right: 15,
+        width: '18.5%',
+    },
+    logoutSmall: {
+        position: 'absolute',
+        left: 0, 
+        right: 0,
+        margin: '0 auto',
+        width: '30%',
+        minWidth: 260,
+    },
+    buttonLogout: {
+        width: '100%'
+    },
+    roomList: {
         display: 'flex',
         justifyContent: 'space-between',
         minWidth: 260,

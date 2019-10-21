@@ -41,6 +41,7 @@ export default class Chat extends Component {
 
     componentWillUnmount() {
         this.props.clearMessages();
+        this._socket.close();
         window.removeEventListener('resize', this._handleResize);
     }
 
@@ -109,9 +110,6 @@ export default class Chat extends Component {
                         <Button className={classes.white} onClick={this._delete}>
                             Delete Messages
                         </Button>
-                        <Button className={classes.white} onClick={this._leaveRoom}>
-                            Leave Room
-                        </Button>
 
                         <Button className={classes.white} onClick={this._getPastMessages}>
                             Get messages history
@@ -121,9 +119,14 @@ export default class Chat extends Component {
 
                 <div className={classes.messages}>
                     <div className={classes.msg}>
-                        <Typography className={classes.big}>
-                            {`${this.props.username} in room ${this.state.roomName}`}
-                        </Typography>
+                        <div className={classes.titleWithButton}>
+                            <Typography className={classes.big}>
+                                {`Welcome to room ${this.state.roomName}, ${this.props.username}!`}
+                            </Typography>
+                            <Button variant="outlined" className={classes.buttonLeave} color="secondary" onClick={this._leaveRoom}>
+                                Leave
+                            </Button>
+                        </div>
                         <Typography>
                             {`${this.state.messageCount} messages have been emitted`}
                         </Typography>

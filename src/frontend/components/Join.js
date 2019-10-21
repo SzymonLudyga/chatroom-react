@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {
     Button, IconButton, Fab, Typography
 } from '@material-ui/core';
-
+import classnames from 'classnames';
 import DeleteIcon from "@material-ui/icons/Delete";
 
 import { routes } from '../routing/routes';
@@ -14,11 +14,27 @@ import ConfirmModal from '../common/ConfirmModal';
 export default class Join extends Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            screenWidth: window.innerWidth,
+        };
+
         this._socket = new WebSocket();
     }
 
     componentDidMount() {
         this.props.fetchRooms();
+        window.addEventListener('resize', () => this._handleResize());
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this._handleResize);
+    }
+
+    _handleResize = () => {
+        this.setState({
+            screenWidth: window.innerWidth
+        })
     }
 
     _onRoomSubmit = (room) => {
@@ -38,15 +54,16 @@ export default class Join extends Component {
     }
 
     render() {
-        const { classes, rooms } = this.props;
+        const { classes, rooms, confirmDeletedRoom } = this.props;
+        const isSmallerScreen = this.state.screenWidth < 600;
         return (
             <>
                 <div className={classes.container}>
-                        <div className={classes.area}>
-                            <Typography variant='h3'>Rooms</Typography>
+                        <div className={classnames([classes.roomArea, isSmallerScreen && classes.topMargin])}>
+                            <Typography variant='h3'>Join Room</Typography>
                             {rooms.map(room => 
-                                <div className={classes.textField}>
-                                    <Fab className={classes.margin} variant="extended" onClick={() => this._handleSubmit(room.name)}>
+                                <div className={classes.roomList}>
+                                    <Fab key={room.name} className={classes.room} variant="extended" onClick={() => this._handleSubmit(room.name)}>
                                         {room.name[0].toUpperCase() + room.name.substring(1)}
                                     </Fab>
                                     <IconButton className={classes.right} onClick={() => this.props.openConfirmModal(room.name)}>
@@ -54,16 +71,13 @@ export default class Join extends Component {
                                     </IconButton>
                                 </div>
                             )}
-                        </div>
-                        <div className={classes.area}>
-                            <Button onClick={this._handleSubmit} className={classes.big} variant="contained" color="primary">
-                                Join
-                            </Button>
-                            <Button onClick={this._handleLogout} className={classes.big} variant="contained" color="secondary">
-                                Log Out
-                            </Button>
-                            <Button onClick={this.props.openRoomModal} className={classes.big} variant="contained" color="secondary">
+                            <Button onClick={this.props.openRoomModal} className={classes.buttonAdd} variant="contained" color="primary">
                                 Add room
+                            </Button>
+                        </div>
+                        <div className={isSmallerScreen ? classes.logoutSmall : classes.logout}>
+                            <Button onClick={this._handleLogout} className={classes.buttonLogout} variant="outlined" color="secondary">
+                                Log Out
                             </Button>
                         </div>
                 </div>
@@ -78,8 +92,8 @@ export default class Join extends Component {
                 <ConfirmModal 
                     openModal={this.props.confirmModal} 
                     closeModal={this.props.closeConfirmModal}
-                    message={`Do you want to delete room: ${this.props.confirmDeletedRoom}?`}
-                    onSubmit={() => this.props.deleteRoom(this.props.confirmDeletedRoom)}
+                    message={`Do you want to delete room: ${confirmDeletedRoom}?`}
+                    onSubmit={() => this.props.deleteRoom(confirmDeletedRoom)}
                     onCancel={this.props.closeConfirmModal}
                 />
             </>

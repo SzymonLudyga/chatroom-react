@@ -8,7 +8,7 @@ import {
 const useStyles = makeStyles(theme => ({
     root: {
         maxWidth: 400,
-        padding: theme.spacing(3,2),
+        padding: theme.spacing(2,3),
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -20,9 +20,7 @@ const useStyles = makeStyles(theme => ({
         alignItems: 'center'
     },
     button: {
-        margin: theme.spacing(2, 2),
-        padding: '10px 20px',
-        fontSize: '20px'
+        margin: 10
     }
 }));
 
@@ -45,10 +43,10 @@ export default function ConfirmModal({
                     {message}
                 </Typography>
                 <div>
-                    <Button className={classes.button} variant="contained" color="primary" onClick={onSubmit}>
+                    <Button className={classes.button} variant="contained" color="secondary" onClick={onSubmit}>
                         Yes
                     </Button>
-                    <Button className={classes.button} variant="contained" color="secondary" onClick={onCancel}>
+                    <Button className={classes.button} variant="contained" color="primary" onClick={onCancel}>
                         No
                     </Button>
                 </div>

@@ -6,23 +6,40 @@ import Login from '../components/Login';
 
 const styles = theme => ({
     container: {
+        position: 'absolute',
+        top: 50,
+        left: 0, 
+        right: 0,
+        margin: '0 auto',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
+        flexDirection: 'column',
     },
-    big: {
-        marginTop: '20px',
-        fontSize: '30px',
-        width: '40%',
+    button: {
+        display: 'flex',
+        marginTop: 15,
+        fontSize: 30,
+        width: '90%',
+    },
+    width60: {
+        width: '60%'
+    },
+    width100: {
+        width: '100%'
     },
     option: {
-        margin: 0,
         width: '50%',
+        margin: 10,
+    },
+    buttonDiv: {
+        display: 'flex',
+        justifyContent: 'space-around',
+        alignItems: 'center',
     },
     textField: {
-        width: '50%',
-        marginLeft: theme.spacing(1),
-        marginRight: theme.spacing(1),
+        display: 'flex',
+        width: '90%',
     }
 });
 

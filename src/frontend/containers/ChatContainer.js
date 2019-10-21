@@ -33,6 +33,8 @@ const styles = () => ({
         margin: 10
     },
     userTitle: {
+        paddingTop: 20,
+        paddingBottom: 20,
         textAlign: 'center',
         borderBottom: '3px solid white',
     },
@@ -41,12 +43,17 @@ const styles = () => ({
         alignSelf: 'center',
         flexDirection: 'column'
     },
+    titleWithButton: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        flexDirection: 'row'
+    },
     inputWithButton: {
         flexShrink: 0,
         display: 'flex',
         justifyContent: 'space-between',
         flexDirection: 'row',
-        margin: 20
+        margin: 15
     },
     inputWithHelper: {
         display: 'flex',
@@ -55,7 +62,7 @@ const styles = () => ({
     },
     big: {
         margin: 5,
-        fontSize: '40px'
+        fontSize: 30
     },
     msg: {
         flexGrow: 1,
@@ -79,6 +86,11 @@ const styles = () => ({
     marginBig: {
         marginTop: 30,
         marginBottom: 30
+    },
+    buttonLeave: {
+        margin: 15,
+        width: '23%',
+        maxHeight: 36
     },
     send: {
         alignSelf: 'flex-end',

@@ -61,7 +61,7 @@ export default function InputModal({
                         <FormHelperText className={classes.red}>{errorMessage}</FormHelperText>
                     }
                 </div>
-                <Button variant="contained" color="secondary" onClick={()=>onSubmit(room)}>
+                <Button variant="contained" color="primary" onClick={()=>onSubmit(room)}>
                     Submit
                 </Button>
             </Paper>
