@@ -4,6 +4,7 @@ import {
     fetchMessages, clearMessages, deleteMessages, addMessage
 } from '../actions/chat';
 import { updateUserList } from '../actions/user';
+import { refreshToken } from '../actions/login';
 import { errorDisplay, errorHide } from '../actions/error';
 
 import Chat from '../components/Chat';
@@ -126,6 +127,7 @@ function mapDispatchToProps(dispatch) {
         handleError: error => dispatch(errorDisplay(error)),
         errorHide: () => dispatch(errorHide()),
         updateUserList: users => dispatch(updateUserList(users)),
+        refreshToken: () => dispatch(refreshToken()),
     };
 }
 

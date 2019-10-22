@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
-
 import { 
     fetchRooms,
     confirmRoom,
@@ -11,7 +10,7 @@ import {
     openConfirmModal,
     closeConfirmModal
 } from '../actions/join';
-import { logout } from '../actions/login';
+import { logout, refreshToken } from '../actions/login';
 
 import Join from '../components/Join';
 
@@ -93,7 +92,8 @@ function mapDispatchToProps(dispatch) {
         openRoomModal: () => dispatch(openRoomModal()),
         closeRoomModal: () => dispatch(closeRoomModal()),
         openConfirmModal: room => dispatch(openConfirmModal(room)),
-        closeConfirmModal: () => dispatch(closeConfirmModal())
+        closeConfirmModal: () => dispatch(closeConfirmModal()),
+        refreshToken: () => dispatch(refreshToken()),
     };
 }
 

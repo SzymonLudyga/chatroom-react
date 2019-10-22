@@ -88,6 +88,7 @@ export function confirmRoom(room) {
 export function createRoom(data) {
     return async (dispatch) => {
         try {
+            dispatch(errorHide());
             const res = await apiCallWithData('post', 'rooms', data);
             if (res.status !== 200) {
                 throw Error('Error confirming room');
@@ -95,7 +96,6 @@ export function createRoom(data) {
             console.log(res.data);
             dispatch(_roomCreated(res.data));
             dispatch(closeRoomModal());
-            dispatch(errorHide());
         } catch (e) {
             console.log(e.response);
             dispatch(errorDisplay({ 

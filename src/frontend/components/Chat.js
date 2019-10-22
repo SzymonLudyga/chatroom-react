@@ -6,6 +6,9 @@ import {
 } from '@material-ui/core';
 import { routes } from '../routing/routes';
 import WebSocket from '../websockets/WebSocket';
+import _ from 'lodash';
+
+const throttled = (method) => _.throttle(method, { trailing: true, leading: true });
 
 export default class Chat extends Component {
     constructor(props) {
@@ -17,6 +20,8 @@ export default class Chat extends Component {
             roomName: this.props.match.params.room,
             screenWidth: window.innerWidth,
         };
+
+        this.throttledRefreshToken = throttled(props.refreshToken);
 
         this._socket = new WebSocket();
     }
@@ -37,6 +42,7 @@ export default class Chat extends Component {
         });
         this._scrollToBottom();
         window.addEventListener('resize', () => this._handleResize());
+        setInterval(() => this.throttledRefreshToken(), 15 * 60 * 1000);
     }
 
     componentWillUnmount() {
@@ -72,8 +78,7 @@ export default class Chat extends Component {
     }
 
     _onEnter = e => {
-        console.log(e);
-        if(e.keyCode == 13){
+        if (e.keyCode == 13) {
             this._sendMessage();
         }
     }
@@ -130,7 +135,7 @@ export default class Chat extends Component {
                         <Typography>
                             {`${this.state.messageCount} messages have been emitted`}
                         </Typography>
-                        {this.props.messages.map(msg => 
+                        {this.props.messages.map(msg =>
                             <Typography className={classes.singleMessage} key={msg.timestamp}>{`${msg.user} (${msg.timestamp}): ${msg.message}`}</Typography>
                         )}
                         <div className={classes.dummyDiv}

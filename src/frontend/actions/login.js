@@ -36,15 +36,15 @@ export function login(userCredentials) {
     };
 }
 
-export function refreshToken(store) {
-    return async () => {
+export function refreshToken() {
+    return async (dispatch, getState) => {
         try {
-            const { tokenInfo } = store.getState().user.userInfo.token;
+            const { tokenInfo } = getState().user.userInfo.token;
             const res = await authApiCall('get', 'users/refresh-token', tokenInfo);
             if (res.status !== 200) {
                 throw Error('Error Token');
             }
-            store.dispatch(_tokenUpdated({
+            dispatch(_tokenUpdated({
                 tokenInfo: res.data.tokens[res.data.tokens.length - 1].token,
                 timestamp: res.data.tokens[res.data.tokens.length - 1].timestamp
             }));
