@@ -9,14 +9,14 @@ const router = express.Router();
 router.get('', (req, res) => {
     Room.find().then(rooms => {
         if (!rooms.length) {
-            throw new Error('No rooms fetched.');
+            throw new Error('not-found');
         }
         res.status(200).send(rooms)
     }).catch(err => {
-        err.message === 'No rooms fetched.' ?
+        err.message === 'not-found' ?
         res.status(404).send({
             errorType: 'room-error',
-            errorMessage: err.message
+            errorMessage: 'No rooms fetched.'
         }) :
         res.status(500).send({
             errorType: 'room-error',
@@ -25,17 +25,17 @@ router.get('', (req, res) => {
     });
 });
 
-router.delete('', (req, res) => {
+router.delete('', authenticate, (req, res) => {
     Room.findOneAndRemove({ room: req.body.room }).then(room => {
         if (!room) {
-            throw new Error('Error deleting the room: Room not found.')
+            throw new Error('not-found')
         }
         res.status(200).send(room)
     }).catch(err => {
-        err.message === 'Error deleting the room: Room not found.' ?
+        err.message === 'not-found' ?
         res.status(404).send({
             errorType: 'room-error',
-            errorMessage: err.message
+            errorMessage: 'Error deleting the room: Room not found.'
         }) :
         res.status(500).send({
             errorType: 'room-error',
@@ -44,20 +44,25 @@ router.delete('', (req, res) => {
     });
 });
 
-router.post('', (req, res) => {
+router.post('', authenticate, (req, res) => {
     const created_at = moment().valueOf();
     const room = new Room({ name: req.body.room.toLowerCase(), created_at, creator: req.body.user });
 
     Room.find().then(
         rooms => {
             if (rooms.length > 10) {
-                throw new Error('There are too many rooms created.');
+                throw new Error('forbidden-action');
             }
         }
     ).catch(err => {
+        err.message === 'forbidden-action' ?
         res.status(422).send({
             errorType: 'create-room',
-            errorMessage: err.message
+            errorMessage: 'Too many rooms created. Choose one from the list.'
+        }) :
+        res.status(500).send({
+            errorType: 'create-room',
+            errorMessage: 'Unknown error, check your internet connection.'
         });
     });
 
@@ -86,17 +91,17 @@ router.post('', (req, res) => {
         });
 });
 
-router.post('/join', (req, res) => {
+router.post('/join', authenticate, (req, res) => {
     Room.findOne({ name: req.body.room }).then(room => {
         if (!room) {
-            throw new Error('Error joining the room: Room not found.')
+            throw new Error('not-found')
         }
         res.status(200).send(room.name)
     }).catch(err => {
-        err.message === 'Error joining the room: Room not found.' ?
+        err.message === 'not-found' ?
         res.status(404).send({ 
             errorType: 'room-error',
-            errorMessage: err.message
+            errorMessage: 'Error joining the room: Room not found.'
         }) :
         res.status(500).send({ 
             errorType: 'room-error',

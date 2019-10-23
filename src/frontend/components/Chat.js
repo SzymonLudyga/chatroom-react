@@ -6,6 +6,7 @@ import {
 } from '@material-ui/core';
 import { routes } from '../routing/routes';
 import WebSocket from '../websockets/WebSocket';
+import ErrorModal from '../common/ErrorModal';
 import _ from 'lodash';
 
 const throttled = (method) => _.throttle(method, { trailing: true, leading: true });
@@ -58,12 +59,11 @@ export default class Chat extends Component {
     }
 
     _scrollToBottom = () => {
-        this.messagesEnd.scrollIntoView({ behavior: "smooth" });
+        this.messagesEnd.scrollIntoView();
     }
 
     _delete = () => {
         this.props.deleteMessages(this.state.roomName);
-        this.props.clearMessages();
     }
 
     _getPastMessages = () => {
@@ -101,60 +101,66 @@ export default class Chat extends Component {
 
     render() {
         const { classes } = this.props;
-        const isSmallerScreen = this.state.screenWidth < 600;
+        const isSmallerScreen = this.state.screenWidth < 700;
         return (
-            <Grid className={classes.container}>
-                <div className={isSmallerScreen ? classes.usersNone : classes.users}>
-                    <div>
-                        <Typography className={classes.userTitle} variant="h3" key={1}>Users</Typography>
-                        {this.props.users.map(user => (
-                            <Typography className={classes.userElement} variant="h5" key={user._id}>{user.name}</Typography>
-                        ))}
-                    </div>
-                    <div className={classes.buttonDiv}>
-                        <Button className={classes.white} onClick={this._delete}>
-                            Delete Messages
-                        </Button>
+            <>
+                <Grid className={classes.container}>
+                    <div className={isSmallerScreen ? classes.usersNone : classes.users}>
+                        <div>
+                            <Typography key={1} className={classes.userTitle} variant="h3">Users</Typography>
+                            {this.props.users.map(user => (
+                                <Typography className={classes.userElement} variant="h5" key={user._id}>{user.name}</Typography>
+                            ))}
+                        </div>
+                        <div className={classes.buttonDiv}>
+                            <Button className={classes.white} onClick={this._delete}>
+                                Delete Messages
+                            </Button>
 
-                        <Button className={classes.white} onClick={this._getPastMessages}>
-                            Get messages history
-                        </Button>
-                    </div>
-                </div>
-
-                <div className={classes.messages}>
-                    <div className={classes.msg}>
-                        <div className={classes.titleWithButton}>
-                            <Typography className={classes.big}>
-                                {`Welcome to room ${this.state.roomName}, ${this.props.username}!`}
-                            </Typography>
-                            <Button variant="outlined" className={classes.buttonLeave} color="secondary" onClick={this._leaveRoom}>
-                                Leave
+                            <Button className={classes.white} onClick={this._getPastMessages}>
+                                Get messages history
                             </Button>
                         </div>
-                        <Typography>
-                            {`${this.state.messageCount} messages have been emitted`}
-                        </Typography>
-                        {this.props.messages.map(msg =>
-                            <Typography className={classes.singleMessage} key={msg.timestamp}>{`${msg.user} (${msg.timestamp}): ${msg.message}`}</Typography>
-                        )}
-                        <div className={classes.dummyDiv}
-                            ref={(el) => { this.messagesEnd = el; }}>
+                    </div>
+
+                    <div className={classes.messages}>
+                        <div className={classes.msg}>
+                            <Button variant="outlined" className={isSmallerScreen ? classes.buttonLeaveSmall : classes.buttonLeave} color="secondary" onClick={this._leaveRoom}>
+                                Leave room
+                            </Button>
+                            <div className={isSmallerScreen ? classes.whiteDivSmall : classes.whiteDiv}></div>
+                            <Typography key={2} className={classes.big}>
+                                {`Welcome ${this.props.username}!`}
+                            </Typography>
+                            <Typography key={3}>
+                                {`${this.state.messageCount} messages have been emitted`}
+                            </Typography>
+                            {this.props.messages.map(msg =>
+                                <Typography className={classes.singleMessage} key={msg._id}>{`${msg.user} (${msg.timestamp}): ${msg.message}`}</Typography>
+                            )}
+                            <div className={classes.dummyDiv}
+                                ref={(el) => { this.messagesEnd = el; }}>
+                            </div>
+                        </div>
+                        <div className={classes.inputWithButton}>
+                            <div className={classes.inputWithHelper}>
+                                <TextField autoFocus error={this.props.errorType === 'message'} onKeyDown={this._onEnter} onChange={this._handleTypeChange} value={this.state.message} placeholder="new message..." />
+                                {this.props.errorType === 'message'
+                                    && <FormHelperText className={classes.red}>{this.props.errorMessage}</FormHelperText>
+                                }
+                            </div>
+                            <Button className={classes.send} onClick={this._sendMessage} variant="contained" color="primary">
+                                Send
+                            </Button>
                         </div>
                     </div>
-                    <div className={classes.inputWithButton}>
-                        <div className={classes.inputWithHelper}>
-                            <TextField autoFocus error={this.props.errorType === 'message'} onKeyDown={this._onEnter} onChange={this._handleTypeChange} value={this.state.message} placeholder="new message..." />
-                            {this.props.errorType === 'message'
-                                && <FormHelperText className={classes.red}>{this.props.errorMessage}</FormHelperText>
-                            }
-                        </div>
-                        <Button className={classes.send} onClick={this._sendMessage} variant="contained" color="primary">
-                            Send
-                        </Button>
-                    </div>
-                </div>
-            </Grid>
+                </Grid>
+                {(this.props.errorType === 'message-error' || this.props.errorType === 'token') && 
+                <ErrorModal
+                    message={this.props.errorMessage}
+                    onSubmit={this.props.errorHide}
+                />}
+            </>
         );
     }
 }

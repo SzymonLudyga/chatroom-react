@@ -23,7 +23,7 @@ const addMessage = (data, callback) => {
 
 const checkMessage = (data) => {
     if (typeof data.message !== 'string' || data.message.trim() === '') {
-        throw new Error('Message should be non-empty');
+        throw new Error('Message should be non-empty.');
     }
 };
 

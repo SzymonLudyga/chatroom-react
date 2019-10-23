@@ -1,5 +1,6 @@
 import { authApiCall } from '../api/api';
 import { MESSAGES_RECEIVED, MESSAGES_CLEARED, MESSAGE_ADDED } from './types';
+import { errorDisplay } from './error';
 
 function _messagesReceived(messages) {
     return {
@@ -29,9 +30,12 @@ export function fetchMessages(room) {
             if (res.status !== 200) {
                 throw new Error('Error fetching messages');
             }
-            dispatch(_messagesReceived(res.data.msg));
+            dispatch(_messagesReceived(res.data));
         } catch (e) {
-            console.log(e);
+            dispatch(errorDisplay({ 
+                errorType: e.response.data.errorType, 
+                errorMessage: e.response.data.errorMessage 
+            }));
         }
     };
 }
@@ -45,8 +49,12 @@ export function deleteMessages(room) {
                 throw new Error('Error deleting messages');
             }
             dispatch(fetchMessages(room));
+            dispatch(clearMessages());
         } catch (e) {
-            console.log(e);
+            dispatch(errorDisplay({ 
+                errorType: e.response.data.errorType, 
+                errorMessage: e.response.data.errorMessage 
+            }));
         }
     };
 }

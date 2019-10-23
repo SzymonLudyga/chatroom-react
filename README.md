@@ -1,13 +1,10 @@
 # TODO
 
 ```
-1. Only authenticated user can:
-    - join room
-    - add message
-    - create room
-    - delete room
-2. Error handling (Error Modals)
-3. PropTypes
-4. npm lint!
-5. Handling disconnection of the socket
+1. Error handling (Error Modals)
+2. PropTypes
+3. npm lint!
+4. Handling disconnection of the socket
+5. Control of changing paths
+6. Handling timestamp next to messages
 ```

@@ -67,7 +67,7 @@ export default class Join extends Component {
             <>
                 <div className={classes.container}>
                         <div className={classnames([classes.roomArea, isSmallerScreen && classes.topMargin])}>
-                            <Typography variant='h3'>Join Room</Typography>
+                            <Typography key={1} variant='h3'>Join Room</Typography>
                             {rooms.map(room => 
                                 <div className={classes.roomList}>
                                     <Fab key={room.name} className={classes.room} variant="extended" onClick={() => this._handleSubmit(room.name)}>
@@ -103,7 +103,8 @@ export default class Join extends Component {
                     onSubmit={() => this.props.deleteRoom(confirmDeletedRoom)}
                     onCancel={this.props.closeConfirmModal}
                 />
-                {this.props.errorType === 'room-error' && <ErrorModal
+                {(this.props.errorType === 'room-error' || this.props.errorType === 'token') && 
+                <ErrorModal
                     message={this.props.errorMessage}
                     onSubmit={this.props.errorHide}
                 />}

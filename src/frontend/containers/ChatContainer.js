@@ -44,11 +44,6 @@ const styles = () => ({
         alignSelf: 'center',
         flexDirection: 'column'
     },
-    titleWithButton: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        flexDirection: 'row'
-    },
     inputWithButton: {
         flexShrink: 0,
         display: 'flex',
@@ -76,6 +71,22 @@ const styles = () => ({
         float:"left", 
         clear: "both" 
     },
+    whiteDivSmall: {
+        position: 'fixed',
+        width: '100%',
+        height: 60,
+        backgroundColor: 'white',
+        zIndex: 1
+    },
+    whiteDiv: {
+        position: 'fixed',
+        width: '23%',
+        height: 60,
+        top: 0,
+        right: 0,
+        backgroundColor: 'white',
+        zIndex: 1
+    },
     messages: {
         height: '100vh',
         width: '100%',
@@ -89,8 +100,22 @@ const styles = () => ({
         marginBottom: 30
     },
     buttonLeave: {
-        margin: 15,
-        width: '23%',
+        zIndex: 2,
+        position: 'fixed',
+        top: 15,
+        right: 15,
+        width: '20%',
+        maxHeight: 36
+    },
+    buttonLeaveSmall: {
+        zIndex: 2,
+        position: 'fixed',
+        top: 15,
+        right: 0,
+        left: 0,
+        margin: '0 auto',
+        width: '30%',
+        minWidth: 260,
         maxHeight: 36
     },
     send: {

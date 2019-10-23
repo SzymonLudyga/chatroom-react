@@ -47,7 +47,7 @@ const styles = theme => ({
         position: 'absolute',
         top: 15,
         right: 15,
-        width: '18.5%',
+        width: '20%',
     },
     logoutSmall: {
         position: 'absolute',
