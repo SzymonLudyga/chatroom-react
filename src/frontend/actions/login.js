@@ -21,7 +21,7 @@ export function login(userCredentials) {
         try {
             const res = await apiCallWithData('post', 'users/login', userCredentials);
             if (res.status !== 200) {
-                throw Error('Error Login');
+                throw new Error('Error Login');
             }
             dispatch(_userUpdated({
                 username: userCredentials.name,
@@ -42,7 +42,7 @@ export function refreshToken() {
             const { tokenInfo } = getState().user.userInfo.token;
             const res = await authApiCall('get', 'users/refresh-token', tokenInfo);
             if (res.status !== 200) {
-                throw Error('Error Token');
+                throw new Error('Error Token');
             }
             dispatch(_tokenUpdated({
                 tokenInfo: res.data.tokens[res.data.tokens.length - 1].token,
@@ -60,7 +60,7 @@ export function logout(username) {
             const { tokenInfo } = getState().user.userInfo.token;
             const res = await authApiCallWithData('delete', 'users/token', tokenInfo, { username });
             if (res.status !== 200) {
-                throw Error('Error Logout');
+                throw new Error('Error Logout');
             }
             dispatch(_userUpdated({
                 username: null,
@@ -80,7 +80,7 @@ export function register(userCredentials) {
         try {
             const res = await apiCallWithData('post', 'users/register', userCredentials);
             if (res.status !== 200) {
-                throw Error('Error Register');
+                throw new Error('Error Register');
             }
             dispatch(_userUpdated({
                 username: userCredentials.name,

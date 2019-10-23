@@ -10,6 +10,7 @@ import { routes } from '../routing/routes';
 import WebSocket from '../websockets/WebSocket';
 import InputModal from '../common/InputModal';
 import ConfirmModal from '../common/ConfirmModal';
+import ErrorModal from '../common/ErrorModal';
 import _ from 'lodash';
 
 const throttled = (method) => _.throttle(method, { trailing: true, leading: true });
@@ -102,6 +103,10 @@ export default class Join extends Component {
                     onSubmit={() => this.props.deleteRoom(confirmDeletedRoom)}
                     onCancel={this.props.closeConfirmModal}
                 />
+                {this.props.errorType === 'room-error' && <ErrorModal
+                    message={this.props.errorMessage}
+                    onSubmit={this.props.errorHide}
+                />}
             </>
         );
     }

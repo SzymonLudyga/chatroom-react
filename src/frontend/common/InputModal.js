@@ -54,10 +54,10 @@ export default function InputModal({
                 </Typography>
                 <div className={classes.marginBig}>
                 <TextField className={classes.margin} autoFocus
-                    error={errorType === 'room'} 
+                    error={errorType === 'create-room'} 
                     onChange={handleChangeRoom} value={room} 
                     placeholder="new room..." />
-                    {errorType === 'room' && 
+                    {errorType === 'create-room' && 
                         <FormHelperText className={classes.red}>{errorMessage}</FormHelperText>
                     }
                 </div>

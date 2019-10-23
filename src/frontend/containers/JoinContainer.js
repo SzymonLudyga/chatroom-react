@@ -11,6 +11,7 @@ import {
     closeConfirmModal
 } from '../actions/join';
 import { logout, refreshToken } from '../actions/login';
+import { errorHide } from '../actions/error';
 
 import Join from '../components/Join';
 
@@ -94,6 +95,7 @@ function mapDispatchToProps(dispatch) {
         openConfirmModal: room => dispatch(openConfirmModal(room)),
         closeConfirmModal: () => dispatch(closeConfirmModal()),
         refreshToken: () => dispatch(refreshToken()),
+        errorHide: () => dispatch(errorHide()),
     };
 }
 

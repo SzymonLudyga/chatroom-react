@@ -5,8 +5,9 @@
     - join room
     - add message
     - create room
-2. Enhance UI/UX
-3. Error handling (Error Modals)
-4. PropTypes
-5. npm lint!
+    - delete room
+2. Error handling (Error Modals)
+3. PropTypes
+4. npm lint!
+5. Handling disconnection of the socket
 ```

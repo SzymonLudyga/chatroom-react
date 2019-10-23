@@ -27,7 +27,7 @@ export function fetchMessages(room) {
             const { tokenInfo } = getState().user.userInfo.token;
             const res = await authApiCall('get', `messages/${room}`, tokenInfo);
             if (res.status !== 200) {
-                throw Error('Error fetching messages');
+                throw new Error('Error fetching messages');
             }
             dispatch(_messagesReceived(res.data.msg));
         } catch (e) {
@@ -42,7 +42,7 @@ export function deleteMessages(room) {
             const { tokenInfo } = getState().user.userInfo.token;
             const res = await authApiCall('delete', `messages/${room}`, tokenInfo);
             if (res.status !== 200) {
-                throw Error('Error fetching messages');
+                throw new Error('Error deleting messages');
             }
             dispatch(fetchMessages(room));
         } catch (e) {

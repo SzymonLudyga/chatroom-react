@@ -45,11 +45,15 @@ export function fetchRooms() {
         try {
             const res = await apiCall('get', 'rooms');
             if (res.status !== 200) {
-                throw Error('Error fetching rooms');
+                throw new Error('Error fetching rooms');
             }
             dispatch(_roomsReceived(res.data));
         } catch (e) {
-            console.log(e);
+            dispatch(_roomsReceived([]));
+            dispatch(errorDisplay({ 
+                errorType: e.response.data.errorType, 
+                errorMessage: e.response.data.errorMessage 
+            }));
         }
     };
 }
@@ -61,12 +65,16 @@ export function deleteRoom(room) {
             // const res = await authApiCallWithData('delete', 'rooms', tokenInfo, { room });
             const res = await apiCallWithData('delete', 'rooms', { room });
             if (res.status !== 200) {
-                throw Error('Error deleting room');
+                throw new Error('Error deleting room');
             }
             dispatch(_roomDeleted(res.data.name));
             dispatch(closeConfirmModal());
         } catch (e) {
-            console.log(e);
+            dispatch(closeConfirmModal());
+            dispatch(errorDisplay({ 
+                errorType: e.response.data.errorType, 
+                errorMessage: e.response.data.errorMessage 
+            }));
         }
     };
 }
@@ -74,30 +82,31 @@ export function deleteRoom(room) {
 export function confirmRoom(room) {
     return async (dispatch) => {
         try {
-            const res = await apiCallWithData('post', 'rooms/choose', { room });
+            const res = await apiCallWithData('post', 'rooms/join', { room });
             if (res.status !== 200) {
-                throw Error('Error confirmin room');
+                throw new Error('Error confirming room');
             }
-            dispatch(_roomChosen(res.data.room));
+            dispatch(_roomChosen({ room: res.data }));
         } catch (e) {
-            console.log(e);
+            dispatch(errorDisplay({ 
+                errorType: e.response.data.errorType, 
+                errorMessage: e.response.data.errorMessage 
+            }));
         }
     };
 }
 
 export function createRoom(data) {
     return async (dispatch) => {
+        dispatch(errorHide());
         try {
-            dispatch(errorHide());
             const res = await apiCallWithData('post', 'rooms', data);
             if (res.status !== 200) {
-                throw Error('Error confirming room');
+                throw new Error('Error confirming room');
             }
-            console.log(res.data);
             dispatch(_roomCreated(res.data));
             dispatch(closeRoomModal());
         } catch (e) {
-            console.log(e.response);
             dispatch(errorDisplay({ 
                 errorType: e.response.data.errorType, 
                 errorMessage: e.response.data.errorMessage 

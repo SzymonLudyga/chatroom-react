@@ -39,7 +39,6 @@ export default function join(state = initialState, action) {
             roomModal: false
         };
     } if (action.type === OPEN_CONFIRM_MODAL) {
-        console.log(action.room)
         return {
             ...state,
             confirmModal: true,
