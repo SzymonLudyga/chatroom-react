@@ -1,5 +1,6 @@
 const moment = require('moment');
 const { User } = require('../db/User');
+const { errorMessages, errorTypes } = require('../utils/errorMessages');
 
 const authenticate = (req, res, next) => {
     const timestamp = moment().valueOf();
@@ -7,20 +8,20 @@ const authenticate = (req, res, next) => {
 
     User.findByToken(token)
         .then((user) => {
-            // if (!user) {
-            //     return Promise.reject();
-            // }
-            // if (timestamp > user.tokens[user.tokens.length - 1].timestamp) {
-            //     return Promise.reject();
-            // }
+            if (!user) {
+                return Promise.reject();
+            }
+            if (timestamp > user.tokens[user.tokens.length - 1].timestamp) {
+                return Promise.reject();
+            }
             req.user = user;
             req.token = token;
             next();
         })
         .catch((e) => {
             res.status(401).send({
-                errorType: 'token',
-                errorMessage: 'Token not found or invalid'
+                errorType: errorTypes.TOKEN_ERROR,
+                errorMessage: errorMessages.tokenInvalid
             });
         });
 };

@@ -1,45 +1,50 @@
 const express = require('express');
 const moment = require('moment');
+const router = express.Router();
 
 const { Room } = require('../db/Room');
 const { authenticate } = require('../middleware/auth');
+const { errorMessages, errorTypes } = require('../utils/errorMessages');
 
-const router = express.Router();
+const NOT_FOUND = 'NOT_FOUND';
+const FORBIDDEN = 'FORBIDDEN_ACTION';
+const VALIDATION_ERROR = 'ValidationError';
+const MONGO_ERROR = 'MongoError';
 
 router.get('', (req, res) => {
     Room.find().then(rooms => {
         if (!rooms.length) {
-            throw new Error('not-found');
+            throw new Error(NOT_FOUND);
         }
         res.status(200).send(rooms)
     }).catch(err => {
-        err.message === 'not-found' ?
+        err.message === NOT_FOUND ?
         res.status(404).send({
-            errorType: 'room-error',
-            errorMessage: 'No rooms fetched.'
+            errorType: errorTypes.ROOM_ERROR,
+            errorMessage: errorMessages.roomsNotFound
         }) :
         res.status(500).send({
-            errorType: 'room-error',
-            errorMessage: 'Server error'
+            errorType: errorTypes.ROOM_ERROR,
+            errorMessage: errorMessages.server
         });
     });
 });
 
 router.delete('', authenticate, (req, res) => {
-    Room.findOneAndRemove({ room: req.body.room }).then(room => {
+    Room.findOneAndRemove({ name: req.body.room }).then(room => {
         if (!room) {
-            throw new Error('not-found')
+            throw new Error(NOT_FOUND)
         }
         res.status(200).send(room)
     }).catch(err => {
-        err.message === 'not-found' ?
+        err.message === NOT_FOUND ?
         res.status(404).send({
-            errorType: 'room-error',
-            errorMessage: 'Error deleting the room: Room not found.'
+            errorType: errorTypes.ROOM_ERROR,
+            errorMessage: errorMessages.roomToDeleteNotFound
         }) :
         res.status(500).send({
-            errorType: 'room-error',
-            errorMessage: 'Server error'
+            errorType: errorTypes.ROOM_ERROR,
+            errorMessage: errorMessages.server
         });
     });
 });
@@ -51,18 +56,18 @@ router.post('', authenticate, (req, res) => {
     Room.find().then(
         rooms => {
             if (rooms.length > 10) {
-                throw new Error('forbidden-action');
+                throw new Error(FORBIDDEN);
             }
         }
     ).catch(err => {
-        err.message === 'forbidden-action' ?
+        err.message === FORBIDDEN ?
         res.status(422).send({
-            errorType: 'create-room',
-            errorMessage: 'Too many rooms created. Choose one from the list.'
+            errorType: errorTypes.CREATE_ERROR,
+            errorMessage: errorMessages.roomsNumberExceeded
         }) :
         res.status(500).send({
-            errorType: 'create-room',
-            errorMessage: 'Unknown error, check your internet connection.'
+            errorType: errorTypes.CREATE_ERROR,
+            errorMessage: errorMessages.server
         });
     });
 
@@ -72,20 +77,20 @@ router.post('', authenticate, (req, res) => {
             res.status(200).send(newRoom)
         ).catch(err => {
             console.log(err);
-            if (err.name === 'ValidationError') {
+            if (err.name === VALIDATION_ERROR) {
                 res.status(400).send({
-                    errorType: 'create-room',
-                    errorMessage: `Room must contain 4-20 letters.`
+                    errorType: errorTypes.CREATE_ERROR,
+                    errorMessage: errorMessages.roomValidationError
                 });
-            } else if (err.name === 'MongoError' && err.code === 11000) {
+            } else if (err.name === MONGO_ERROR && err.code === 11000) {
                 res.status(422).send({
-                    errorType: 'create-room',
-                    errorMessage: 'Room already exists.'
+                    errorType: errorTypes.CREATE_ERROR,
+                    errorMessage: errorMessages.roomExists
                 });
             } else {
                 res.status(500).send({
-                    errorType: 'create-room',
-                    errorMessage: 'Unknown error, check your internet connection.'
+                    errorType: errorTypes.CREATE_ERROR,
+                    errorMessage: errorMessages.server
                 });
             }
         });
@@ -94,18 +99,18 @@ router.post('', authenticate, (req, res) => {
 router.post('/join', authenticate, (req, res) => {
     Room.findOne({ name: req.body.room }).then(room => {
         if (!room) {
-            throw new Error('not-found')
+            throw new Error(NOT_FOUND)
         }
         res.status(200).send(room.name)
     }).catch(err => {
-        err.message === 'not-found' ?
+        err.message === NOT_FOUND ?
         res.status(404).send({ 
-            errorType: 'room-error',
-            errorMessage: 'Error joining the room: Room not found.'
+            errorType: errorTypes.ROOM_ERROR,
+            errorMessage: errorMessages.roomToJoinNotFound
         }) :
         res.status(500).send({ 
-            errorType: 'room-error',
-            errorMessage: 'Server Error'
+            errorType: errorTypes.ROOM_ERROR,
+            errorMessage: errorMessages.server
         });
     });
 });
