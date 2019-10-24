@@ -7,14 +7,20 @@ const errorMessages = {
     roomValidationError: `Room must contain 4-20 letters`,
     roomExists: 'Room already exists',
     roomToJoinNotFound: 'Error joining the room: Room not found',
-    tokenInvalid: 'Token not found or invalid'
+    tokenInvalid: 'Token not found or invalid',
+    passwordInvalid: 'Password should contain at least (non-space) 6 characters',
+    usernameInvalid: 'User should contain at least (non-space) 4 characters',
+    userExists: 'User with this name already exists',
+    userNotFound: 'Invalid username. Try again.',
+    incorrectPassword: 'Invalid password. Try again.',
 }
 
 const errorTypes = {
     MESSAGE_ERROR: 'message-error',
     ROOM_ERROR:'room-error',
     CREATE_ERROR: 'create-room',
-    TOKEN_ERROR: 'token'
+    TOKEN_ERROR: 'token',
+    USER_ERROR: 'user-error',
 }
 
 module.exports = {

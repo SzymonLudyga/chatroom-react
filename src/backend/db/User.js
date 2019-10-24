@@ -4,18 +4,20 @@ const _ = require('lodash');
 const bcrypt = require('bcryptjs');
 const moment = require('moment');
 
+const NOT_FOUND = 'NOT_FOUND';
+const BAD_PASSWORD = 'BAD_PASSWORD';
+
 const UserSchema = new mongoose.Schema({
     name: {
         type: String,
         require: true,
-        minlength: 1,
+        minlength: 4,
         trim: true,
         unique: true
     },
     password: {
         type: String,
         require: true,
-        minlength: 6
     },
     room: {
         type: String,
@@ -60,14 +62,14 @@ UserSchema.statics.findByCredentials = function (name, password) {
 
     return User.findOne({ name }).then((user) => {
         if (!user) {
-            return Promise.reject();
+            return Promise.reject(NOT_FOUND);
         }
         return new Promise((resolve, reject) => {
             bcrypt.compare(password, user.password, (err, res) => {
                 if (res) {
                     resolve(user);
                 } else {
-                    reject();
+                    reject(BAD_PASSWORD);
                 }
             });
         });
