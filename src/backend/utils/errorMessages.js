@@ -2,9 +2,9 @@ const errorMessages = {
     server: 'Server error',
     messagesNotFound: 'Messages not found for the room',
     roomToDeleteNotFound: 'Error deleting the room: Room not found',
-    roomsNotFound:  'No rooms found',
+    roomsNotFound: 'No rooms found',
     roomsNumberExceeded: 'Too many rooms created. Choose one from the list',
-    roomValidationError: `Room must contain 4-20 letters`,
+    roomValidationError: 'Room must contain 4-20 letters',
     roomExists: 'Room already exists',
     roomToJoinNotFound: 'Error joining the room: Room not found',
     tokenInvalid: 'Token not found or invalid',
@@ -13,16 +13,21 @@ const errorMessages = {
     userExists: 'User with this name already exists',
     userNotFound: 'Invalid username. Try again.',
     incorrectPassword: 'Invalid password. Try again.',
-}
+    userGetError: 'Error getting user',
+    userUpdateError: 'Error updating user',
+    addMessageError: 'Error when adding message',
+    emptyMessage: 'Message should be non-empty'
+};
 
 const errorTypes = {
+    SEND_ERROR: 'send-message-error',
     MESSAGE_ERROR: 'message-error',
-    ROOM_ERROR:'room-error',
+    ROOM_ERROR: 'room-error',
     CREATE_ERROR: 'create-room',
     TOKEN_ERROR: 'token',
     USER_ERROR: 'user-error',
-}
+};
 
 module.exports = {
     errorMessages, errorTypes
-}
+};

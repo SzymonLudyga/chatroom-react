@@ -1,4 +1,4 @@
-import { 
+import {
     ROOMS_RECEIVED,
     ROOM_CHOSEN,
     ROOM_CREATED,

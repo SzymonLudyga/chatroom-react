@@ -8,7 +8,7 @@ import {
 const useStyles = makeStyles(theme => ({
     root: {
         maxWidth: 400,
-        padding: theme.spacing(2,3),
+        padding: theme.spacing(2, 3),
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -24,12 +24,12 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export default function ConfirmModal({ 
-    openModal, 
-    closeModal, 
+export default function ConfirmModal({
+    openModal,
+    closeModal,
     message,
     onCancel,
-    onSubmit 
+    onSubmit
 }) {
     const classes = useStyles();
     return (

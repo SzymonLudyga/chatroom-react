@@ -8,7 +8,7 @@ import {
 const useStyles = makeStyles(theme => ({
     root: {
         maxWidth: 400,
-        padding: theme.spacing(2,3),
+        padding: theme.spacing(2, 3),
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -26,14 +26,14 @@ const useStyles = makeStyles(theme => ({
     },
     button: {
         fontSize: 20,
-        padding: theme.spacing(1,3),
+        padding: theme.spacing(1, 3),
         margin: 10
     }
 }));
 
 export default function ErrorModal({
     message,
-    onSubmit 
+    onSubmit
 }) {
     const classes = useStyles();
     return (

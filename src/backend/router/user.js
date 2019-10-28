@@ -27,15 +27,15 @@ router.post('/register', (req, res) => {
             errorMessage: errorMessages.passwordInvalid
         });
     }
-    
+
     const user = new User({ name, password });
 
     user
         .save()
         .then(() => user.generateAuthToken())
-        .then(token => {
+        .then((token) => {
             res.header('x-auth', token).send(user);
-        }).catch(err => {
+        }).catch((err) => {
             if (err.name === VALIDATION_ERROR) {
                 res.status(400).send({
                     errorType: errorTypes.USER_ERROR,
@@ -59,10 +59,10 @@ router.post('/login', (req, res) => {
     const { name, password } = _.pick(req.body, ['name', 'password']);
 
     User.findByCredentials(name, password)
-        .then(user => user.generateAuthToken().then(token => {
+        .then(user => user.generateAuthToken().then((token) => {
             res.header('x-auth', token).send(user);
         }))
-        .catch(err => {
+        .catch((err) => {
             if (err === NOT_FOUND) {
                 res.status(404).send({
                     errorType: errorTypes.USER_ERROR,
@@ -89,8 +89,8 @@ router.get('/refresh-token', authenticate, (req, res) => {
             .then(() => req.user.generateAuthToken())
             .then((token) => {
                 res.header('x-auth', token).send(req.user);
-            })
-    }).catch(err => {
+            });
+    }).catch((err) => {
         res.status(500).send({
             errorType: errorTypes.USER_ERROR,
             errorMessage: errorMessages.server
@@ -101,7 +101,7 @@ router.get('/refresh-token', authenticate, (req, res) => {
 router.delete('/token', authenticate, (req, res) => {
     req.user.removeToken(req.token).then(() => {
         res.status(200).send(req.user);
-    }).catch(err => {
+    }).catch((err) => {
         res.status(500).send({
             errorType: errorTypes.USER_ERROR,
             errorMessage: errorMessages.server
@@ -112,21 +112,21 @@ router.delete('/token', authenticate, (req, res) => {
 router.delete('/token/all', (req, res) => {
     const { user } = req.body;
 
-    User.findOneAndUpdate({ name: user }, { tokens: [] }).then(user => {
+    User.findOneAndUpdate({ name: user }, { tokens: [] }).then((user) => {
         if (!user) {
             throw new Error(NOT_FOUND);
         }
         res.status(200).send(user);
-    }).catch(err => {
-        err.message === NOT_FOUND ?
-        res.status(404).send({
-            errorType: errorTypes.USER_ERROR,
-            errorMessage: errorMessages.userNotFound
-        }) : 
-        res.status(500).send({
-            errorType: errorTypes.USER_ERROR,
-            errorMessage: errorMessages.server
-        })
+    }).catch((err) => {
+        err.message === NOT_FOUND
+            ? res.status(404).send({
+                errorType: errorTypes.USER_ERROR,
+                errorMessage: errorMessages.userNotFound
+            })
+            : res.status(500).send({
+                errorType: errorTypes.USER_ERROR,
+                errorMessage: errorMessages.server
+            });
     });
 });
 

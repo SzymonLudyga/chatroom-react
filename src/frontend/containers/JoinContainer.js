@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
-import { 
+import {
     fetchRooms,
     confirmRoom,
     createRoom,
@@ -35,7 +35,7 @@ const styles = theme => ({
         position: 'absolute',
         width: '30%',
         display: 'flex',
-        left: 0, 
+        left: 0,
         right: 0,
         margin: '0 auto',
         justifyContent: 'center',
@@ -51,7 +51,7 @@ const styles = theme => ({
     },
     logoutSmall: {
         position: 'absolute',
-        left: 0, 
+        left: 0,
         right: 0,
         margin: '0 auto',
         width: '30%',

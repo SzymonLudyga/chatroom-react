@@ -1,21 +1,26 @@
 const { User } = require('../db/User');
+const { errorMessages } = require('./errorMessages');
 
 const getUsers = (room, callback) => {
     User.find({ room }).then((res) => {
         callback(res);
-    }, (err) => {
-        console.log(err);
+    }).catch((err) => {
+        throw new Error(errorMessages.userGetError);
     });
 };
 
-const checkUserRoom = user => User.findOne({ name: user }).then(res => res.room, (err) => {
-    throw new Error('Error getting user');
-});
+const checkUserRoom = user => User.findOne({ name: user })
+    .then(res => res.room)
+    .catch((err) => {
+        throw new Error(errorMessages.userGetError);
+    });
 
 const changeUserRoom = (user, room, callback) => {
     User.findOneAndUpdate({ name: user }, { room })
         .then(res => getUsers(room || res.room, callback))
-        .catch(err => console.log(err));
+        .catch((err) => {
+            throw new Error(errorMessages.userUpdateError);
+        });
 };
 
 module.exports = {

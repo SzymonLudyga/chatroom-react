@@ -8,7 +8,7 @@ import {
 const useStyles = makeStyles(theme => ({
     root: {
         maxWidth: 400,
-        padding: theme.spacing(3,2),
+        padding: theme.spacing(3, 2),
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -21,26 +21,26 @@ const useStyles = makeStyles(theme => ({
     },
     marginBig: {
         margin: theme.spacing(6, 2),
-    }, 
+    },
     red: {
         color: 'red'
     }
 }));
 
-export default function InputModal({ 
-    openModal, 
-    closeModal, 
-    message, 
-    onSubmit, 
-    errorType, 
-    errorMessage 
+export default function InputModal({
+    openModal,
+    closeModal,
+    message,
+    onSubmit,
+    errorType,
+    errorMessage
 }) {
     const classes = useStyles();
     const [room, setRoom] = React.useState('');
 
-    const handleChangeRoom = e => {
+    const handleChangeRoom = (e) => {
         setRoom(e.target.value);
-    }
+    };
 
     return (
         <Modal
@@ -53,15 +53,17 @@ export default function InputModal({
                     {message}
                 </Typography>
                 <div className={classes.marginBig}>
-                <TextField className={classes.margin} autoFocus
-                    error={errorType === 'create-room'} 
-                    onChange={handleChangeRoom} value={room} 
-                    placeholder="new room..." />
-                    {errorType === 'create-room' && 
-                        <FormHelperText className={classes.red}>{errorMessage}</FormHelperText>
+                    <TextField
+                      className={classes.margin} autoFocus
+                      error={errorType === 'create-room'}
+                      onChange={handleChangeRoom} value={room}
+                      placeholder="new room..."
+                    />
+                    {errorType === 'create-room'
+                        && <FormHelperText className={classes.red}>{errorMessage}</FormHelperText>
                     }
                 </div>
-                <Button variant="contained" color="primary" onClick={()=>onSubmit(room)}>
+                <Button variant="contained" color="primary" onClick={() => onSubmit(room)}>
                     Submit
                 </Button>
             </Paper>

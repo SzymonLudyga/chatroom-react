@@ -29,7 +29,7 @@ export default class Login extends Component {
     _handleResize = () => {
         this.setState({
             screenWidth: window.innerWidth
-        })
+        });
     }
 
     _handleNameChange = (e) => {

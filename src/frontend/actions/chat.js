@@ -27,14 +27,11 @@ export function fetchMessages(room) {
         try {
             const { tokenInfo } = getState().user.userInfo.token;
             const res = await authApiCall('get', `messages/${room}`, tokenInfo);
-            if (res.status !== 200) {
-                throw new Error('Error fetching messages');
-            }
             dispatch(_messagesReceived(res.data));
         } catch (e) {
-            dispatch(errorDisplay({ 
-                errorType: e.response.data.errorType, 
-                errorMessage: e.response.data.errorMessage 
+            dispatch(errorDisplay({
+                errorType: e.response.data.errorType,
+                errorMessage: e.response.data.errorMessage
             }));
         }
     };
@@ -45,15 +42,12 @@ export function deleteMessages(room) {
         try {
             const { tokenInfo } = getState().user.userInfo.token;
             const res = await authApiCall('delete', `messages/${room}`, tokenInfo);
-            if (res.status !== 200) {
-                throw new Error('Error deleting messages');
-            }
             dispatch(fetchMessages(room));
             dispatch(clearMessages());
         } catch (e) {
-            dispatch(errorDisplay({ 
-                errorType: e.response.data.errorType, 
-                errorMessage: e.response.data.errorMessage 
+            dispatch(errorDisplay({
+                errorType: e.response.data.errorType,
+                errorMessage: e.response.data.errorMessage
             }));
         }
     };

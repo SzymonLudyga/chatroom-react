@@ -4,12 +4,12 @@ import PropTypes from 'prop-types';
 import {
     Button, Typography, TextField, FormHelperText, Grid
 } from '@material-ui/core';
+import _ from 'lodash';
 import { routes } from '../routing/routes';
 import WebSocket from '../websockets/WebSocket';
 import ErrorModal from '../common/ErrorModal';
-import _ from 'lodash';
 
-const throttled = (method) => _.throttle(method, { trailing: true, leading: true });
+const throttled = method => _.throttle(method, { trailing: true, leading: true });
 
 export default class Chat extends Component {
     constructor(props) {
@@ -55,7 +55,7 @@ export default class Chat extends Component {
     _handleResize = () => {
         this.setState({
             screenWidth: window.innerWidth
-        })
+        });
     }
 
     _scrollToBottom = () => {
@@ -77,7 +77,7 @@ export default class Chat extends Component {
         this.props.history.push(routes.join);
     }
 
-    _onEnter = e => {
+    _onEnter = (e) => {
         if (e.keyCode == 13) {
             this._sendMessage();
         }
@@ -100,7 +100,7 @@ export default class Chat extends Component {
     };
 
     render() {
-        const { classes } = this.props;
+        const { classes, errorMessage, errorType } = this.props;
         const isSmallerScreen = this.state.screenWidth < 700;
         return (
             <>
@@ -128,25 +128,31 @@ export default class Chat extends Component {
                             <Button variant="outlined" className={isSmallerScreen ? classes.buttonLeaveSmall : classes.buttonLeave} color="secondary" onClick={this._leaveRoom}>
                                 Leave room
                             </Button>
-                            <div className={isSmallerScreen ? classes.whiteDivSmall : classes.whiteDiv}></div>
+                            <div className={isSmallerScreen ? classes.whiteDivSmall : classes.whiteDiv} />
                             <Typography key={2} className={classes.big}>
                                 {`Welcome ${this.props.username}!`}
                             </Typography>
                             <Typography key={3}>
                                 {`${this.state.messageCount} messages have been emitted`}
                             </Typography>
-                            {this.props.messages.map(msg =>
-                                <Typography className={classes.singleMessage} key={msg._id}>{`${msg.user} (${msg.timestamp}): ${msg.message}`}</Typography>
-                            )}
-                            <div className={classes.dummyDiv}
-                                ref={(el) => { this.messagesEnd = el; }}>
-                            </div>
+                            {this.props.messages.map(msg => <Typography className={classes.singleMessage} key={msg._id}>{`${msg.user} (${msg.timestamp}): ${msg.message}`}</Typography>)}
+                            <div
+                              className={classes.dummyDiv}
+                                ref={(el) => { this.messagesEnd = el; }}
+                            />
                         </div>
                         <div className={classes.inputWithButton}>
                             <div className={classes.inputWithHelper}>
-                                <TextField autoFocus error={this.props.errorType === 'message'} onKeyDown={this._onEnter} onChange={this._handleTypeChange} value={this.state.message} placeholder="new message..." />
-                                {this.props.errorType === 'message'
-                                    && <FormHelperText className={classes.red}>{this.props.errorMessage}</FormHelperText>
+                                <TextField
+                                    autoFocus
+                                    error={errorType === 'send-message-error'}
+                                    onKeyDown={this._onEnter}
+                                    onChange={this._handleTypeChange}
+                                    value={this.state.message}
+                                    placeholder="new message..."
+                                />
+                                {errorType === 'send-message-error'
+                                    && <FormHelperText className={classes.red}>{errorMessage}</FormHelperText>
                                 }
                             </div>
                             <Button className={classes.send} onClick={this._sendMessage} variant="contained" color="primary">
@@ -155,11 +161,13 @@ export default class Chat extends Component {
                         </div>
                     </div>
                 </Grid>
-                {(this.props.errorType === 'message-error' || this.props.errorType === 'token') && 
-                <ErrorModal
-                    message={this.props.errorMessage}
-                    onSubmit={this.props.errorHide}
-                />}
+                {(errorType === 'user-error' || errorType === 'message-error' || errorType === 'token')
+                    && (
+                        <ErrorModal
+                          message={errorMessage}
+                          onSubmit={this.props.errorHide}
+                        />
+                    )}
             </>
         );
     }

@@ -1,6 +1,7 @@
 const moment = require('moment');
 
 const { Message } = require('../db/Message');
+const { errorMessages } = require('./errorMessages');
 
 const addMessage = (data, callback) => {
     const timestamp = moment().valueOf();
@@ -14,16 +15,15 @@ const addMessage = (data, callback) => {
                 timestamp: res.timestamp,
                 message: res.message
             });
-        },
-        (err) => {
-            throw new Error('Error saving msg');
         }
-    );
+    ).catch((err) => {
+        throw new Error(errorMessages.addMessageError);
+    });
 };
 
 const checkMessage = (data) => {
     if (typeof data.message !== 'string' || data.message.trim() === '') {
-        throw new Error('Message should be non-empty.');
+        throw new Error(errorMessages.emptyMessage);
     }
 };
 

@@ -67,9 +67,9 @@ const styles = () => ({
     singleMessage: {
         margin: 7
     },
-    dummyDiv: { 
-        float:"left", 
-        clear: "both" 
+    dummyDiv: {
+        float: 'left',
+        clear: 'both'
     },
     whiteDivSmall: {
         position: 'fixed',

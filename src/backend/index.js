@@ -10,7 +10,8 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 
 const { addMessage, checkMessage } = require('./utils/messageUtils');
-const { getUsers, changeUserRoom, checkUserRoom } = require('./utils/userUtils');
+const { changeUserRoom, checkUserRoom } = require('./utils/userUtils');
+const { errorMessages, errorTypes } = require('./utils/errorMessages');
 
 const { mongoose } = require('./db/mongooseConfig');
 const { User } = require('./db/User');
@@ -39,30 +40,36 @@ io.on('connection', (socket) => {
     });
 
     socket.on('join-room', async (data) => {
-        socket.join(data.room);
-        const room = await checkUserRoom(data.user);
-
-        if (data.room !== room) {
-            // - if new room of the user
+        try {
             socket.join(data.room);
-            // 1. then update user list
-            changeUserRoom(data.user, data.room, (userList) => {
-                // 2. then info to everyone to fetch user list
-                io.to(data.room).emit(
-                    'update-user-list',
-                    userList
-                );
-            });
-
-            addMessage({ user: 'Admin', room: data.room, message: 'Welcome to the app' }, (res) => {
-                // 3. then info to socket with welcome message
-                // socket.emit - emits event to single connection(socket)
-                socket.emit('new-message', res);
-            });
-            addMessage({ user: 'Admin', room: data.room, message: `${data.user} has joined` }, (res) => {
-                // 4. then info to everyone but socket that user was connected
-                // socket.broadcast.emit - emits event to every connection but the socket
-                socket.broadcast.to(data.room).emit('new-message', res);
+            const room = await checkUserRoom(data.user);
+            if (data.room !== room) {
+                // - if new room of the user
+                socket.join(data.room);
+                // 1. then update user list
+                changeUserRoom(data.user, data.room, (userList) => {
+                    // 2. then info to everyone to fetch user list
+                    io.to(data.room).emit(
+                        'update-user-list',
+                        userList
+                    );
+                });
+                addMessage({ user: 'Admin', room: data.room, message: 'Welcome to the app' }, (res) => {
+                    // 3. then info to socket with welcome message
+                    // socket.emit - emits event to single connection(socket)
+                    socket.emit('new-message', res);
+                });
+                addMessage({ user: 'Admin', room: data.room, message: `${data.user} has joined` }, (res) => {
+                    // 4. then info to everyone but socket that user was connected
+                    // socket.broadcast.emit - emits event to every connection but the socket
+                    socket.broadcast.to(data.room).emit('new-message', res);
+                });
+            }
+        } catch (err) {
+            console.log(err.message);
+            socket.emit('error-message', {
+                message: err.message,
+                type: err.message === errorMessages.addMessageError ? errorTypes.MESSAGE_ERROR : errorTypes.USER_ERROR
             });
         }
     });
@@ -73,19 +80,27 @@ io.on('connection', (socket) => {
 
         socket.leave(data.room);
 
-        addMessage({ user: 'Admin', room: data.room, message: `${data.user} left the room` }, (res) => {
-            // 1. Info to everyone but the socket to update user list
-            // socket.broadcast.emit - emits event to every connection but the socket
-            socket.broadcast.to(data.room).emit('new-message', res);
-        });
+        try {
+            addMessage({ user: 'Admin', room: data.room, message: `${data.user} left the room` }, (res) => {
+                // 1. Info to everyone but the socket to update user list
+                // socket.broadcast.emit - emits event to every connection but the socket
+                socket.broadcast.to(data.room).emit('new-message', res);
+            });
 
-        changeUserRoom(data.user, null, (userList) => {
-            // 2. Info to everyone but the socket that user left the room
-            socket.broadcast.to(data.room).emit(
-                'update-user-list',
-                userList
-            );
-        });
+            changeUserRoom(data.user, null, (userList) => {
+                // 2. Info to everyone but the socket that user left the room
+                socket.broadcast.to(data.room).emit(
+                    'update-user-list',
+                    userList
+                );
+            });
+        } catch (err) {
+            console.log(err.message);
+            socket.emit('error-message', {
+                message: err.message,
+                type: err.message === errorMessages.addMessageError ? errorTypes.MESSAGE_ERROR : errorTypes.USER_ERROR
+            });
+        }
     });
 
     socket.on('create-message', (data) => {
@@ -102,7 +117,10 @@ io.on('connection', (socket) => {
             });
         } catch (err) {
             console.log(err.message);
-            socket.emit('error-message', { message: err.message, type: 'message' });
+            socket.emit('error-message', {
+                message: err.message,
+                type: err.message === errorMessages.addMessageError ? errorTypes.MESSAGE_ERROR : errorTypes.SEND_ERROR
+            });
         }
     });
 });

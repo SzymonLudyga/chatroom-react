@@ -1,6 +1,7 @@
 import { apiCallWithData, authApiCallWithData, authApiCall } from '../api/api';
 
 import { USER_UPDATE, TOKEN_UPDATE } from './types';
+import { errorDisplay, errorHide } from './error';
 
 function _userUpdated(userData) {
     return {
@@ -31,7 +32,10 @@ export function login(userCredentials) {
                 }
             }));
         } catch (e) {
-            console.log(e);
+            dispatch(errorDisplay({
+                errorType: e.response.data.errorType,
+                errorMessage: e.response.data.errorMessage
+            }));
         }
     };
 }
@@ -41,15 +45,15 @@ export function refreshToken() {
         try {
             const { tokenInfo } = getState().user.userInfo.token;
             const res = await authApiCall('get', 'users/refresh-token', tokenInfo);
-            if (res.status !== 200) {
-                throw new Error('Error Token');
-            }
             dispatch(_tokenUpdated({
                 tokenInfo: res.data.tokens[res.data.tokens.length - 1].token,
                 timestamp: res.data.tokens[res.data.tokens.length - 1].timestamp
             }));
         } catch (e) {
-            console.log(e);
+            dispatch(errorDisplay({
+                errorType: e.response.data.errorType,
+                errorMessage: e.response.data.errorMessage
+            }));
         }
     };
 }
@@ -59,9 +63,6 @@ export function logout(username) {
         try {
             const { tokenInfo } = getState().user.userInfo.token;
             const res = await authApiCallWithData('delete', 'users/token', tokenInfo, { username });
-            if (res.status !== 200) {
-                throw new Error('Error Logout');
-            }
             dispatch(_userUpdated({
                 username: null,
                 token: {
@@ -70,7 +71,10 @@ export function logout(username) {
                 }
             }));
         } catch (e) {
-            console.log(e);
+            dispatch(errorDisplay({
+                errorType: e.response.data.errorType,
+                errorMessage: e.response.data.errorMessage
+            }));
         }
     };
 }
@@ -79,9 +83,6 @@ export function register(userCredentials) {
     return async (dispatch) => {
         try {
             const res = await apiCallWithData('post', 'users/register', userCredentials);
-            if (res.status !== 200) {
-                throw new Error('Error Register');
-            }
             dispatch(_userUpdated({
                 username: userCredentials.name,
                 token: {
@@ -90,7 +91,10 @@ export function register(userCredentials) {
                 }
             }));
         } catch (e) {
-            console.log(e);
+            dispatch(errorDisplay({
+                errorType: e.response.data.errorType,
+                errorMessage: e.response.data.errorMessage
+            }));
         }
     };
 }

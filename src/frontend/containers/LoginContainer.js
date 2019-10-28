@@ -8,7 +8,7 @@ const styles = theme => ({
     container: {
         position: 'absolute',
         top: 50,
-        left: 0, 
+        left: 0,
         right: 0,
         margin: '0 auto',
         display: 'flex',
