@@ -3,7 +3,7 @@ import { withStyles } from '@material-ui/core/styles';
 import {
     fetchMessages, clearMessages, deleteMessages, addMessage
 } from '../actions/chat';
-import { updateUserList } from '../actions/user';
+import updateUserList from '../actions/user';
 import { refreshToken } from '../actions/login';
 import { errorDisplay, errorHide } from '../actions/error';
 

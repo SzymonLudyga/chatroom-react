@@ -41,7 +41,7 @@ export function deleteMessages(room) {
     return async (dispatch, getState) => {
         try {
             const { tokenInfo } = getState().user.userInfo.token;
-            const res = await authApiCall('delete', `messages/${room}`, tokenInfo);
+            await authApiCall('delete', `messages/${room}`, tokenInfo);
             dispatch(fetchMessages(room));
             dispatch(clearMessages());
         } catch (e) {

@@ -15,15 +15,15 @@ router.delete('/:roomName', authenticate, (req, res) => {
         }
         res.status(200).send('OK');
     }).catch((err) => {
-        err.message === NOT_FOUND
-            ? res.status(404).send({
-                errorType: errorTypes.MESSAGE_ERROR,
-                errorMessage: `${errorMessages.messagesNotFound}: ${req.params.roomName}.`
-            })
-            : res.status(500).send({
-                errorType: errorTypes.MESSAGE_ERROR,
-                errorMessage: errorMessages.server
-            });
+        /* eslint-disable-next-line no-unused-expressions */
+        err.message === NOT_FOUND ? res.status(404).send({
+            errorType: errorTypes.MESSAGE_ERROR,
+            errorMessage:
+                `${errorMessages.messagesNotFound}: ${req.params.roomName}.`
+        }) : res.status(500).send({
+            errorType: errorTypes.MESSAGE_ERROR,
+            errorMessage: errorMessages.server
+        });
     });
 });
 
@@ -34,15 +34,15 @@ router.get('/:roomName', authenticate, (req, res) => {
         }
         res.status(200).send(msg);
     }).catch((err) => {
-        err.message === NOT_FOUND
-            ? res.status(404).send({
-                errorType: errorTypes.MESSAGE_ERROR,
-                errorMessage: `${errorMessages.messagesNotFound}: ${req.params.roomName}.`
-            })
-            : res.status(500).send({
-                errorType: errorTypes.MESSAGE_ERROR,
-                errorMessage: errorMessages.server
-            });
+        /* eslint-disable-next-line no-unused-expressions */
+        err.message === NOT_FOUND ? res.status(404).send({
+            errorType: errorTypes.MESSAGE_ERROR,
+            errorMessage:
+                `${errorMessages.messagesNotFound}: ${req.params.roomName}.`
+        }) : res.status(500).send({
+            errorType: errorTypes.MESSAGE_ERROR,
+            errorMessage: errorMessages.server
+        });
     });
 });
 

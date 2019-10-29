@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export default function ConfirmModal({
+function ConfirmModal({
     openModal,
     closeModal,
     message,
@@ -43,10 +43,20 @@ export default function ConfirmModal({
                     {message}
                 </Typography>
                 <div>
-                    <Button className={classes.button} variant="contained" color="secondary" onClick={onSubmit}>
+                    <Button
+                        className={classes.button}
+                        variant="contained"
+                        color="secondary"
+                        onClick={onSubmit}
+                    >
                         Yes
                     </Button>
-                    <Button className={classes.button} variant="contained" color="primary" onClick={onCancel}>
+                    <Button
+                        className={classes.button}
+                        variant="contained"
+                        color="primary"
+                        onClick={onCancel}
+                    >
                         No
                     </Button>
                 </div>
@@ -54,3 +64,13 @@ export default function ConfirmModal({
         </Modal>
     );
 }
+
+ConfirmModal.propTypes = {
+    message: PropTypes.string.isRequired,
+    openModal: PropTypes.bool.isRequired,
+    closeModal: PropTypes.func.isRequired,
+    onCancel: PropTypes.func.isRequired,
+    onSubmit: PropTypes.func.isRequired,
+};
+
+export default ConfirmModal;

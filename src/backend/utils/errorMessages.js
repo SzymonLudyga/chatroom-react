@@ -8,7 +8,8 @@ const errorMessages = {
     roomExists: 'Room already exists',
     roomToJoinNotFound: 'Error joining the room: Room not found',
     tokenInvalid: 'Token not found or invalid',
-    passwordInvalid: 'Password should contain at least (non-space) 6 characters',
+    passwordInvalid: `Password should contain 
+                        at least (non-space) 6 characters`,
     usernameInvalid: 'User should contain at least (non-space) 4 characters',
     userExists: 'User with this name already exists',
     userNotFound: 'Invalid username. Try again.',

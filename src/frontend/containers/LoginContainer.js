@@ -4,7 +4,7 @@ import { login, register } from '../actions/login';
 
 import Login from '../components/Login';
 
-const styles = theme => ({
+const styles = () => ({
     container: {
         position: 'absolute',
         top: 50,
@@ -43,7 +43,7 @@ const styles = theme => ({
     }
 });
 
-function mapStateToProps(state) {
+function mapStateToProps() {
     return {};
 }
 

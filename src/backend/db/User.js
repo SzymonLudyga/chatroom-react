@@ -1,6 +1,7 @@
+/* eslint func-names: 0 */
+
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
-const _ = require('lodash');
 const bcrypt = require('bcryptjs');
 const moment = require('moment');
 
@@ -53,7 +54,9 @@ UserSchema.methods.generateAuthToken = function () {
     const token = jwt
         .sign({ _id: user._id.toHexString(), access }, process.env.JWT_SECRET)
         .toString();
-    user.tokens = user.tokens.concat([{ access, token, timestamp: expiration }]);
+    user.tokens = user.tokens.concat([{
+        access, token, timestamp: expiration
+    }]);
     return user.save().then(() => token);
 };
 

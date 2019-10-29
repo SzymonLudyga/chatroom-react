@@ -1,8 +1,8 @@
 import axios from 'axios';
-import { baseUrl } from '../config/config';
+import baseUrl from '../config/config';
 
 export async function apiCallWithData(method, resource, data) {
-    return await axios({
+    return axios({
         method,
         url: `${baseUrl}/${resource}`,
         data
@@ -10,7 +10,7 @@ export async function apiCallWithData(method, resource, data) {
 }
 
 export async function authApiCallWithData(method, resource, token, req) {
-    return await axios({
+    return axios({
         method,
         url: `${baseUrl}/${resource}`,
         data: req,
@@ -19,7 +19,7 @@ export async function authApiCallWithData(method, resource, token, req) {
 }
 
 export async function apiCall(method, resource) {
-    return await axios({
+    return axios({
         method,
         url: `${baseUrl}/${resource}`,
         responseType: 'json'
@@ -27,7 +27,7 @@ export async function apiCall(method, resource) {
 }
 
 export async function authApiCall(method, resource, token) {
-    return await axios({
+    return axios({
         method,
         url: `${baseUrl}/${resource}`,
         headers: { 'x-auth': token }

@@ -1,5 +1,4 @@
 const express = require('express');
-const moment = require('moment');
 
 const app = express();
 const port = 3000;
@@ -13,9 +12,8 @@ const { addMessage, checkMessage } = require('./utils/messageUtils');
 const { changeUserRoom, checkUserRoom } = require('./utils/userUtils');
 const { errorMessages, errorTypes } = require('./utils/errorMessages');
 
+/* eslint-disable-next-line no-unused-vars */
 const { mongoose } = require('./db/mongooseConfig');
-const { User } = require('./db/User');
-const { Message } = require('./db/Message');
 
 const usersRouter = require('./router/user');
 const roomsRouter = require('./router/room');
@@ -54,14 +52,24 @@ io.on('connection', (socket) => {
                         userList
                     );
                 });
-                addMessage({ user: 'Admin', room: data.room, message: 'Welcome to the app' }, (res) => {
+                addMessage({
+                    user: 'Admin',
+                    room: data.room,
+                    message: 'Welcome to the app'
+                }, (res) => {
                     // 3. then info to socket with welcome message
                     // socket.emit - emits event to single connection(socket)
                     socket.emit('new-message', res);
                 });
-                addMessage({ user: 'Admin', room: data.room, message: `${data.user} has joined` }, (res) => {
-                    // 4. then info to everyone but socket that user was connected
-                    // socket.broadcast.emit - emits event to every connection but the socket
+                addMessage({
+                    user: 'Admin',
+                    room: data.room,
+                    message: `${data.user} has joined`
+                }, (res) => {
+                    // 4. then info to everyone but socket
+                    //      that user was connected
+                    // socket.broadcast.emit - emits event to
+                    //      every connection but the socket
                     socket.broadcast.to(data.room).emit('new-message', res);
                 });
             }
@@ -69,7 +77,9 @@ io.on('connection', (socket) => {
             console.log(err.message);
             socket.emit('error-message', {
                 message: err.message,
-                type: err.message === errorMessages.addMessageError ? errorTypes.MESSAGE_ERROR : errorTypes.USER_ERROR
+                type: err.message === errorMessages.addMessageError
+                    ? errorTypes.MESSAGE_ERROR
+                    : errorTypes.USER_ERROR
             });
         }
     });
@@ -81,9 +91,14 @@ io.on('connection', (socket) => {
         socket.leave(data.room);
 
         try {
-            addMessage({ user: 'Admin', room: data.room, message: `${data.user} left the room` }, (res) => {
+            addMessage({
+                user: 'Admin',
+                room: data.room,
+                message: `${data.user} left the room`
+            }, (res) => {
                 // 1. Info to everyone but the socket to update user list
-                // socket.broadcast.emit - emits event to every connection but the socket
+                // socket.broadcast.emit - emits event
+                //      to every connection but the socket
                 socket.broadcast.to(data.room).emit('new-message', res);
             });
 
@@ -98,7 +113,9 @@ io.on('connection', (socket) => {
             console.log(err.message);
             socket.emit('error-message', {
                 message: err.message,
-                type: err.message === errorMessages.addMessageError ? errorTypes.MESSAGE_ERROR : errorTypes.USER_ERROR
+                type: err.message === errorMessages.addMessageError
+                    ? errorTypes.MESSAGE_ERROR
+                    : errorTypes.USER_ERROR
             });
         }
     });
@@ -119,7 +136,9 @@ io.on('connection', (socket) => {
             console.log(err.message);
             socket.emit('error-message', {
                 message: err.message,
-                type: err.message === errorMessages.addMessageError ? errorTypes.MESSAGE_ERROR : errorTypes.SEND_ERROR
+                type: err.message === errorMessages.addMessageError
+                    ? errorTypes.MESSAGE_ERROR
+                    : errorTypes.SEND_ERROR
             });
         }
     });

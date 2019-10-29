@@ -1,3 +1,6 @@
+/* eslint consistent-return: 0 */
+/* eslint no-unused-vars: 0 */
+
 const moment = require('moment');
 const { User } = require('../db/User');
 const { errorMessages, errorTypes } = require('../utils/errorMessages');

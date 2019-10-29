@@ -16,6 +16,7 @@ const addMessage = (data, callback) => {
                 message: res.message
             });
         }
+    /* eslint-disable-next-line no-unused-vars */
     ).catch((err) => {
         throw new Error(errorMessages.addMessageError);
     });

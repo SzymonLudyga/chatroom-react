@@ -15,7 +15,7 @@ import { errorHide } from '../actions/error';
 
 import Join from '../components/Join';
 
-const styles = theme => ({
+const styles = () => ({
     container: {
         marginTop: 10
     },

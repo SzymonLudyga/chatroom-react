@@ -90,6 +90,7 @@ router.get('/refresh-token', authenticate, (req, res) => {
             .then((token) => {
                 res.header('x-auth', token).send(req.user);
             });
+        /* eslint-disable-next-line no-unused-vars */
     }).catch((err) => {
         res.status(500).send({
             errorType: errorTypes.USER_ERROR,
@@ -101,6 +102,7 @@ router.get('/refresh-token', authenticate, (req, res) => {
 router.delete('/token', authenticate, (req, res) => {
     req.user.removeToken(req.token).then(() => {
         res.status(200).send(req.user);
+        /* eslint-disable-next-line no-unused-vars */
     }).catch((err) => {
         res.status(500).send({
             errorType: errorTypes.USER_ERROR,
@@ -118,6 +120,7 @@ router.delete('/token/all', (req, res) => {
         }
         res.status(200).send(user);
     }).catch((err) => {
+        /* eslint-disable-next-line no-unused-expressions */
         err.message === NOT_FOUND
             ? res.status(404).send({
                 errorType: errorTypes.USER_ERROR,

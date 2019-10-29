@@ -9,8 +9,33 @@ import {
     OPEN_CONFIRM_MODAL,
     CLOSE_CONFIRM_MODAL
 } from './types';
-
 import { errorDisplay, errorHide } from './error';
+
+export function openRoomModal() {
+    return {
+        type: OPEN_ROOM_MODAL,
+    };
+}
+
+export function closeRoomModal() {
+    return {
+        type: CLOSE_ROOM_MODAL,
+    };
+}
+
+export function openConfirmModal(room) {
+    return {
+        type: OPEN_CONFIRM_MODAL,
+        room
+    };
+}
+
+export function closeConfirmModal() {
+    return {
+        type: CLOSE_CONFIRM_MODAL,
+    };
+}
+
 
 function _roomsReceived(rooms) {
     return {
@@ -56,11 +81,15 @@ export function fetchRooms() {
 }
 
 export function deleteRoom(room) {
-    return async (dispatch) => {
+    return async (dispatch, getState) => {
         try {
-            // const { tokenInfo } = getState().user.userInfo.token;
-            // const res = await authApiCallWithData('delete', 'rooms', tokenInfo, { room });
-            const res = await apiCallWithData('delete', 'rooms', { room });
+            const { tokenInfo } = getState().user.userInfo.token;
+            const res = await authApiCallWithData(
+                'delete',
+                'rooms',
+                tokenInfo,
+                { room }
+            );
             dispatch(_roomDeleted(res.data.name));
             dispatch(closeConfirmModal());
         } catch (e) {
@@ -76,7 +105,7 @@ export function deleteRoom(room) {
 export function confirmRoom(room) {
     return async (dispatch) => {
         try {
-            const res = await apiCallWithData('post', 'rooms/join', { room })
+            const res = await apiCallWithData('post', 'rooms/join', { room });
             dispatch(_roomChosen({ room: res.data }));
         } catch (e) {
             dispatch(errorDisplay({
@@ -100,30 +129,5 @@ export function createRoom(data) {
                 errorMessage: e.response.data.errorMessage
             }));
         }
-    };
-}
-
-export function openRoomModal() {
-    return {
-        type: OPEN_ROOM_MODAL,
-    };
-}
-
-export function closeRoomModal() {
-    return {
-        type: CLOSE_ROOM_MODAL,
-    };
-}
-
-export function openConfirmModal(room) {
-    return {
-        type: OPEN_CONFIRM_MODAL,
-        room
-    };
-}
-
-export function closeConfirmModal() {
-    return {
-        type: CLOSE_CONFIRM_MODAL,
     };
 }

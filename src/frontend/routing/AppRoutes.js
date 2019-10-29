@@ -1,6 +1,6 @@
 import React from 'react';
 import { Switch, Route } from 'react-router';
-import { routes } from './routes';
+import routes from './routes';
 import RoutesProvider from './RoutesProvider';
 import ChatContainer from '../containers/ChatContainer';
 import LoginContainer from '../containers/LoginContainer';

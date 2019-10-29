@@ -19,6 +19,7 @@ router.get('', (req, res) => {
         }
         res.status(200).send(rooms);
     }).catch((err) => {
+        /* eslint-disable-next-line no-unused-expressions */
         err.message === NOT_FOUND
             ? res.status(404).send({
                 errorType: errorTypes.ROOM_ERROR,
@@ -38,6 +39,7 @@ router.delete('', authenticate, (req, res) => {
         }
         res.status(200).send(room);
     }).catch((err) => {
+        /* eslint-disable-next-line no-unused-expressions */
         err.message === NOT_FOUND
             ? res.status(404).send({
                 errorType: errorTypes.ROOM_ERROR,
@@ -51,8 +53,12 @@ router.delete('', authenticate, (req, res) => {
 });
 
 router.post('', authenticate, (req, res) => {
-    const created_at = moment().valueOf();
-    const room = new Room({ name: req.body.room.toLowerCase(), created_at, creator: req.body.user });
+    const createdAt = moment().valueOf();
+    const room = new Room({
+        name: req.body.room.toLowerCase(),
+        created_at: createdAt,
+        creator: req.body.user
+    });
 
     Room.find().then(
         (rooms) => {
@@ -61,6 +67,7 @@ router.post('', authenticate, (req, res) => {
             }
         }
     ).catch((err) => {
+        /* eslint-disable-next-line no-unused-expressions */
         err.message === FORBIDDEN
             ? res.status(422).send({
                 errorType: errorTypes.CREATE_ERROR,
@@ -75,7 +82,6 @@ router.post('', authenticate, (req, res) => {
     room
         .save()
         .then(newRoom => res.status(200).send(newRoom)).catch((err) => {
-            console.log(err);
             if (err.name === VALIDATION_ERROR) {
                 res.status(400).send({
                     errorType: errorTypes.CREATE_ERROR,
@@ -102,6 +108,7 @@ router.post('/join', authenticate, (req, res) => {
         }
         res.status(200).send(room.name);
     }).catch((err) => {
+        /* eslint-disable-next-line no-unused-expressions */
         err.message === NOT_FOUND
             ? res.status(404).send({
                 errorType: errorTypes.ROOM_ERROR,

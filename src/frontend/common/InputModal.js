@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export default function InputModal({
+function InputModal({
     openModal,
     closeModal,
     message,
@@ -54,19 +54,40 @@ export default function InputModal({
                 </Typography>
                 <div className={classes.marginBig}>
                     <TextField
-                      className={classes.margin} autoFocus
-                      error={errorType === 'create-room'}
-                      onChange={handleChangeRoom} value={room}
-                      placeholder="new room..."
+                        className={classes.margin}
+                        autoFocus
+                        error={errorType === 'create-room'}
+                        onChange={handleChangeRoom}
+                        value={room}
+                        placeholder="new room..."
                     />
                     {errorType === 'create-room'
-                        && <FormHelperText className={classes.red}>{errorMessage}</FormHelperText>
+                        && (
+                            <FormHelperText className={classes.red}>
+                                {errorMessage}
+                            </FormHelperText>
+                        )
                     }
                 </div>
-                <Button variant="contained" color="primary" onClick={() => onSubmit(room)}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => onSubmit(room)}
+                >
                     Submit
                 </Button>
             </Paper>
         </Modal>
     );
 }
+
+InputModal.propTypes = {
+    message: PropTypes.string.isRequired,
+    openModal: PropTypes.bool.isRequired,
+    closeModal: PropTypes.func.isRequired,
+    onSubmit: PropTypes.func.isRequired,
+    errorType: PropTypes.string.isRequired,
+    errorMessage: PropTypes.string.isRequired,
+};
+
+export default InputModal;

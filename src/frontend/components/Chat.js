@@ -1,3 +1,4 @@
+/* eslint "max-len": ["error", { "code": 100, "tabWidth": 4 }] */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
@@ -5,7 +6,7 @@ import {
     Button, Typography, TextField, FormHelperText, Grid
 } from '@material-ui/core';
 import _ from 'lodash';
-import { routes } from '../routing/routes';
+import routes from '../routing/routes';
 import WebSocket from '../websockets/WebSocket';
 import ErrorModal from '../common/ErrorModal';
 
@@ -18,6 +19,7 @@ export default class Chat extends Component {
         this.state = {
             messageCount: 0,
             message: '',
+            /* eslint-disable-next-line react/destructuring-assignment */
             roomName: this.props.match.params.room,
             screenWidth: window.innerWidth,
         };
@@ -28,18 +30,25 @@ export default class Chat extends Component {
     }
 
     componentDidMount() {
+        const {
+            addMessage,
+            handleError,
+            updateUserList,
+            username
+        } = this.props;
+        const { roomName } = this.state;
         this._socket.onMessage('new-message', (res) => {
-            this.props.addMessage(res);
+            addMessage(res);
             this._scrollToBottom();
         });
         this._socket.onMessage('error-message', (res) => {
-            this.props.handleError({ errorType: res.type, errorMessage: res.message });
+            handleError({ errorType: res.type, errorMessage: res.message });
         });
         this._socket.onMessage('update-user-list', (users) => {
-            this.props.updateUserList(users);
+            updateUserList(users);
         });
         this._socket.emitMessage('join-room', {
-            user: this.props.username, room: this.state.roomName
+            user: username, room: roomName
         });
         this._scrollToBottom();
         window.addEventListener('resize', () => this._handleResize());
@@ -47,7 +56,8 @@ export default class Chat extends Component {
     }
 
     componentWillUnmount() {
-        this.props.clearMessages();
+        const { clearMessages } = this.props;
+        clearMessages();
         this._socket.close();
         window.removeEventListener('resize', this._handleResize);
     }
@@ -63,22 +73,28 @@ export default class Chat extends Component {
     }
 
     _delete = () => {
-        this.props.deleteMessages(this.state.roomName);
+        const { deleteMessages } = this.props;
+        const { roomName } = this.state;
+        deleteMessages(roomName);
     }
 
     _getPastMessages = () => {
-        this.props.fetchMessages(this.state.roomName);
+        const { fetchMessages } = this.props;
+        const { roomName } = this.state;
+        fetchMessages(roomName);
     }
 
     _leaveRoom = () => {
+        const { username, history } = this.props;
+        const { roomName } = this.state;
         this._socket.emitMessage('leave-room', {
-            user: this.props.username, room: this.state.roomName
+            user: username, room: roomName
         });
-        this.props.history.push(routes.join);
+        history.push(routes.join);
     }
 
     _onEnter = (e) => {
-        if (e.keyCode == 13) {
+        if (e.keyCode === 13) {
             this._sendMessage();
         }
     }
@@ -88,28 +104,50 @@ export default class Chat extends Component {
     }
 
     _sendMessage = () => {
-        console.log(`${this.props.username} emits new message ${this.state.message} to ${this.state.roomName}`);
+        const { roomName, message, messageCount } = this.state;
+        const { username, errorHide } = this.props;
+        console.log(
+            `${username} 
+            emits new message 
+            ${message} 
+            to ${roomName}`
+        );
 
-        this.props.errorHide();
+        errorHide();
         this._socket.emitMessage('create-message', {
-            user: this.props.username,
-            room: this.state.roomName,
-            message: this.state.message
+            user: username,
+            room: roomName,
+            message
         });
-        this.setState({ messageCount: this.state.messageCount + 1, message: '' });
+        this.setState({ messageCount: messageCount + 1, message: '' });
     };
 
     render() {
-        const { classes, errorMessage, errorType } = this.props;
-        const isSmallerScreen = this.state.screenWidth < 700;
+        const {
+            classes, errorMessage, errorType, messages, username, users, errorHide
+        } = this.props;
+        const { messageCount, message, screenWidth } = this.state;
+        const isSmallerScreen = screenWidth < 700;
         return (
             <>
                 <Grid className={classes.container}>
                     <div className={isSmallerScreen ? classes.usersNone : classes.users}>
                         <div>
-                            <Typography key={1} className={classes.userTitle} variant="h3">Users</Typography>
-                            {this.props.users.map(user => (
-                                <Typography className={classes.userElement} variant="h5" key={user._id}>{user.name}</Typography>
+                            <Typography
+                                key={1}
+                                className={classes.userTitle}
+                                variant="h3"
+                            >
+                                Users
+                            </Typography>
+                            {users.map(user => (
+                                <Typography
+                                    className={classes.userElement}
+                                    variant="h5"
+                                    key={user._id}
+                                >
+                                    {user.name}
+                                </Typography>
                             ))}
                         </div>
                         <div className={classes.buttonDiv}>
@@ -125,19 +163,37 @@ export default class Chat extends Component {
 
                     <div className={classes.messages}>
                         <div className={classes.msg}>
-                            <Button variant="outlined" className={isSmallerScreen ? classes.buttonLeaveSmall : classes.buttonLeave} color="secondary" onClick={this._leaveRoom}>
+                            <Button
+                                variant="outlined"
+                                className={isSmallerScreen
+                                    ? classes.buttonLeaveSmall
+                                    : classes.buttonLeave}
+                                color="secondary"
+                                onClick={this._leaveRoom}
+                            >
                                 Leave room
                             </Button>
-                            <div className={isSmallerScreen ? classes.whiteDivSmall : classes.whiteDiv} />
+                            <div
+                                className={isSmallerScreen
+                                    ? classes.whiteDivSmall
+                                    : classes.whiteDiv}
+                            />
                             <Typography key={2} className={classes.big}>
-                                {`Welcome ${this.props.username}!`}
+                                {`Welcome ${username}!`}
                             </Typography>
                             <Typography key={3}>
-                                {`${this.state.messageCount} messages have been emitted`}
+                                {`${messageCount} messages have been emitted`}
                             </Typography>
-                            {this.props.messages.map(msg => <Typography className={classes.singleMessage} key={msg._id}>{`${msg.user} (${msg.timestamp}): ${msg.message}`}</Typography>)}
+                            {messages.map(msg => (
+                                <Typography
+                                    className={classes.singleMessage}
+                                    key={msg._id}
+                                >
+                                    {`${msg.user} (${msg.timestamp}): ${msg.message}`}
+                                </Typography>
+                            ))}
                             <div
-                              className={classes.dummyDiv}
+                                className={classes.dummyDiv}
                                 ref={(el) => { this.messagesEnd = el; }}
                             />
                         </div>
@@ -148,24 +204,37 @@ export default class Chat extends Component {
                                     error={errorType === 'send-message-error'}
                                     onKeyDown={this._onEnter}
                                     onChange={this._handleTypeChange}
-                                    value={this.state.message}
+                                    value={message}
                                     placeholder="new message..."
                                 />
                                 {errorType === 'send-message-error'
-                                    && <FormHelperText className={classes.red}>{errorMessage}</FormHelperText>
+                                    && (
+                                        <FormHelperText
+                                            className={classes.red}
+                                        >
+                                            {errorMessage}
+                                        </FormHelperText>
+                                    )
                                 }
                             </div>
-                            <Button className={classes.send} onClick={this._sendMessage} variant="contained" color="primary">
+                            <Button
+                                className={classes.send}
+                                onClick={this._sendMessage}
+                                variant="contained"
+                                color="primary"
+                            >
                                 Send
                             </Button>
                         </div>
                     </div>
                 </Grid>
-                {(errorType === 'user-error' || errorType === 'message-error' || errorType === 'token')
+                {(errorType === 'user-error'
+                    || errorType === 'message-error'
+                    || errorType === 'token')
                     && (
                         <ErrorModal
-                          message={errorMessage}
-                          onSubmit={this.props.errorHide}
+                            message={errorMessage}
+                            onSubmit={errorHide}
                         />
                     )}
             </>
@@ -175,8 +244,20 @@ export default class Chat extends Component {
 
 
 Chat.propTypes = {
+    users: PropTypes.array.isRequired,
+    errorType: PropTypes.string.isRequired,
+    errorMessage: PropTypes.string.isRequired,
+    errorHide: PropTypes.func.isRequired,
+    history: PropTypes.object.isRequired,
+    fetchMessages: PropTypes.func.isRequired,
+    deleteMessages: PropTypes.func.isRequired,
+    clearMessages: PropTypes.func.isRequired,
+    username: PropTypes.string.isRequired,
+    updateUserList: PropTypes.func.isRequired,
+    handleError: PropTypes.func.isRequired,
+    addMessage: PropTypes.func.isRequired,
+    refreshToken: PropTypes.func.isRequired,
+    match: PropTypes.object.isRequired,
     classes: PropTypes.object.isRequired,
     messages: PropTypes.array.isRequired,
-    deleteMessages: PropTypes.func.isRequired,
-    fetchMessages: PropTypes.func.isRequired,
 };

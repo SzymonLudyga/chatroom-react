@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export default function ErrorModal({
+function ErrorModal({
     message,
     onSubmit
 }) {
@@ -42,11 +42,20 @@ export default function ErrorModal({
             open={message}
         >
             <Paper className={classes.root}>
-                <Typography className={classes.message} variant="h5" component="h3">
+                <Typography
+                    className={classes.message}
+                    variant="h5"
+                    component="h3"
+                >
                     {message}
                 </Typography>
                 <div>
-                    <Button className={classes.button} variant="contained" color="secondary" onClick={onSubmit}>
+                    <Button
+                        className={classes.button}
+                        variant="contained"
+                        color="secondary"
+                        onClick={onSubmit}
+                    >
                         OK
                     </Button>
                 </div>
@@ -54,3 +63,10 @@ export default function ErrorModal({
         </Modal>
     );
 }
+
+ErrorModal.propTypes = {
+    message: PropTypes.string.isRequired,
+    onSubmit: PropTypes.func.isRequired,
+};
+
+export default ErrorModal;

@@ -1,10 +1,12 @@
+/* eslint "max-len": ["error", { "code": 100, "tabWidth": 4 }] */
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
-    FormControl, Button, TextField
+    Button, TextField
 } from '@material-ui/core';
 import classnames from 'classnames';
-import { routes } from '../routing/routes';
+import routes from '../routing/routes';
 
 export default class Login extends Component {
     constructor(props) {
@@ -42,8 +44,10 @@ export default class Login extends Component {
 
     _handleSubmit = () => {
         const { name, password, option } = this.state;
-        option === 'login' ? this.props.login({ name, password }) : this.props.register({ name, password });
-        this.props.history.push(routes.join);
+        const { login, register, history } = this.props;
+        /* eslint-disable-next-line no-unused-expressions */
+        option === 'login' ? login({ name, password }) : register({ name, password });
+        history.push(routes.join);
     }
 
     _change = (option) => {
@@ -52,19 +56,33 @@ export default class Login extends Component {
 
     render() {
         const { classes } = this.props;
-        const { option } = this.state;
-        const isSmallerScreen = this.state.screenWidth < 600;
+        const { option, screenWidth } = this.state;
+        const isSmallerScreen = screenWidth < 600;
         return (
             <>
                 <div className={classes.buttonDiv}>
-                    <Button onClick={() => this._change('login')} className={classes.option} variant="outlined" color="primary">
+                    <Button
+                        onClick={() => this._change('login')}
+                        className={classes.option}
+                        variant="outlined"
+                        color="primary"
+                    >
                         Login
                     </Button>
-                    <Button onClick={() => this._change('register')} className={classes.option} variant="outlined" color="secondary">
+                    <Button
+                        onClick={() => this._change('register')}
+                        className={classes.option}
+                        variant="outlined"
+                        color="secondary"
+                    >
                         Register
                     </Button>
                 </div>
-                <div className={classnames([classes.container, isSmallerScreen ? classes.width100 : classes.width60])}>
+                <div className={classnames([
+                    classes.container,
+                    isSmallerScreen ? classes.width100 : classes.width60
+                ])}
+                >
                     <TextField
                         id="outlined-name"
                         label="Name"
@@ -83,7 +101,12 @@ export default class Login extends Component {
                         margin="normal"
                         variant="outlined"
                     />
-                    <Button onClick={this._handleSubmit} className={classes.button} variant="contained" color={option === 'login' ? 'primary' : 'secondary'}>
+                    <Button
+                        onClick={this._handleSubmit}
+                        className={classes.button}
+                        variant="contained"
+                        color={option === 'login' ? 'primary' : 'secondary'}
+                    >
                         {option === 'login' ? 'Login' : 'Register'}
                     </Button>
                 </div>

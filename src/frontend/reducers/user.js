@@ -1,4 +1,8 @@
-import { USER_UPDATE, USER_LIST_RECEIVED, TOKEN_UPDATE } from '../actions/types';
+import {
+    USER_UPDATE,
+    USER_LIST_RECEIVED,
+    TOKEN_UPDATE
+} from '../actions/types';
 
 const initialState = {
     userInfo: {

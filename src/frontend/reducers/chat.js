@@ -1,4 +1,8 @@
-import { MESSAGES_RECEIVED, MESSAGES_CLEARED, MESSAGE_ADDED } from '../actions/types';
+import {
+    MESSAGES_RECEIVED,
+    MESSAGES_CLEARED,
+    MESSAGE_ADDED
+} from '../actions/types';
 
 const initialState = {
     messages: [],
