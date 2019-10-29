@@ -64,8 +64,40 @@ const styles = () => ({
         flexGrow: 1,
         overflowY: 'scroll',
     },
+    coloredBox: {
+        backgroundColor: '#111111',
+        color: '#eeeeee',
+        margin: '7px 7px 7px auto',
+        boxShadow: '-2px 2px 10px rgba(0, 0, 0, .5)',
+    },
+    plainBox: {
+        margin: 7,
+        backgroundColor: '#eeeeee',
+        boxShadow: '2px 2px 10px rgba(0, 0, 0, .5)',
+    },
+    messageBox: {
+        minWidth: 260,
+        width: '40%',
+        display: 'flex',
+        alignSelf: 'right',
+        justifyContent: 'right',
+        flexDirection: 'column',
+        borderRadius: '4px 4px',
+    },
+    timestamp: {
+        alignSelf: 'center',
+        paddingRight: 3,
+        fontSize: '80%'
+    },
+    adminMessage: {
+        textAlign: 'center',
+        color: '#444444',
+        fontSize: '120%',
+    },
     singleMessage: {
-        margin: 7
+        fontSize: '120%',
+        paddingLeft: 5,
+        paddingRight: 5
     },
     dummyDiv: {
         float: 'left',
@@ -91,7 +123,6 @@ const styles = () => ({
         height: '100vh',
         width: '100%',
         display: 'flex',
-        alignItems: 'right',
         justifyContent: 'space-between',
         flexDirection: 'column'
     },

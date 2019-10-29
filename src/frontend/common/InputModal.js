@@ -86,7 +86,7 @@ InputModal.propTypes = {
     openModal: PropTypes.bool.isRequired,
     closeModal: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
-    errorType: PropTypes.string.isRequired,
+    errorType: PropTypes.string,
     errorMessage: PropTypes.string.isRequired,
 };
 

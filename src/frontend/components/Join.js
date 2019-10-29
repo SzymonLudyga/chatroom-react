@@ -165,7 +165,6 @@ export default class Join extends Component {
 
 Join.propTypes = {
     rooms: PropTypes.array.isRequired,
-    room: PropTypes.string.isRequired,
     classes: PropTypes.object.isRequired,
     confirmRoom: PropTypes.func.isRequired,
     fetchRooms: PropTypes.func.isRequired,
@@ -175,9 +174,9 @@ Join.propTypes = {
     confirmModal: PropTypes.bool.isRequired,
     history: PropTypes.object.isRequired,
     roomModal: PropTypes.bool.isRequired,
-    errorType: PropTypes.string.isRequired,
+    errorType: PropTypes.string,
     errorMessage: PropTypes.string.isRequired,
-    confirmDeletedRoom: PropTypes.string.isRequired,
+    confirmDeletedRoom: PropTypes.string,
     closeRoomModal: PropTypes.func.isRequired,
     logout: PropTypes.func.isRequired,
     createRoom: PropTypes.func.isRequired,

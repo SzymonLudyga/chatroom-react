@@ -1,11 +1,12 @@
 /* eslint "max-len": ["error", { "code": 100, "tabWidth": 4 }] */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
 import {
     Button, Typography, TextField, FormHelperText, Grid
 } from '@material-ui/core';
 import _ from 'lodash';
+import moment from 'moment';
+import classnames from 'classnames';
 import routes from '../routing/routes';
 import WebSocket from '../websockets/WebSocket';
 import ErrorModal from '../common/ErrorModal';
@@ -103,6 +104,11 @@ export default class Chat extends Component {
         this.setState({ message: e.target.value });
     }
 
+    _renderProperTime = timestamp => (
+        moment().format('DDMMYYYY') === moment(timestamp).format('DDMMYYYY')
+            ? moment(timestamp).format('H:mm') : moment(timestamp).format('DD.MM')
+    )
+
     _sendMessage = () => {
         const { roomName, message, messageCount } = this.state;
         const { username, errorHide } = this.props;
@@ -185,12 +191,30 @@ export default class Chat extends Component {
                                 {`${messageCount} messages have been emitted`}
                             </Typography>
                             {messages.map(msg => (
-                                <Typography
-                                    className={classes.singleMessage}
-                                    key={msg._id}
-                                >
-                                    {`${msg.user} (${msg.timestamp}): ${msg.message}`}
-                                </Typography>
+                                msg.user === 'Admin'
+                                    ? (
+                                        <Typography className={classes.adminMessage}>
+                                            {msg.message}
+                                        </Typography>
+                                    )
+                                    : (
+                                        <div
+                                            className={classnames([
+                                                classes.messageBox,
+                                                username === msg.user
+                                                    ? classes.coloredBox
+                                                    : classes.plainBox
+                                            ])}
+                                            key={msg._id}
+                                        >
+                                            <Typography className={classes.timestamp}>
+                                                {this._renderProperTime(msg.timestamp)}
+                                            </Typography>
+                                            <Typography className={classes.singleMessage}>
+                                                {`${msg.user}: ${msg.message}`}
+                                            </Typography>
+                                        </div>
+                                    )
                             ))}
                             <div
                                 className={classes.dummyDiv}
@@ -245,7 +269,7 @@ export default class Chat extends Component {
 
 Chat.propTypes = {
     users: PropTypes.array.isRequired,
-    errorType: PropTypes.string.isRequired,
+    errorType: PropTypes.string,
     errorMessage: PropTypes.string.isRequired,
     errorHide: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired,

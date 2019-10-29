@@ -2,9 +2,7 @@
 
 ```
 1. Error handling (Error Modals)
-2. PropTypes
-3. npm lint!
-4. Handling disconnection of the socket
-5. Control of changing paths
-6. Handling timestamp next to messages
+2. npm lint!
+3. Handling disconnection of the socket
+4. Control of changing paths
 ```
