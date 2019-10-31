@@ -5,7 +5,9 @@ import {
 } from '../api/api';
 
 import { USER_UPDATE, TOKEN_UPDATE } from './types';
-import { errorDisplay } from './error';
+import { errorHide, errorDisplay } from './error';
+import changePath from './status';
+import routes from '../routing/routes';
 
 function _userUpdated(userData) {
     return {
@@ -38,6 +40,8 @@ export function login(userCredentials) {
                         res.data.tokens[res.data.tokens.length - 1].timestamp
                 }
             }));
+            dispatch(errorHide());
+            dispatch(changePath({ path: routes.join }));
         } catch (e) {
             dispatch(errorDisplay({
                 errorType: e.response.data.errorType,
@@ -88,6 +92,7 @@ export function logout(username) {
                     timestamp: null
                 }
             }));
+            dispatch(changePath({ path: routes.login }));
         } catch (e) {
             dispatch(errorDisplay({
                 errorType: e.response.data.errorType,
@@ -114,6 +119,8 @@ export function register(userCredentials) {
                         res.data.tokens[res.data.tokens.length - 1].timestamp
                 }
             }));
+            dispatch(errorHide());
+            dispatch(changePath({ path: routes.join }));
         } catch (e) {
             dispatch(errorDisplay({
                 errorType: e.response.data.errorType,

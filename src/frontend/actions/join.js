@@ -1,4 +1,4 @@
-import { apiCall, apiCallWithData, authApiCallWithData } from '../api/api';
+import { apiCall, authApiCallWithData } from '../api/api';
 import {
     ROOMS_RECEIVED,
     ROOM_CHOSEN,
@@ -10,6 +10,8 @@ import {
     CLOSE_CONFIRM_MODAL
 } from './types';
 import { errorDisplay, errorHide } from './error';
+import changePath from './status';
+import routes from '../routing/routes';
 
 export function openRoomModal() {
     return {
@@ -103,10 +105,17 @@ export function deleteRoom(room) {
 }
 
 export function confirmRoom(room) {
-    return async (dispatch) => {
+    return async (dispatch, getState) => {
         try {
-            const res = await apiCallWithData('post', 'rooms/join', { room });
-            dispatch(_roomChosen({ room: res.data }));
+            const { tokenInfo } = getState().user.userInfo.token;
+            const res = await authApiCallWithData(
+                'post',
+                'rooms/join',
+                tokenInfo,
+                { room }
+            );
+            dispatch(_roomChosen({ room: res.data.room }));
+            dispatch(changePath({ path: `${routes.chat}/${room}` }));
         } catch (e) {
             dispatch(errorDisplay({
                 errorType: e.response.data.errorType,
@@ -117,10 +126,16 @@ export function confirmRoom(room) {
 }
 
 export function createRoom(data) {
-    return async (dispatch) => {
+    return async (dispatch, getState) => {
         dispatch(errorHide());
         try {
-            const res = await apiCallWithData('post', 'rooms', data);
+            const { tokenInfo } = getState().user.userInfo.token;
+            const res = await authApiCallWithData(
+                'post',
+                'rooms',
+                tokenInfo,
+                data
+            );
             dispatch(_roomCreated(res.data));
             dispatch(closeRoomModal());
         } catch (e) {

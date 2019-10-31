@@ -6,6 +6,7 @@ import {
 import updateUserList from '../actions/user';
 import { refreshToken } from '../actions/login';
 import { errorDisplay, errorHide } from '../actions/error';
+import changePath from '../actions/status';
 
 import Chat from '../components/Chat';
 
@@ -176,6 +177,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
+        changePath: path => dispatch(changePath(path)),
         fetchMessages: room => dispatch(fetchMessages(room)),
         addMessage: msg => dispatch(addMessage(msg)),
         clearMessages: () => dispatch(clearMessages()),

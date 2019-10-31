@@ -17,7 +17,7 @@ const errorMessages = {
     userGetError: 'Error getting user',
     userUpdateError: 'Error updating user',
     addMessageError: 'Error when adding message',
-    emptyMessage: 'Message should be non-empty'
+    emptyMessage: 'Message should not be empty'
 };
 
 const errorTypes = {

@@ -93,7 +93,7 @@ router.get('/refresh-token', authenticate, (req, res) => {
         /* eslint-disable-next-line no-unused-vars */
     }).catch((err) => {
         res.status(500).send({
-            errorType: errorTypes.USER_ERROR,
+            errorType: errorTypes.TOKEN_ERROR,
             errorMessage: errorMessages.server
         });
     });

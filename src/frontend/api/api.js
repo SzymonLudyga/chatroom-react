@@ -9,11 +9,11 @@ export async function apiCallWithData(method, resource, data) {
     });
 }
 
-export async function authApiCallWithData(method, resource, token, req) {
+export async function authApiCallWithData(method, resource, token, data) {
     return axios({
         method,
         url: `${baseUrl}/${resource}`,
-        data: req,
+        data,
         headers: { 'x-auth': token }
     });
 }

@@ -42,6 +42,11 @@ function InputModal({
         setRoom(e.target.value);
     };
 
+    const submit = () => {
+        onSubmit(room);
+        setRoom('');
+    };
+
     return (
         <Modal
             className={classes.center}
@@ -72,7 +77,7 @@ function InputModal({
                 <Button
                     variant="contained"
                     color="primary"
-                    onClick={() => onSubmit(room)}
+                    onClick={() => submit()}
                 >
                     Submit
                 </Button>

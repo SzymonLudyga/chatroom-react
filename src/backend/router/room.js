@@ -106,7 +106,7 @@ router.post('/join', authenticate, (req, res) => {
         if (!room) {
             throw new Error(NOT_FOUND);
         }
-        res.status(200).send(room.name);
+        res.status(200).send({ room: room.name });
     }).catch((err) => {
         /* eslint-disable-next-line no-unused-expressions */
         err.message === NOT_FOUND

@@ -9,7 +9,6 @@ import classnames from 'classnames';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import _ from 'lodash';
-import routes from '../routing/routes';
 import WebSocket from '../websockets/WebSocket';
 import InputModal from '../common/InputModal';
 import ConfirmModal from '../common/ConfirmModal';
@@ -55,15 +54,13 @@ export default class Join extends Component {
     }
 
     _handleSubmit = (room) => {
-        const { confirmRoom, history } = this.props;
+        const { confirmRoom } = this.props;
         confirmRoom(room);
-        history.push(`${routes.chat}/${room}`);
     }
 
     _handleLogout = () => {
-        const { logout, history, username } = this.props;
+        const { logout, username } = this.props;
         logout({ username });
-        history.push(routes.login);
     }
 
     render() {
@@ -172,7 +169,6 @@ Join.propTypes = {
     closeConfirmModal: PropTypes.func.isRequired,
     deleteRoom: PropTypes.func.isRequired,
     confirmModal: PropTypes.bool.isRequired,
-    history: PropTypes.object.isRequired,
     roomModal: PropTypes.bool.isRequired,
     errorType: PropTypes.string,
     errorMessage: PropTypes.string.isRequired,
@@ -183,5 +179,5 @@ Join.propTypes = {
     refreshToken: PropTypes.func.isRequired,
     openRoomModal: PropTypes.func.isRequired,
     openConfirmModal: PropTypes.func.isRequired,
-    username: PropTypes.string.isRequired
+    username: PropTypes.string
 };

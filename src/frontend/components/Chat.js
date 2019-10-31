@@ -86,12 +86,12 @@ export default class Chat extends Component {
     }
 
     _leaveRoom = () => {
-        const { username, history } = this.props;
+        const { username, changePath } = this.props;
         const { roomName } = this.state;
         this._socket.emitMessage('leave-room', {
             user: username, room: roomName
         });
-        history.push(routes.join);
+        changePath({ path: routes.join });
     }
 
     _onEnter = (e) => {
@@ -252,8 +252,7 @@ export default class Chat extends Component {
                         </div>
                     </div>
                 </Grid>
-                {(errorType === 'user-error'
-                    || errorType === 'message-error'
+                {(errorType === 'message-error'
                     || errorType === 'token')
                     && (
                         <ErrorModal
@@ -272,7 +271,6 @@ Chat.propTypes = {
     errorType: PropTypes.string,
     errorMessage: PropTypes.string.isRequired,
     errorHide: PropTypes.func.isRequired,
-    history: PropTypes.object.isRequired,
     fetchMessages: PropTypes.func.isRequired,
     deleteMessages: PropTypes.func.isRequired,
     clearMessages: PropTypes.func.isRequired,
@@ -281,6 +279,7 @@ Chat.propTypes = {
     handleError: PropTypes.func.isRequired,
     addMessage: PropTypes.func.isRequired,
     refreshToken: PropTypes.func.isRequired,
+    changePath: PropTypes.func.isRequired,
     match: PropTypes.object.isRequired,
     classes: PropTypes.object.isRequired,
     messages: PropTypes.array.isRequired,

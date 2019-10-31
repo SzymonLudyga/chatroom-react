@@ -3,10 +3,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
-    Button, TextField
+    Button, TextField, FormHelperText
 } from '@material-ui/core';
 import classnames from 'classnames';
-import routes from '../routing/routes';
 
 export default class Login extends Component {
     constructor(props) {
@@ -44,10 +43,10 @@ export default class Login extends Component {
 
     _handleSubmit = () => {
         const { name, password, option } = this.state;
-        const { login, register, history } = this.props;
+        const { login, register, errorHide } = this.props;
+        errorHide();
         /* eslint-disable-next-line no-unused-expressions */
         option === 'login' ? login({ name, password }) : register({ name, password });
-        history.push(routes.join);
     }
 
     _change = (option) => {
@@ -55,7 +54,7 @@ export default class Login extends Component {
     }
 
     render() {
-        const { classes } = this.props;
+        const { classes, errorMessage, errorType } = this.props;
         const { option, screenWidth } = this.state;
         const isSmallerScreen = screenWidth < 600;
         return (
@@ -83,6 +82,15 @@ export default class Login extends Component {
                     isSmallerScreen ? classes.width100 : classes.width60
                 ])}
                 >
+                    {errorType === 'user-error'
+                        && (
+                            <FormHelperText
+                                className={classes.red}
+                            >
+                                {errorMessage}
+                            </FormHelperText>
+                        )
+                    }
                     <TextField
                         id="outlined-name"
                         label="Name"
@@ -116,8 +124,10 @@ export default class Login extends Component {
 }
 
 Login.propTypes = {
-    history: PropTypes.object.isRequired,
+    errorType: PropTypes.string,
+    errorMessage: PropTypes.string.isRequired,
     classes: PropTypes.object.isRequired,
+    errorHide: PropTypes.func.isRequired,
     login: PropTypes.func.isRequired,
     register: PropTypes.func.isRequired,
 };

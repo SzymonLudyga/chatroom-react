@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import { login, register } from '../actions/login';
+import { errorHide } from '../actions/error';
 
 import Login from '../components/Login';
 
@@ -37,20 +38,27 @@ const styles = () => ({
         justifyContent: 'space-around',
         alignItems: 'center',
     },
+    red: {
+        color: 'red'
+    },
     textField: {
         display: 'flex',
         width: '90%',
     }
 });
 
-function mapStateToProps() {
-    return {};
+function mapStateToProps(state) {
+    return {
+        errorType: state.error.errorType,
+        errorMessage: state.error.errorMessage
+    };
 }
 
 function mapDispatchToProps(dispatch) {
     return {
         login: userInfo => dispatch(login(userInfo)),
         register: userInfo => dispatch(register(userInfo)),
+        errorHide: () => dispatch(errorHide()),
     };
 }
 
