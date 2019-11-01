@@ -12,6 +12,7 @@ import {
 } from '../actions/join';
 import { logout, refreshToken } from '../actions/login';
 import { errorHide } from '../actions/error';
+import changePath from '../actions/status';
 
 import Join from '../components/Join';
 
@@ -85,6 +86,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
+        changePath: path => dispatch(changePath(path)),
         logout: username => dispatch(logout(username)),
         fetchRooms: () => dispatch(fetchRooms()),
         deleteRoom: room => dispatch(deleteRoom(room)),

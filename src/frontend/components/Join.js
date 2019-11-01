@@ -7,8 +7,8 @@ import {
 } from '@material-ui/core';
 import classnames from 'classnames';
 import DeleteIcon from '@material-ui/icons/Delete';
-
 import _ from 'lodash';
+import routes from '../routing/routes';
 import WebSocket from '../websockets/WebSocket';
 import InputModal from '../common/InputModal';
 import ConfirmModal from '../common/ConfirmModal';
@@ -47,10 +47,11 @@ export default class Join extends Component {
     }
 
     _onRoomSubmit = (room) => {
-        const { createRoom, username } = this.props;
+        const { createRoom, username, closeRoomModal } = this.props;
         createRoom({
             user: username, room
         });
+        closeRoomModal();
     }
 
     _handleSubmit = (room) => {
@@ -61,6 +62,14 @@ export default class Join extends Component {
     _handleLogout = () => {
         const { logout, username } = this.props;
         logout({ username });
+    }
+
+    _hideModal = () => {
+        const { errorType, errorHide, changePath } = this.props;
+        if (errorType === 'token') {
+            changePath({ path: routes.login });
+        }
+        errorHide();
     }
 
     render() {
@@ -77,7 +86,6 @@ export default class Join extends Component {
             closeConfirmModal,
             confirmModal,
             deleteRoom,
-            errorHide,
         } = this.props;
         const { screenWidth } = this.state;
         const isSmallerScreen = screenWidth < 600;
@@ -151,7 +159,7 @@ export default class Join extends Component {
                     && (
                         <ErrorModal
                             message={errorMessage}
-                            onSubmit={errorHide}
+                            onSubmit={this._hideModal}
                         />
                     )}
             </>
@@ -167,6 +175,7 @@ Join.propTypes = {
     fetchRooms: PropTypes.func.isRequired,
     errorHide: PropTypes.func.isRequired,
     closeConfirmModal: PropTypes.func.isRequired,
+    changePath: PropTypes.func.isRequired,
     deleteRoom: PropTypes.func.isRequired,
     confirmModal: PropTypes.bool.isRequired,
     roomModal: PropTypes.bool.isRequired,

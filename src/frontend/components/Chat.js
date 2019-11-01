@@ -128,9 +128,17 @@ export default class Chat extends Component {
         this.setState({ messageCount: messageCount + 1, message: '' });
     };
 
+    _hideModal = () => {
+        const { errorType, errorHide, changePath } = this.props;
+        if (errorType === 'token') {
+            changePath({ path: routes.login });
+        }
+        errorHide();
+    }
+
     render() {
         const {
-            classes, errorMessage, errorType, messages, username, users, errorHide
+            classes, errorMessage, errorType, messages, username, users
         } = this.props;
         const { messageCount, message, screenWidth } = this.state;
         const isSmallerScreen = screenWidth < 700;
@@ -257,7 +265,7 @@ export default class Chat extends Component {
                     && (
                         <ErrorModal
                             message={errorMessage}
-                            onSubmit={errorHide}
+                            onSubmit={this._hideModal}
                         />
                     )}
             </>

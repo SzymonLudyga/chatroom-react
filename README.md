@@ -1,7 +1,7 @@
 # TODO
 
 ```
-1. Error handling (Error Modals)
-2. npm lint!
-3. Handling disconnection of the socket
+1. npm lint!
+2. Handling disconnection of the socket
+3. Mocha tests
 ```
