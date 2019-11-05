@@ -11,11 +11,11 @@ const userTwoId = new ObjectId();
 const userThreeId = new ObjectId();
 const firstTimestamp = moment().valueOf();
 const timestamps = [
-    firstTimestamp - 10, 
-    firstTimestamp, 
-    firstTimestamp + 10, 
+    firstTimestamp - 10,
+    firstTimestamp,
+    firstTimestamp + 10,
     firstTimestamp + 20
-]
+];
 
 const roomsDummy = [
     {
@@ -30,7 +30,7 @@ const roomsDummy = [
         created_at: timestamps[0],
         creator: 'secondUser'
     }
-]
+];
 
 const usersDummy = [
     {
@@ -42,7 +42,12 @@ const usersDummy = [
         tokens: [
             {
                 access: 'auth',
-                token: jwt.sign({ _id: userOneId, access: 'auth' }, process.env.JWT_SECRET).toString(),
+                token: jwt.sign(
+                    {
+                        _id: userOneId, access: 'auth'
+                    },
+                    process.env.JWT_SECRET
+                ).toString(),
                 timestamp: timestamps[0]
             }
         ]
@@ -56,7 +61,12 @@ const usersDummy = [
         tokens: [
             {
                 access: 'auth',
-                token: jwt.sign({ _id: userTwoId, access: 'auth' }, process.env.JWT_SECRET).toString(),
+                token: jwt.sign(
+                    {
+                        _id: userTwoId, access: 'auth'
+                    },
+                    process.env.JWT_SECRET
+                ).toString(),
                 timestamp: timestamps[0]
             }
         ]
@@ -70,7 +80,12 @@ const usersDummy = [
         tokens: [
             {
                 access: 'auth',
-                token: jwt.sign({ _id: userThreeId, access: 'auth' }, process.env.JWT_SECRET).toString(),
+                token: jwt.sign(
+                    {
+                        _id: userThreeId, access: 'auth'
+                    },
+                    process.env.JWT_SECRET
+                ).toString(),
                 timestamp: timestamps[0]
             }
         ]
@@ -103,23 +118,19 @@ const messagesDummy = [
     }
 ];
 
-const populateMessages = done => {
+const populateMessages = (done) => {
     Message.deleteMany({})
-        .then(() => {
-            return Message.insertMany(messagesDummy);
-        })
+        .then(() => Message.insertMany(messagesDummy))
         .then(() => done());
 };
 
-const populateRooms = done => {
+const populateRooms = (done) => {
     Room.deleteMany({})
-        .then(() => {
-            return Room.insertMany(roomsDummy);
-        })
+        .then(() => Room.insertMany(roomsDummy))
         .then(() => done());
 };
 
-const populateUsers = done => {
+const populateUsers = (done) => {
     User.deleteMany({})
         .then(() => {
             const userOne = new User(usersDummy[0]).save();
@@ -130,11 +141,11 @@ const populateUsers = done => {
         .then(() => done());
 };
 
-module.exports = { 
+module.exports = {
     roomsDummy,
     messagesDummy,
     usersDummy,
     populateMessages,
-    populateRooms, 
-    populateUsers 
+    populateRooms,
+    populateUsers
 };

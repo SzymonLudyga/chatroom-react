@@ -1,3 +1,6 @@
+/* eslint "no-undef": 0 */
+/* eslint "consistent-return": 0 */
+
 const expect = require('expect');
 const request = require('supertest');
 const { ObjectId } = require('mongodb');
@@ -20,28 +23,29 @@ beforeEach(populateUsers);
 beforeEach(populateMessages);
 
 describe('POST /users/register', () => {
-  it('should create new user', done => {
-    const [ name, password ] = ['fourthUser', 'userPass4'];
-    request(server)
-        .post('/api/users/register')
-        .send({ name, password })
-        .expect(200)
-        .expect(res => {
-            expect(res.body.name).toBe(name);
-        })
-        .end((err, res) => {
-            if (err) {
-                return done(err);
-            }
-            User.find({ name })
-                .then(user => {
-                    expect(user.length).toBe(1);
-                    expect(user[0].name).toBe(name);
-                    done();
-                })
-                .catch(err => {
-                    done(err);
-                });
-        });
-  });
+    it('should create new user', (done) => {
+        const [name, password] = ['fourthUser', 'userPass4'];
+        request(server)
+            .post('/api/users/register')
+            .send({ name, password })
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.name).toBe(name);
+            })
+            /* eslint disable-next-line "no-unused-vars": 0 */
+            .end((err, res) => {
+                if (err) {
+                    return done(err);
+                }
+                User.find({ name })
+                    .then((user) => {
+                        expect(user.length).toBe(1);
+                        expect(user[0].name).toBe(name);
+                        done();
+                    })
+                    .catch((err) => {
+                        done(err);
+                    });
+            });
+    });
 });
