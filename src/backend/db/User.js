@@ -11,14 +11,14 @@ const BAD_PASSWORD = 'BAD_PASSWORD';
 const UserSchema = new mongoose.Schema({
     name: {
         type: String,
-        require: true,
+        required: true,
         minlength: 4,
         trim: true,
         unique: true
     },
     password: {
         type: String,
-        require: true,
+        required: true,
     },
     room: {
         type: String,
@@ -32,11 +32,11 @@ const UserSchema = new mongoose.Schema({
         {
             access: {
                 type: String,
-                require: true
+                required: true
             },
             token: {
                 type: String,
-                require: true
+                required: true
             },
             timestamp: {
                 type: Number,
