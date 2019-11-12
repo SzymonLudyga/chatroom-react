@@ -118,12 +118,6 @@ const messagesDummy = [
     }
 ];
 
-const populateMessages = (done) => {
-    Message.deleteMany({})
-        .then(() => Message.insertMany(messagesDummy))
-        .then(() => done());
-};
-
 const populateRooms = (done) => {
     Room.deleteMany({})
         .then(() => Room.insertMany(roomsDummy))
@@ -138,6 +132,13 @@ const populateUsers = (done) => {
             const userThree = new User(usersDummy[2]).save();
             return Promise.all([userOne, userTwo, userThree]);
         })
+        .then(() => done());
+};
+
+
+const populateMessages = (done) => {
+    Message.deleteMany({})
+        .then(() => Message.insertMany(messagesDummy))
         .then(() => done());
 };
 

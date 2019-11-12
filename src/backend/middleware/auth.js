@@ -14,7 +14,7 @@ const authenticate = (req, res, next) => {
             if (!user) {
                 return Promise.reject();
             }
-            if (timestamp > user.tokens[user.tokens.length - 1].timestamp) {
+            if (timestamp - 3600*1000 > user.tokens[user.tokens.length - 1].timestamp) {
                 return Promise.reject();
             }
             req.user = user;

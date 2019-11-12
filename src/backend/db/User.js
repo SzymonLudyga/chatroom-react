@@ -14,7 +14,8 @@ const UserSchema = new mongoose.Schema({
         required: true,
         minlength: 4,
         trim: true,
-        unique: true
+        unique: true,
+        match: [/^[a-zA-Z0-9]+$/, 'Please fill a valid user name']
     },
     password: {
         type: String,
