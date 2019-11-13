@@ -1,9 +1,10 @@
 /* eslint "no-undef": 0 */
 /* eslint "consistent-return": 0 */
+/* eslint "no-unused-vars": 0 */
+/* eslint "max-len": [ "error", 100] */
 
 const expect = require('expect');
 const request = require('supertest');
-const { ObjectId } = require('mongodb');
 
 const { server } = require('../server');
 const { Message } = require('../db/Message');
@@ -12,7 +13,6 @@ const { Room } = require('../db/Room');
 const { errorMessages, errorTypes } = require('../utils/errorMessages');
 const {
     roomsDummy,
-    messagesDummy,
     usersDummy,
     populateMessages,
     populateUsers,
@@ -22,6 +22,341 @@ const {
 beforeEach(populateRooms);
 beforeEach(populateUsers);
 beforeEach(populateMessages);
+
+describe('GET /messages/:name', () => {
+    it('should get messages successfully', (done) => {
+        request(server)
+            .get(`/api/messages/${roomsDummy[0].name}`)
+            .set('x-auth', usersDummy[0].tokens[0].token)
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.length).toBe(2);
+            })
+            .end(done);
+    });
+
+    it('should not get messages if not authenticated', (done) => {
+        request(server)
+            .get(`/api/messages/${roomsDummy[0].name}`)
+            .expect(401)
+            .expect((res) => {
+                expect(res.body.errorMessage).toEqual(errorMessages.tokenInvalid);
+                expect(res.body.errorType).toEqual(errorTypes.TOKEN_ERROR);
+            })
+            .end(done);
+    });
+
+    it('should not get messages from room that does not exist', (done) => {
+        const badRoom = 'roomNotExists';
+        request(server)
+            .get(`/api/messages/${badRoom}`)
+            .set('x-auth', usersDummy[0].tokens[0].token)
+            .expect(404)
+            .expect((res) => {
+                expect(res.body.errorMessage).toEqual(
+                    `${errorMessages.messagesNotFound}: ${badRoom}.`
+                );
+                expect(res.body.errorType).toEqual(errorTypes.MESSAGE_ERROR);
+            })
+            .end(done);
+    });
+});
+
+describe('DELETE /messages/:name', () => {
+    it('should delete messages successfully', (done) => {
+        request(server)
+            .delete(`/api/messages/${roomsDummy[0].name}`)
+            .set('x-auth', usersDummy[0].tokens[0].token)
+            .expect(404)
+            .expect((res) => {
+                expect(res.body.errorMessage).toEqual(
+                    `${errorMessages.messagesNotFound}: ${roomsDummy[0].name}.`
+                );
+                expect(res.body.errorType).toEqual(errorTypes.MESSAGE_ERROR);
+            })
+            .end((err, res) => {
+                if (err) {
+                    return done(err);
+                }
+                Message.find({ room: roomsDummy[0].name })
+                    .then((rooms) => {
+                        expect(rooms.length).toBe(0);
+                        done();
+                    })
+                    .catch((err) => {
+                        done(err);
+                    });
+            });
+    });
+
+    it('should not delete messages if not authenticated', (done) => {
+        request(server)
+            .delete(`/api/messages/${roomsDummy[0].name}`)
+            .expect(401)
+            .expect((res) => {
+                expect(res.body.errorMessage).toEqual(errorMessages.tokenInvalid);
+                expect(res.body.errorType).toEqual(errorTypes.TOKEN_ERROR);
+            })
+            .end((err, res) => {
+                if (err) {
+                    return done(err);
+                }
+                Message.find({ room: roomsDummy[0].name })
+                    .then((rooms) => {
+                        expect(rooms.length).toBe(2);
+                        done();
+                    })
+                    .catch((err) => {
+                        done(err);
+                    });
+            });
+    });
+
+    it('should not delete messages from room that does not exist', (done) => {
+        const badRoom = 'roomNotExists';
+        request(server)
+            .delete(`/api/messages/${badRoom}`)
+            .set('x-auth', usersDummy[0].tokens[0].token)
+            .expect(404)
+            .expect((res) => {
+                expect(res.body.errorMessage).toEqual(
+                    `${errorMessages.messagesNotFound}: ${badRoom}.`
+                );
+                expect(res.body.errorType).toEqual(errorTypes.MESSAGE_ERROR);
+            })
+            .end(done);
+    });
+});
+
+describe('POST /rooms/join', () => {
+    it('should join room successfully', (done) => {
+        request(server)
+            .post('/api/rooms/join')
+            .set('x-auth', usersDummy[0].tokens[0].token)
+            .send({ room: roomsDummy[0].name })
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.room).toBe(roomsDummy[0].name);
+            })
+            .end(done);
+    });
+
+    it('should not join room successfully if not authenticated', (done) => {
+        request(server)
+            .post('/api/rooms/join')
+            .send({ room: roomsDummy[0].name })
+            .expect(401)
+            .expect((res) => {
+                expect(res.body.errorMessage).toEqual(errorMessages.tokenInvalid);
+                expect(res.body.errorType).toEqual(errorTypes.TOKEN_ERROR);
+            })
+            .end(done);
+    });
+
+    it('should not return user if not authenticated', (done) => {
+        request(server)
+            .post('/api/rooms/join')
+            .set('x-auth', usersDummy[0].tokens[0].token)
+            .send({ room: 'roomNotExists' })
+            .expect(404)
+            .expect((res) => {
+                expect(res.body.errorMessage).toEqual(errorMessages.roomToJoinNotFound);
+                expect(res.body.errorType).toEqual(errorTypes.ROOM_ERROR);
+            })
+            .end(done);
+    });
+});
+
+describe('GET /rooms', () => {
+    it('should get rooms', (done) => {
+        request(server)
+            .get('/api/rooms/')
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.length).toBe(2);
+                expect(res.body[0].name).toBe(roomsDummy[0].name);
+            })
+            .end(done);
+    });
+});
+
+describe('POST /rooms', () => {
+    it('should add room successfully', (done) => {
+        const room = 'warsaw';
+        request(server)
+            .post('/api/rooms')
+            .set('x-auth', usersDummy[0].tokens[0].token)
+            .send({ room })
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.creator).toBe(usersDummy[0].name);
+                expect(res.body.name).toBe(room);
+            })
+            .end((err, res) => {
+                if (err) {
+                    return done(err);
+                }
+                Room.find()
+                    .then((rooms) => {
+                        expect(rooms.length).toBe(3);
+                        done();
+                    })
+                    .catch((err) => {
+                        done(err);
+                    });
+            });
+    });
+
+    it('should not add room if not authenticated', (done) => {
+        const room = 'warsaw';
+        request(server)
+            .post('/api/rooms')
+            .send({ room })
+            .expect(401)
+            .expect((res) => {
+                expect(res.body.errorMessage).toEqual(errorMessages.tokenInvalid);
+                expect(res.body.errorType).toEqual(errorTypes.TOKEN_ERROR);
+            })
+            .end((err, res) => {
+                if (err) {
+                    return done(err);
+                }
+                Room.find()
+                    .then((rooms) => {
+                        expect(rooms.length).toBe(2);
+                        done();
+                    })
+                    .catch((err) => {
+                        done(err);
+                    });
+            });
+    });
+
+    it('should not duplicate rooms', (done) => {
+        request(server)
+            .post('/api/rooms')
+            .set('x-auth', usersDummy[0].tokens[0].token)
+            .send({ room: roomsDummy[0].name })
+            .expect(422)
+            .expect((res) => {
+                expect(res.body.errorMessage).toEqual(errorMessages.roomExists);
+                expect(res.body.errorType).toEqual(errorTypes.CREATE_ERROR);
+            })
+            .end((err, res) => {
+                if (err) {
+                    return done(err);
+                }
+                Room.find()
+                    .then((rooms) => {
+                        expect(rooms.length).toBe(2);
+                        done();
+                    })
+                    .catch((err) => {
+                        done(err);
+                    });
+            });
+    });
+
+    it('should not add room with bad name', (done) => {
+        request(server)
+            .post('/api/rooms')
+            .set('x-auth', usersDummy[0].tokens[0].token)
+            .send({ room: 'oslo123213' })
+            .expect(400)
+            .expect((res) => {
+                expect(res.body.errorMessage).toEqual(errorMessages.roomValidationError);
+                expect(res.body.errorType).toEqual(errorTypes.CREATE_ERROR);
+            })
+            .end((err, res) => {
+                if (err) {
+                    return done(err);
+                }
+                Room.find()
+                    .then((rooms) => {
+                        expect(rooms.length).toBe(2);
+                        done();
+                    })
+                    .catch((err) => {
+                        done(err);
+                    });
+            });
+    });
+});
+
+describe('DELETE /rooms', () => {
+    it('should delete room successfully', (done) => {
+        request(server)
+            .delete('/api/rooms')
+            .set('x-auth', usersDummy[0].tokens[0].token)
+            .send({ room: roomsDummy[0].name })
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.name).toBe(roomsDummy[0].name);
+            })
+            .end((err, res) => {
+                if (err) {
+                    return done(err);
+                }
+                Room.find()
+                    .then((rooms) => {
+                        expect(rooms.length).toBe(1);
+                        done();
+                    })
+                    .catch((err) => {
+                        done(err);
+                    });
+            });
+    });
+
+    it('should not delete room if not authenticated', (done) => {
+        request(server)
+            .delete('/api/rooms')
+            .send({ room: roomsDummy[0].name })
+            .expect(401)
+            .expect((res) => {
+                expect(res.body.errorMessage).toEqual(errorMessages.tokenInvalid);
+                expect(res.body.errorType).toEqual(errorTypes.TOKEN_ERROR);
+            })
+            .end((err, res) => {
+                if (err) {
+                    return done(err);
+                }
+                Room.find()
+                    .then((rooms) => {
+                        expect(rooms.length).toBe(2);
+                        done();
+                    })
+                    .catch((err) => {
+                        done(err);
+                    });
+            });
+    });
+
+    it('should not delete room that does not exist', (done) => {
+        request(server)
+            .delete('/api/rooms')
+            .set('x-auth', usersDummy[0].tokens[0].token)
+            .send({ room: 'roomNotExists' })
+            .expect(404)
+            .expect((res) => {
+                expect(res.body.errorMessage).toEqual(errorMessages.roomToDeleteNotFound);
+                expect(res.body.errorType).toEqual(errorTypes.ROOM_ERROR);
+            })
+            .end((err, res) => {
+                if (err) {
+                    return done(err);
+                }
+                Room.find()
+                    .then((rooms) => {
+                        expect(rooms.length).toBe(2);
+                        done();
+                    })
+                    .catch((err) => {
+                        done(err);
+                    });
+            });
+    });
+});
 
 describe('GET /users', () => {
     it('should return user information by token', (done) => {
@@ -59,7 +394,6 @@ describe('POST /users/register', () => {
                 expect(res.headers['x-auth']).toBeTruthy();
                 expect(res.body.name).toBe(name);
             })
-            /* eslint disable-next-line "no-unused-vars": 0 */
             .end((err, res) => {
                 if (err) {
                     return done(err);
@@ -166,8 +500,8 @@ describe('GET /users/refresh-token', () => {
             .expect((res) => {
                 expect(res.headers['x-auth']).toBeTruthy();
                 expect(res.body.name).toBe(usersDummy[1].name);
-            }).
-            end(done);
+            })
+            .end(done);
     });
 
     it('should not refresh token if not authenticated', (done) => {
@@ -192,7 +526,6 @@ describe('DELETE /users/token', () => {
             .expect((res) => {
                 expect(res.body.name).toBe(usersDummy[0].name);
             })
-            /* eslint disable-next-line "no-unused-vars": 0 */
             .end((err, res) => {
                 if (err) {
                     return done(err);
@@ -225,12 +558,11 @@ describe('DELETE /users/token/all', () => {
     it('should delete all tokens', (done) => {
         request(server)
             .delete('/api/users/token/all')
-            .send({ user: usersDummy[2].name})
+            .send({ user: usersDummy[2].name })
             .expect(200)
             .expect((res) => {
                 expect(res.body.name).toBe(usersDummy[2].name);
             })
-            /* eslint disable-next-line "no-unused-vars": 0 */
             .end((err, res) => {
                 if (err) {
                     return done(err);
@@ -250,7 +582,7 @@ describe('DELETE /users/token/all', () => {
     it('should not delete tokens of invalid user', (done) => {
         request(server)
             .delete('/api/users/token/all')
-            .send({ user: 'badUser'})
+            .send({ user: 'badUser' })
             .expect(404)
             .expect((res) => {
                 expect(res.body.errorMessage).toEqual(errorMessages.userNotFound);

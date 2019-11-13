@@ -57,7 +57,7 @@ router.post('', authenticate, (req, res) => {
     const room = new Room({
         name: req.body.room.toLowerCase(),
         created_at: createdAt,
-        creator: req.body.user
+        creator: req.user.name
     });
 
     Room.find().then(

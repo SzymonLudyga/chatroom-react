@@ -96,7 +96,6 @@ const messagesDummy = [
     {
         _id: new ObjectId(),
         message: 'First test message',
-        socket_id: 'idasdvasdvvdgas',
         timestamp: timestamps[1],
         user: usersDummy[0].name,
         room: roomsDummy[0].name
@@ -104,7 +103,6 @@ const messagesDummy = [
     {
         _id: new ObjectId(),
         message: 'Second test message',
-        socket_id: 'iusafasyfvbahfbash',
         timestamp: timestamps[2],
         user: usersDummy[0].name,
         room: roomsDummy[1].name
@@ -144,7 +142,6 @@ const populateMessages = (done) => {
 
 module.exports = {
     roomsDummy,
-    messagesDummy,
     usersDummy,
     populateMessages,
     populateRooms,
