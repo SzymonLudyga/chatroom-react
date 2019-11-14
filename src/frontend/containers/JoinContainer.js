@@ -10,13 +10,20 @@ import {
     openConfirmModal,
     closeConfirmModal
 } from '../actions/join';
-import { logout, refreshToken } from '../actions/login';
+import { logout, refreshToken, clearUser } from '../actions/login';
 import { errorHide } from '../actions/error';
 import changePath from '../actions/status';
 
 import Join from '../components/Join';
 
 const styles = () => ({
+    errorGrid: {
+        marginTop: 20,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'column',
+    },
     container: {
         marginTop: 10
     },
@@ -98,6 +105,7 @@ function mapDispatchToProps(dispatch) {
         closeConfirmModal: () => dispatch(closeConfirmModal()),
         refreshToken: () => dispatch(refreshToken()),
         errorHide: () => dispatch(errorHide()),
+        clearUser: () => dispatch(clearUser()),
     };
 }
 

@@ -4,13 +4,10 @@ const MessageSchema = new mongoose.Schema({
     user: {
         type: String,
         required: true,
-        minlength: 1,
     },
     room: {
         type: String,
         required: true,
-        minlength: 1,
-        trim: true,
     },
     timestamp: {
         type: Number,

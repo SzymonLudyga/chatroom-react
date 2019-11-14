@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
-    Button, IconButton, Fab, Typography
+    Button, IconButton, Fab, Typography, Grid
 } from '@material-ui/core';
 import classnames from 'classnames';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -65,8 +65,11 @@ export default class Join extends Component {
     }
 
     _hideModal = () => {
-        const { errorType, errorHide, changePath } = this.props;
+        const {
+            errorType, errorHide, changePath, clearUser
+        } = this.props;
         if (errorType === 'token') {
+            clearUser();
             changePath({ path: routes.login });
         }
         errorHide();
@@ -76,6 +79,7 @@ export default class Join extends Component {
         const {
             classes,
             rooms,
+            username,
             confirmDeletedRoom,
             openConfirmModal,
             openRoomModal,
@@ -86,9 +90,30 @@ export default class Join extends Component {
             closeConfirmModal,
             confirmModal,
             deleteRoom,
+            changePath
         } = this.props;
         const { screenWidth } = this.state;
         const isSmallerScreen = screenWidth < 600;
+        if (!username) {
+            return (
+                <Grid className={classes.errorGrid}>
+                    <Typography
+                        style={{ textAlign: 'center' }}
+                        variant="h3"
+                    >
+                        User unknown.
+                    </Typography>
+                    <Button
+                        style={{ width: '40%', margin: 20 }}
+                        onClick={() => changePath({ path: routes.login })}
+                        variant="contained"
+                        color="primary"
+                    >
+                        Login here
+                    </Button>
+                </Grid>
+            );
+        }
         return (
             <>
                 <div className={classes.container}>
@@ -185,6 +210,7 @@ Join.propTypes = {
     closeRoomModal: PropTypes.func.isRequired,
     logout: PropTypes.func.isRequired,
     createRoom: PropTypes.func.isRequired,
+    clearUser: PropTypes.func.isRequired,
     refreshToken: PropTypes.func.isRequired,
     openRoomModal: PropTypes.func.isRequired,
     openConfirmModal: PropTypes.func.isRequired,

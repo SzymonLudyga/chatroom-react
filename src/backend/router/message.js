@@ -10,10 +10,10 @@ const NOT_FOUND = 'NOT_FOUND';
 
 router.delete('/:roomName', authenticate, (req, res) => {
     Message.deleteMany({ room: req.params.roomName }).then((msg) => {
-        if (!msg.length) {
+        if (msg.deletedCount === 0) {
             throw new Error(NOT_FOUND);
         }
-        res.status(200).send('OK');
+        res.status(200).send({ status: 'OK' });
     }).catch((err) => {
         /* eslint-disable-next-line no-unused-expressions */
         err.message === NOT_FOUND ? res.status(404).send({

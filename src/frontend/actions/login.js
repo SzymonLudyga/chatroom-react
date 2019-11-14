@@ -23,6 +23,18 @@ function _tokenUpdated(token) {
     };
 }
 
+export function clearUser() {
+    return (dispatch) => {
+        dispatch(_userUpdated({
+            username: null,
+            token: {
+                tokenInfo: null,
+                timestamp: null
+            }
+        }));
+    };
+}
+
 export function login(userCredentials) {
     return async (dispatch) => {
         try {
@@ -85,13 +97,7 @@ export function logout(username) {
                 tokenInfo,
                 { username }
             );
-            dispatch(_userUpdated({
-                username: null,
-                token: {
-                    tokenInfo: null,
-                    timestamp: null
-                }
-            }));
+            dispatch(clearUser());
             dispatch(changePath({ path: routes.login }));
         } catch (e) {
             dispatch(errorDisplay({

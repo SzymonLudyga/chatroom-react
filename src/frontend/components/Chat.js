@@ -70,7 +70,9 @@ export default class Chat extends Component {
     }
 
     _scrollToBottom = () => {
-        this.messagesEnd.scrollIntoView();
+        if (this.messagesEnd) {
+            this.messagesEnd.scrollIntoView();
+        }
     }
 
     _delete = () => {
@@ -129,8 +131,11 @@ export default class Chat extends Component {
     };
 
     _hideModal = () => {
-        const { errorType, errorHide, changePath } = this.props;
+        const {
+            errorType, errorHide, changePath, clearUser
+        } = this.props;
         if (errorType === 'token') {
+            clearUser();
             changePath({ path: routes.login });
         }
         errorHide();
@@ -138,10 +143,30 @@ export default class Chat extends Component {
 
     render() {
         const {
-            classes, errorMessage, errorType, messages, username, users
+            classes, errorMessage, errorType, messages, username, users, changePath
         } = this.props;
         const { messageCount, message, screenWidth } = this.state;
         const isSmallerScreen = screenWidth < 700;
+        if (!username) {
+            return (
+                <Grid className={classes.errorGrid}>
+                    <Typography
+                        style={{ textAlign: 'center' }}
+                        variant="h3"
+                    >
+                        User unknown.
+                    </Typography>
+                    <Button
+                        style={{ width: '40%', margin: 20 }}
+                        onClick={() => changePath({ path: routes.login })}
+                        variant="contained"
+                        color="primary"
+                    >
+                        Login here
+                    </Button>
+                </Grid>
+            );
+        }
         return (
             <>
                 <Grid className={classes.container}>
@@ -283,6 +308,7 @@ Chat.propTypes = {
     deleteMessages: PropTypes.func.isRequired,
     clearMessages: PropTypes.func.isRequired,
     username: PropTypes.string.isRequired,
+    clearUser: PropTypes.func.isRequired,
     updateUserList: PropTypes.func.isRequired,
     handleError: PropTypes.func.isRequired,
     addMessage: PropTypes.func.isRequired,

@@ -5,7 +5,7 @@
     "main": "src/backend/server.js",
     "scripts": {
         "build": "webpack --mode production",
-        "test": "export NODE_ENV=test && mocha src/backend/**/*.test.js",
+        "test": "export NODE_ENV=test && mocha src/backend/**/*.test.js --timeout 5000",
         "start": "npm run build && node src/backend/server.js",
         "client": "webpack-dev-server --mode development --devtool inline-source-map --hot",
         "server": "nodemon src/backend/server.js",

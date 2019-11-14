@@ -4,13 +4,20 @@ import {
     fetchMessages, clearMessages, deleteMessages, addMessage
 } from '../actions/chat';
 import updateUserList from '../actions/user';
-import { refreshToken } from '../actions/login';
+import { refreshToken, clearUser } from '../actions/login';
 import { errorDisplay, errorHide } from '../actions/error';
 import changePath from '../actions/status';
 
 import Chat from '../components/Chat';
 
 const styles = () => ({
+    errorGrid: {
+        marginTop: 20,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'column',
+    },
     container: {
         display: 'flex',
         justifyContent: 'right',
@@ -186,6 +193,7 @@ function mapDispatchToProps(dispatch) {
         errorHide: () => dispatch(errorHide()),
         updateUserList: users => dispatch(updateUserList(users)),
         refreshToken: () => dispatch(refreshToken()),
+        clearUser: () => dispatch(clearUser()),
     };
 }
 

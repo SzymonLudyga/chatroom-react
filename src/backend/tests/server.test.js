@@ -67,12 +67,9 @@ describe('DELETE /messages/:name', () => {
         request(server)
             .delete(`/api/messages/${roomsDummy[0].name}`)
             .set('x-auth', usersDummy[0].tokens[0].token)
-            .expect(404)
+            .expect(200)
             .expect((res) => {
-                expect(res.body.errorMessage).toEqual(
-                    `${errorMessages.messagesNotFound}: ${roomsDummy[0].name}.`
-                );
-                expect(res.body.errorType).toEqual(errorTypes.MESSAGE_ERROR);
+                expect(res.body.status).toBe('OK');
             })
             .end((err, res) => {
                 if (err) {
