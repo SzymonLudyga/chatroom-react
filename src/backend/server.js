@@ -9,7 +9,11 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 
 const { addMessage, checkMessage } = require('./utils/messageUtils');
-const { changeUserRoom, checkUserRoom } = require('./utils/userUtils');
+const {
+    changeUserRoom,
+    checkUserRoom,
+    updateRoomBySocketId
+} = require('./utils/userUtils');
 const { errorMessages, errorTypes } = require('./utils/errorMessages');
 
 /* eslint-disable-next-line no-unused-vars */
@@ -37,6 +41,12 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         console.log('\n\n', socket.id, 'user disconnected\n\n');
+        updateRoomBySocketId(socket.id, null, (userList, room) => {
+            socket.broadcast.to(room).emit(
+                'update-user-list',
+                userList
+            );
+        });
     });
 
     socket.on('join-room', async (data) => {
@@ -47,7 +57,7 @@ io.on('connection', (socket) => {
                 // - if new room of the user
                 socket.join(data.room);
                 // 1. then update user list
-                changeUserRoom(data.user, data.room, (userList) => {
+                changeUserRoom(data.user, data.room, socket.id, (userList) => {
                     // 2. then info to everyone to fetch user list
                     io.to(data.room).emit(
                         'update-user-list',
@@ -76,7 +86,6 @@ io.on('connection', (socket) => {
                 });
             }
         } catch (err) {
-            console.log(err.message);
             socket.emit('error-message', {
                 message: err.message,
                 type: err.message === errorMessages.addMessageError
@@ -87,9 +96,6 @@ io.on('connection', (socket) => {
     });
 
     socket.on('leave-room', (data) => {
-        console.log('\n\nleave room\n\n');
-        console.log(data);
-
         socket.leave(data.room);
 
         try {
@@ -104,7 +110,7 @@ io.on('connection', (socket) => {
                 socket.broadcast.to(data.room).emit('new-message', res);
             });
 
-            changeUserRoom(data.user, null, (userList) => {
+            changeUserRoom(data.user, null, socket.id, (userList) => {
                 // 2. Info to everyone but the socket that user left the room
                 socket.broadcast.to(data.room).emit(
                     'update-user-list',
@@ -112,7 +118,6 @@ io.on('connection', (socket) => {
                 );
             });
         } catch (err) {
-            console.log(err.message);
             socket.emit('error-message', {
                 message: err.message,
                 type: err.message === errorMessages.addMessageError
@@ -123,9 +128,6 @@ io.on('connection', (socket) => {
     });
 
     socket.on('create-message', (data) => {
-        console.log('\n\ncreate message\n\n');
-        console.log('DATA', data);
-
         try {
             // 1. check message and user
             checkMessage(data);
@@ -135,7 +137,6 @@ io.on('connection', (socket) => {
                 io.to(data.room).emit('new-message', res);
             });
         } catch (err) {
-            console.log(err.message);
             socket.emit('error-message', {
                 message: err.message,
                 type: err.message === errorMessages.addMessageError
