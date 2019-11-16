@@ -1,14 +1,14 @@
 import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import { createHashHistory } from 'history';
+import { createHashHistory, createMemoryHistory } from 'history';
 import { routerMiddleware } from 'connected-react-router';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
 import createRootReducer from '../reducers/rootReducer';
 
-export const history = createHashHistory();
+export const history = createMemoryHistory();
 
 const persistConfig = {
     key: 'root',
